@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FindeyVouchers.Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200428183312_EnrichMerchantAccount")]
+    [Migration("20200428184011_EnrichMerchantAccount")]
     partial class EnrichMerchantAccount
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,6 +34,9 @@ namespace FindeyVouchers.Domain.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")

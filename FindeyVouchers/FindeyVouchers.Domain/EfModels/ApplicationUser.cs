@@ -8,6 +8,7 @@ namespace FindeyVouchers.Domain.EfModels
         public string LastName { get; set; }
         public string Street { get; set; }
         public string ZipCode { get; set; }
+        public string Country { get; set; }
         public string CompanyName { get; set; }
         public int KvkNumber { get; set; }
         public string IbanNumber { get; set; }

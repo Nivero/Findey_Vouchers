@@ -22,18 +22,18 @@ namespace FindeyVouchers.Cms.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
             {
                 b.Property<string>("Id")
-                    .HasColumnType("TEXT");
+                    .HasColumnType("varchar(256)");
 
                 b.Property<string>("ConcurrencyStamp")
                     .IsConcurrencyToken()
-                    .HasColumnType("TEXT");
+                    .HasColumnType("varchar(256)");
 
                 b.Property<string>("Name")
-                    .HasColumnType("TEXT")
+                    .HasColumnType("varchar(256)")
                     .HasMaxLength(256);
 
                 b.Property<string>("NormalizedName")
-                    .HasColumnType("TEXT")
+                    .HasColumnType("varchar(256)")
                     .HasMaxLength(256);
 
                 b.HasKey("Id");
@@ -52,14 +52,14 @@ namespace FindeyVouchers.Cms.Data.Migrations
                     .HasColumnType("INTEGER");
 
                 b.Property<string>("ClaimType")
-                    .HasColumnType("TEXT");
+                    .HasColumnType("varchar(256)");
 
                 b.Property<string>("ClaimValue")
-                    .HasColumnType("TEXT");
+                    .HasColumnType("varchar(256)");
 
                 b.Property<string>("RoleId")
                     .IsRequired()
-                    .HasColumnType("TEXT");
+                    .HasColumnType("varchar(256)");
 
                 b.HasKey("Id");
 
@@ -71,17 +71,17 @@ namespace FindeyVouchers.Cms.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
             {
                 b.Property<string>("Id")
-                    .HasColumnType("TEXT");
+                    .HasColumnType("varchar(256)");
 
                 b.Property<int>("AccessFailedCount")
                     .HasColumnType("INTEGER");
 
                 b.Property<string>("ConcurrencyStamp")
                     .IsConcurrencyToken()
-                    .HasColumnType("TEXT");
+                    .HasColumnType("varchar(256)");
 
                 b.Property<string>("Email")
-                    .HasColumnType("TEXT")
+                    .HasColumnType("varchar(256)")
                     .HasMaxLength(256);
 
                 b.Property<bool>("EmailConfirmed")
@@ -91,33 +91,33 @@ namespace FindeyVouchers.Cms.Data.Migrations
                     .HasColumnType("INTEGER");
 
                 b.Property<DateTimeOffset?>("LockoutEnd")
-                    .HasColumnType("TEXT");
+                    .HasColumnType("varchar(256)");
 
                 b.Property<string>("NormalizedEmail")
-                    .HasColumnType("TEXT")
+                    .HasColumnType("varchar(256)")
                     .HasMaxLength(256);
 
                 b.Property<string>("NormalizedUserName")
-                    .HasColumnType("TEXT")
+                    .HasColumnType("varchar(256)")
                     .HasMaxLength(256);
 
                 b.Property<string>("PasswordHash")
-                    .HasColumnType("TEXT");
+                    .HasColumnType("varchar(256)");
 
                 b.Property<string>("PhoneNumber")
-                    .HasColumnType("TEXT");
+                    .HasColumnType("varchar(256)");
 
                 b.Property<bool>("PhoneNumberConfirmed")
                     .HasColumnType("INTEGER");
 
                 b.Property<string>("SecurityStamp")
-                    .HasColumnType("TEXT");
+                    .HasColumnType("varchar(256)");
 
                 b.Property<bool>("TwoFactorEnabled")
                     .HasColumnType("INTEGER");
 
                 b.Property<string>("UserName")
-                    .HasColumnType("TEXT")
+                    .HasColumnType("varchar(256)")
                     .HasMaxLength(256);
 
                 b.HasKey("Id");
@@ -139,14 +139,14 @@ namespace FindeyVouchers.Cms.Data.Migrations
                     .HasColumnType("INTEGER");
 
                 b.Property<string>("ClaimType")
-                    .HasColumnType("TEXT");
+                    .HasColumnType("varchar(256)");
 
                 b.Property<string>("ClaimValue")
-                    .HasColumnType("TEXT");
+                    .HasColumnType("varchar(256)");
 
                 b.Property<string>("UserId")
                     .IsRequired()
-                    .HasColumnType("TEXT");
+                    .HasColumnType("varchar(256)");
 
                 b.HasKey("Id");
 
@@ -158,19 +158,19 @@ namespace FindeyVouchers.Cms.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
             {
                 b.Property<string>("LoginProvider")
-                    .HasColumnType("TEXT")
+                    .HasColumnType("varchar(256)")
                     .HasMaxLength(128);
 
                 b.Property<string>("ProviderKey")
-                    .HasColumnType("TEXT")
+                    .HasColumnType("varchar(256)")
                     .HasMaxLength(128);
 
                 b.Property<string>("ProviderDisplayName")
-                    .HasColumnType("TEXT");
+                    .HasColumnType("varchar(256)");
 
                 b.Property<string>("UserId")
                     .IsRequired()
-                    .HasColumnType("TEXT");
+                    .HasColumnType("varchar(256)");
 
                 b.HasKey("LoginProvider", "ProviderKey");
 
@@ -182,10 +182,10 @@ namespace FindeyVouchers.Cms.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
             {
                 b.Property<string>("UserId")
-                    .HasColumnType("TEXT");
+                    .HasColumnType("varchar(256)");
 
                 b.Property<string>("RoleId")
-                    .HasColumnType("TEXT");
+                    .HasColumnType("varchar(256)");
 
                 b.HasKey("UserId", "RoleId");
 
@@ -197,18 +197,18 @@ namespace FindeyVouchers.Cms.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
             {
                 b.Property<string>("UserId")
-                    .HasColumnType("TEXT");
+                    .HasColumnType("varchar(256)");
 
                 b.Property<string>("LoginProvider")
-                    .HasColumnType("TEXT")
+                    .HasColumnType("varchar(256)")
                     .HasMaxLength(128);
 
                 b.Property<string>("Name")
-                    .HasColumnType("TEXT")
+                    .HasColumnType("varchar(256)")
                     .HasMaxLength(128);
 
                 b.Property<string>("Value")
-                    .HasColumnType("TEXT");
+                    .HasColumnType("varchar(256)");
 
                 b.HasKey("UserId", "LoginProvider", "Name");
 

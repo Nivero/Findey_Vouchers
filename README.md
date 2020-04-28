@@ -2,4 +2,4 @@
 Findey vouchers giftcard app
 
 # Updating database
-`$dotnet ef database update -c FindeyVouchers.Domain.EfModels.ApplicationDbContext --startup-project ../FindeyVouchers.Cms`
+`$dotnet ef database update -c FindeyVouchers.Domain.ApplicationDbContext --startup-project ../FindeyVouchers.Cms`

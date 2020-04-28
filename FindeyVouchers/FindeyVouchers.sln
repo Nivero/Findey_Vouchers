@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FindeyVouchers.Website", "FindeyVouchers.Website\FindeyVouchers.Website.csproj", "{7A672233-2909-4D45-9B66-707660AC0DF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FindeyFouchers.Cms", "FindeyFouchers.Cms\FindeyFouchers.Cms.csproj", "{D45D04C0-77C4-4530-BE75-827991B084DF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FindeyVouchers.Cms", "FindeyVouchers.Cms\FindeyVouchers.Cms.csproj", "{D45D04C0-77C4-4530-BE75-827991B084DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using FindeyFouchers.Cms.Models;
+using FindeyVouchers.Cms.Models;
 
-namespace FindeyFouchers.Cms.Controllers
+namespace FindeyVouchers.Cms.Controllers
 {
     public class HomeController : Controller
     {

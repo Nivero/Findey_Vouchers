@@ -8,7 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 
-namespace FindeyFouchers.Cms
+namespace FindeyVouchers.Cms
 {
     public class Program
     {

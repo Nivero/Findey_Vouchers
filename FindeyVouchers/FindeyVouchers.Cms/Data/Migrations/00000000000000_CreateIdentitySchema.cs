@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace FindeyFouchers.Cms.Data.Migrations
+namespace FindeyVouchers.Cms.Data.Migrations
 {
     public partial class CreateIdentitySchema : Migration
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace FindeyFouchers.Cms.Models
+namespace FindeyVouchers.Cms.Models
 {
     public class ErrorViewModel
     {

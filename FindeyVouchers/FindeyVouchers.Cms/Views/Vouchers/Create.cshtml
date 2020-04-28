@@ -1,0 +1,59 @@
+@page
+@model FindeyVouchers.Cms.Views.Vouchers.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>MerchantVoucher</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="MerchantVoucher.Name" class="control-label"></label>
+                <input asp-for="MerchantVoucher.Name" class="form-control" />
+                <span asp-validation-for="MerchantVoucher.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MerchantVoucher.Description" class="control-label"></label>
+                <input asp-for="MerchantVoucher.Description" class="form-control" />
+                <span asp-validation-for="MerchantVoucher.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MerchantVoucher.Image" class="control-label"></label>
+                <input asp-for="MerchantVoucher.Image" class="form-control" />
+                <span asp-validation-for="MerchantVoucher.Image" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MerchantVoucher.CreatedOn" class="control-label"></label>
+                <input asp-for="MerchantVoucher.CreatedOn" class="form-control" />
+                <span asp-validation-for="MerchantVoucher.CreatedOn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MerchantVoucher.ValidUntil" class="control-label"></label>
+                <input asp-for="MerchantVoucher.ValidUntil" class="form-control" />
+                <span asp-validation-for="MerchantVoucher.ValidUntil" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MerchantVoucher.Price" class="control-label"></label>
+                <input asp-for="MerchantVoucher.Price" class="form-control" />
+                <span asp-validation-for="MerchantVoucher.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

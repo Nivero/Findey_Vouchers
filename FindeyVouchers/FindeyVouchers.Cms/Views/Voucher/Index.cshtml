@@ -1,6 +1,6 @@
 @model IEnumerable<FindeyVouchers.Domain.EfModels.MerchantVoucher>
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Maak nieuwe voucher aan</a>
 </p>
 <table class="table">
     <thead>
@@ -15,10 +15,10 @@
             @Html.DisplayNameFor(model => model.Image)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CreatedOn)
+            @Html.DisplayNameFor(model => model.ValidUntil)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ValidUntil)
+            @Html.DisplayNameFor(model => model.CreatedOn)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Price)
@@ -43,27 +43,34 @@
                 @Html.DisplayFor(modelItem => item.Image)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreatedOn)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.ValidUntil)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Price)
+                @Html.DisplayFor(modelItem => item.CreatedOn)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IsActive)
+                €@Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @if (item.IsActive)
+                {
+                    <span class="voucher-status-dot-on"></span>
+                }
+                else
+                {
+                    <span class="voucher-status-dot-off"></span>
+                }
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Wijzig</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 @if (item.IsActive)
                 {
-                    <a asp-action="Delete" asp-route-id="@item.Id">Deactiveer</a>
+                    <a asp-action="ChangeActive" asp-route-id="@item.Id">Deactiveer</a>
                 }
                 else
                 {
-                    <a asp-action="Delete" asp-route-id="@item.Id">Activeer</a>
+                    <a asp-action="ChangeActive" asp-route-id="@item.Id">Activeer</a>
                 }
 
             </td>

@@ -1,14 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using FindeyVouchers.Domain;
 using FindeyVouchers.Domain.EfModels;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
-namespace FindeyVouchers.Cms.Controllers_
+namespace FindeyVouchers.Cms.Controllers
 {
     public class VoucherController : Controller
     {
@@ -130,35 +128,6 @@ namespace FindeyVouchers.Cms.Controllers_
             merchantVoucher.IsActive = !merchantVoucher.IsActive;
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Delete", new { id = id });
-        }
-
-        // GET: Voucher/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var merchantVoucher = await _context.MerchantVouchers
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (merchantVoucher == null)
-            {
-                return NotFound();
-            }
-
-            return View(merchantVoucher);
-        }
-
-        // POST: Voucher/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            var merchantVoucher = await _context.MerchantVouchers.FindAsync(id);
-            merchantVoucher.IsActive = false;
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

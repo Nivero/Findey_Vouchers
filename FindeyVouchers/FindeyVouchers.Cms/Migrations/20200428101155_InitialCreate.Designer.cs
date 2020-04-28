@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FindeyVouchers.Cms.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(IdentityDbContext))]
     [Migration("20200428101155_InitialCreate")]
     partial class InitialCreate
     {

@@ -10,29 +10,33 @@
 </head>
 <body>
 <div id="wrapper" class="toggled">
-@if (User.Identity.IsAuthenticated){
-
-    <!-- Sidebar -->
-    <div id="sidebar-wrapper">
-        <ul class="sidebar-nav">
-            <li class="sidebar-brand">
-                <a asp-area="" asp-controller="Home" asp-action="Index">
-                    Findley vouchers
-                </a>
-            </li>
-            <li>
-                <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-            </li>
-            <li>
-                <a href="#">Vouchers</a>
-            </li>
-            <li>
-                <a href="#">Account</a>
-            </li>
-        </ul>
-    </div>
-    <!-- /#sidebar-wrapper -->
-}
+    @if (User.Identity.IsAuthenticated)
+    {
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a asp-area="" asp-controller="Home" asp-action="Index">
+                        Findley vouchers
+                    </a>
+                </li>
+                <li>
+                    <a href="#">Vouchers</a>
+                </li>
+                <li>
+                    <a href="">Account</a>
+                </li>
+                <li>
+                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout"
+                          asp-route-returnUrl="@Url.Page("/", new {area = ""})"
+                          method="post">
+                        <button type="submit" class="nav-link btn text-white mt-5">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+    }
     <!-- Page Content -->
     <div id="page-content-wrapper">
         <div class="container-fluid">

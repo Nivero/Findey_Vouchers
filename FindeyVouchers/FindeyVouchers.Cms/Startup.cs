@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using FindeyVouchers.Cms.Data;
+using FindeyVouchers.Domain;
 using FindeyVouchers.Services;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
@@ -32,7 +33,7 @@ namespace FindeyVouchers.Cms
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -49,7 +50,7 @@ namespace FindeyVouchers.Cms
                 options.Password.RequiredUniqueChars = 1;
                 
                 // User settings.
-                options.User.RequireUniqueEmail = false;
+                options.User.RequireUniqueEmail = true;
             });
 
             services.ConfigureApplicationCookie(options =>
@@ -63,8 +64,8 @@ namespace FindeyVouchers.Cms
                 options.SlidingExpiration = true;
             });
             
-            services.AddTransient<IEmailSender, IdentityCoreEmailSender>();
-            services.Configure<Domain.SendGrid>(Configuration);
+            // services.AddTransient<IEmailSender, IdentityCoreEmailSender>();
+            // services.Configure<Domain.SendGrid>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using FindeyVouchers.Cms.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FindeyVouchers.Cms.Controllers
 {
@@ -18,6 +19,7 @@ namespace FindeyVouchers.Cms.Controllers
             _logger = logger;
         }
 
+        [Authorize]
         public IActionResult Index()
         {
             return View();

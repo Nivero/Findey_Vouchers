@@ -37,6 +37,5 @@ msbuild.wrn
 .vs/
 
 # Appsettings
-FindeyVouchers/FindeyVouchers.Cms/appsettings.Development.json
-FindeyVouchers/FindeyVouchers.Website/appsettings.Development.json
-FindeyVouchers/FindeyVouchers.Website/appsettings.Development.json
+**/appsettings.Development.json
+**/appsettings.Production.json

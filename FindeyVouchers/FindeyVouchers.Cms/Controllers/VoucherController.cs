@@ -1,13 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using FindeyVouchers.Domain;
 using FindeyVouchers.Domain.EfModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
-namespace FindeyVouchers.Cms.Controllers
+namespace FindeyVouchers.Cms.Controllers_
 {
     public class VoucherController : Controller
     {
@@ -19,14 +20,12 @@ namespace FindeyVouchers.Cms.Controllers
         }
 
         // GET: Voucher
-        [Authorize]
         public async Task<IActionResult> Index()
         {
             return View(await _context.MerchantVouchers.ToListAsync());
         }
 
         // GET: Voucher/Details/5
-        [Authorize]
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -45,7 +44,6 @@ namespace FindeyVouchers.Cms.Controllers
         }
 
         // GET: Voucher/Create
-        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -54,10 +52,10 @@ namespace FindeyVouchers.Cms.Controllers
         // POST: Voucher/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Image,CreatedOn,ValidUntil,Price")] MerchantVoucher merchantVoucher)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Image,IsActive,CreatedOn,ValidUntil,Price")]
+            MerchantVoucher merchantVoucher)
         {
             if (ModelState.IsValid)
             {
@@ -66,11 +64,11 @@ namespace FindeyVouchers.Cms.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(merchantVoucher);
         }
 
         // GET: Voucher/Edit/5
-        [Authorize]
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -83,16 +81,18 @@ namespace FindeyVouchers.Cms.Controllers
             {
                 return NotFound();
             }
+
             return View(merchantVoucher);
         }
 
         // POST: Voucher/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,Image,CreatedOn,ValidUntil,Price")] MerchantVoucher merchantVoucher)
+        public async Task<IActionResult> Edit(Guid id,
+            [Bind("Id,Name,Description,Image,IsActive,CreatedOn,ValidUntil,Price")]
+            MerchantVoucher merchantVoucher)
         {
             if (id != merchantVoucher.Id)
             {
@@ -117,13 +117,23 @@ namespace FindeyVouchers.Cms.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(merchantVoucher);
         }
 
+        public async Task<IActionResult> ChangeActive(Guid? id)
+        {
+            var merchantVoucher = await _context.MerchantVouchers.FindAsync(id);
+            merchantVoucher.IsActive = !merchantVoucher.IsActive;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Delete", new { id = id });
+        }
+
         // GET: Voucher/Delete/5
-        [Authorize]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -142,13 +152,12 @@ namespace FindeyVouchers.Cms.Controllers
         }
 
         // POST: Voucher/Delete/5
-        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var merchantVoucher = await _context.MerchantVouchers.FindAsync(id);
-            _context.MerchantVouchers.Remove(merchantVoucher);
+            merchantVoucher.IsActive = false;
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

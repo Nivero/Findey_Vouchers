@@ -26,12 +26,16 @@
                 <li>
                     <a href="">Account</a>
                 </li>
-                <li>
-                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout"
-                          asp-route-returnUrl="@Url.Page("/", new {area = ""})"
-                          method="post">
-                        <button type="submit" class="nav-link btn text-white mt-5">Logout</button>
-                    </form>
+                <li class="mt-5">
+                    <a>
+                        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout"
+                              asp-route-returnUrl="@Url.Page("/", new {area = ""})"
+                              method="post">
+
+                            <button type="submit" class="nav-link btn text-white">Logout</button>
+
+                        </form>
+                    </a>
                 </li>
             </ul>
         </div>

@@ -4,6 +4,11 @@ namespace FindeyVouchers.Domain.EfModels
 {
     public class MerchantVoucher
     {
+        public MerchantVoucher()
+        {
+            this.CreatedOn = DateTime.UtcNow;
+        }
+
         public Guid Id { get; set; }
         public ApplicationUser Merchant { get; set; }
         public string Name { get; set; }

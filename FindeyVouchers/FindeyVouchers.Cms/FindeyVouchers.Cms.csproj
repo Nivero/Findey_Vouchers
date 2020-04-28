@@ -42,4 +42,12 @@
       <Folder Include="Views\Home" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\Voucher\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Voucher\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Voucher\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Voucher\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Voucher\Index.cshtml" />
+    </ItemGroup>
+
 </Project>

@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using FindeyVouchers.Domain.EfModels;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace FindeyVouchers.Domain.EfModels
+namespace FindeyVouchers.Domain
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {

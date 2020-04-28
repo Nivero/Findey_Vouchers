@@ -1,4 +1,5 @@
-﻿@{
+﻿@model HomeViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -6,3 +7,5 @@
 <div class="col-lg home-color-header">
     One of three columns
 </div>
+
+<img src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(Model.QrCode))" />

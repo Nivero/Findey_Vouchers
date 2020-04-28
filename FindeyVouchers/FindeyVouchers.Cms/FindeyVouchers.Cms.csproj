@@ -21,4 +21,8 @@
         <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\FindeyVouchers.Services\FindeyVouchers.Services.csproj" />
+    </ItemGroup>
+
 </Project>

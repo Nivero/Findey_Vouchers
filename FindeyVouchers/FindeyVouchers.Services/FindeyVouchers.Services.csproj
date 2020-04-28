@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\FindeyVouchers.Domain\FindeyVouchers.Domain.csproj" />
+      <ProjectReference Include="..\FindeyVouchers.Interfaces\FindeyVouchers.Interfaces.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.2" />
+      <PackageReference Include="SendGrid" Version="9.14.0" />
+    </ItemGroup>
+
+</Project>

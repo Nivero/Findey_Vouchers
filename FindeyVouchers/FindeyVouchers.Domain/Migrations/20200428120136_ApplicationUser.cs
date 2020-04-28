@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace FindeyVouchers.Cms.Migrations
+namespace FindeyVouchers.Domain.Migrations
 {
     public partial class ApplicationUser : Migration
     {

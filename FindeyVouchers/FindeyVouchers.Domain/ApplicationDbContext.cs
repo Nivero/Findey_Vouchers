@@ -9,6 +9,7 @@ namespace FindeyVouchers.Domain.EfModels
             : base(options)
         {
         }
-        
+
+        public DbSet<MerchantVoucher> MerchantVouchers { get; set; }
     }
 }

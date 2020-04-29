@@ -8,14 +8,14 @@ namespace FindeyVouchers.Cms.Controllers
 {
     public class StripeController : Controller
     {
-        private readonly StripeClient _client;
+        private readonly StripeClient client;
 
         public StripeController(
         )
         {
             // Set your secret key: remember to switch to your live secret key in production
             // See your keys here: https://dashboard.stripe.com/account/apikeys
-            this._client = new StripeClient("sk_test_iZnEwjRXBzBdmTUdjLWDV8Xn00zsgY41iV");
+            this.client = new StripeClient("sk_test_iZnEwjRXBzBdmTUdjLWDV8Xn00zsgY41iV");
         }
 
         [HttpGet("/connect/oauth")]
@@ -24,7 +24,7 @@ namespace FindeyVouchers.Cms.Controllers
             [FromQuery] string code
         )
         {
-            var service = new OAuthTokenService(_client);
+            var service = new OAuthTokenService(client);
 
             // Assert the state matches the state you provided in the OAuth link (optional).
             if (!StateMatches(state))

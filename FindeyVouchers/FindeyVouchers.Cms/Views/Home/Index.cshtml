@@ -1,17 +1,14 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Welkom";
 }
-<link rel="stylesheet" href="~/css/stripe.css"/>
+@model HomeViewModel
 
 <div class="text-center">
     <h1 class="display-4">Welkom</h1>
     <p>Ik zie dat het je eerste keer is op dit platform</p>
     <p>Wij hebben daarom wat gegevens van jou nodig voordat jij producten kan gaan aanbieden!</p>
     <p>Klik op de button hieronder om jouw gegevens in te voeren.</p>
-</div>
-
-<div class="sr-root">
     <div class="sr-main">
-        <a href="https://connect.stripe.com/express/oauth/authorize?client_id=ca_HBZIz0WiJks9tIkVc2Lota62Nzc9hDNO&state={STATE_VALUE}&suggested_capabilities[]=transfers&stripe_user[email]=rasjaad@nivero.io">Start onboarding</a>
+        <a href="https://connect.stripe.com/express/oauth/authorize?client_id=@Model.ClientId&=@Model.StateValue&suggested_capabilities[]=transfers&stripe_user[email]=@Model.Email">Start onboarding</a>
     </div>
 </div>

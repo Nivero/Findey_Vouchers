@@ -11,6 +11,7 @@ using FindeyVouchers.Domain.EfModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace FindeyVouchers.Cms.Controllers
 {
@@ -19,21 +20,31 @@ namespace FindeyVouchers.Cms.Controllers
         
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
+        private readonly IConfiguration _configuration;
+        private readonly IVoucherService _voucherService;
 
-        public HomeController(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
+        public HomeController(UserManager<ApplicationUser> userManager, ApplicationDbContext context, IConfiguration configuration)
         {
             _userManager = userManager;
             _context = context;
+            _configuration = configuration;
         }
 
         [Authorize]
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
-            if (!String.IsNullOrWhiteSpace(user.CompanyName) && !String.IsNullOrWhiteSpace(user.IbanNumber))
+            var model = new HomeViewModel
             {
-                return RedirectToAction("Index", "Voucher");
+                Email = user.Email,
+                ClientId = _configuration.GetValue<string>("StripeClientId"),
+                StateValue = 
             }
+            
+            // if (!String.IsNullOrWhiteSpace(user.CompanyName) && !String.IsNullOrWhiteSpace(user.IbanNumber))
+            // {
+            //     return RedirectToAction("Index", "Voucher");
+            // }
             return View();
         }
 

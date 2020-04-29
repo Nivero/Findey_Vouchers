@@ -70,7 +70,7 @@ namespace FindeyVouchers.Cms.Controllers
                 merchantVoucher.Id = Guid.NewGuid();
                 merchantVoucher.Merchant = await _userManager.GetUserAsync(User);
                 _context.Add(merchantVoucher);
-                ;
+                
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

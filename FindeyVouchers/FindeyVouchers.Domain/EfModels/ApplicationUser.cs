@@ -23,6 +23,7 @@ namespace FindeyVouchers.Domain.EfModels
 
         [Display(Name = "Stad")] public string City { get; set; }
         [Display(Name = "Land")] public string Country { get; set; }
+        [Display(Name = "Bedrijfsnaam")] public string CompanyName { get; set; }
         [Display(Name = "Rechtsvorm bedrijf")] public BusinessType BusinessType { get; set; }
         [DataType(DataType.PhoneNumber)] public override string PhoneNumber { get; set; }
     }

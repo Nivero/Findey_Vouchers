@@ -2,7 +2,7 @@
 
 namespace FindeyVouchers.Domain.Migrations
 {
-    public partial class AddCustomUser : Migration
+    public partial class AddCompanyName : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

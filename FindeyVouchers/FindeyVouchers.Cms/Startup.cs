@@ -1,8 +1,11 @@
-using System;
+using System;using FindeyVouchers.Cms.Controllers;
 using FindeyVouchers.Domain;
 using FindeyVouchers.Domain.EfModels;
+using FindeyVouchers.Interfaces;
+using FindeyVouchers.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -32,6 +35,16 @@ namespace FindeyVouchers.Cms
             services.AddControllersWithViews();
             services.AddRazorPages();
             
+            // Cookies
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential 
+                // cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                // requires using Microsoft.AspNetCore.Http;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+            
             // Configure identity
             services.Configure<IdentityOptions>(options =>
             {
@@ -58,6 +71,7 @@ namespace FindeyVouchers.Cms
                 options.SlidingExpiration = true;
             });
             
+            services.AddTransient<IVoucherService, VoucherService>();
             // services.AddTransient<IEmailSender, IdentityCoreEmailSender>();
             // services.Configure<Domain.SendGrid>(Configuration);
         }
@@ -79,11 +93,13 @@ namespace FindeyVouchers.Cms
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseCookiePolicy();
+            
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
+            
 
             app.UseEndpoints(endpoints =>
             {

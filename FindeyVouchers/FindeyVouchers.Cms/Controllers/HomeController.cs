@@ -89,14 +89,5 @@ namespace FindeyVouchers.Cms.Controllers
             Response.Cookies.Append(key, value, option);
         }
 
-        private string HashString(string secret)
-        {
-            return Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: secret,
-                salt: new byte[42],
-                prf: KeyDerivationPrf.HMACSHA1,
-                iterationCount: 10000,
-                numBytesRequested: 256 / 8));
-        }
     }
 }

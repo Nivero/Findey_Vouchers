@@ -23,7 +23,8 @@ namespace FindeyVouchers.Services
         public async Task<Response> Execute(string apiKey, string subject, string message, string email)
         {
             var client = new SendGridClient(apiKey);
-            var from = new EmailAddress("noreply@finde.co", Options.SendGridUser);
+            //TODO: put the email in appsettings
+            var from = new EmailAddress("noreply@findey.co", Options.SendGridUser);
             var to = new EmailAddress(email);
 
             var msg = MailHelper.CreateSingleEmail(from, to, subject, message, message);

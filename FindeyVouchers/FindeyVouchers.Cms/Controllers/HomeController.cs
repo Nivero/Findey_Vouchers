@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -18,6 +19,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace FindeyVouchers.Cms.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -34,7 +36,6 @@ namespace FindeyVouchers.Cms.Controllers
             _voucherService = voucherService;
         }
 
-        [Authorize]
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -62,14 +63,80 @@ namespace FindeyVouchers.Cms.Controllers
             var model = new HomeViewModel
             {
                 Email = user.Email.ToLower(),
-                ClientId = _configuration.GetValue<string>("StripeClientId"),
-                StateValue = secret,
-                OnboardingComplete = !String.IsNullOrWhiteSpace(user.StripeAccountId)
+                AccountComplete = !string.IsNullOrWhiteSpace(user.CompanyName),
+                StripeComplete = !String.IsNullOrWhiteSpace(user.StripeAccountId),
+                StripeUrl = GenerateStripeUrl(user, secret)
             };
+            
 
             return View(model);
         }
 
+        public async Task<IActionResult> OnBoarding()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var applicationUser = await _context.Users.FindAsync(user.Id);
+            if (applicationUser == null)
+            {
+                return NotFound();
+            }
+
+            return View(applicationUser);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> OnBoarding(string id,
+            [Bind(
+                "StripeAccountId,FirstName,LastName,DateOfBirth,Address,ZipCode,City,Country,CompanyName,BusinessType,PhoneNumber,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")]
+            ApplicationUser applicationUser)
+        {
+            if (id != applicationUser.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var user = await _userManager.GetUserAsync(User);
+                    user.FirstName = applicationUser.FirstName;
+                    user.LastName = applicationUser.LastName;
+                    user.DateOfBirth = applicationUser.DateOfBirth;
+                    user.Address = applicationUser.Address;
+                    user.ZipCode = applicationUser.ZipCode;
+                    user.City = applicationUser.City;
+                    user.CompanyName = applicationUser.CompanyName;
+                    user.BusinessType = applicationUser.BusinessType;
+                    user.PhoneNumber = applicationUser.PhoneNumber;
+                    user.Email = applicationUser.Email;
+                    user.NormalizedEmail = applicationUser.Email.ToUpper();
+
+                    await _userManager.UpdateAsync(user);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!_context.Users.Any(e => e.Id == id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(applicationUser);
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -89,5 +156,37 @@ namespace FindeyVouchers.Cms.Controllers
             Response.Cookies.Append(key, value, option);
         }
 
+        private string GenerateStripeUrl(ApplicationUser user, string secret)
+        {
+            string businessType = "";
+            if (user.BusinessType == BusinessType.Corporation)
+            {
+                businessType = "company";
+            }
+            else
+            {
+                businessType = "individual";
+            }
+            StringBuilder stripeUrl = new StringBuilder("https://connect.stripe.com/express/oauth/authorize");
+            stripeUrl.Append($"?client_id={_configuration.GetValue<string>("StripeClientId")}");
+            stripeUrl.Append($"&state={secret}");
+            stripeUrl.Append($"&suggested_capabilities[]=transfers");
+            stripeUrl.Append($"&suggested_capabilities[]=transfers");
+            stripeUrl.Append($"&stripe_user[email]={user.Email}");
+            stripeUrl.Append($"&stripe_user[country]={user.Country}");
+            stripeUrl.Append($"&stripe_user[phone_number]={user.PhoneNumber.Substring(1)}");
+            stripeUrl.Append($"&stripe_user[business_name]={user.CompanyName}");
+            stripeUrl.Append($"&stripe_user[business_type]={businessType}");
+            stripeUrl.Append($"&stripe_user[first_name]={user.FirstName}");
+            stripeUrl.Append($"&stripe_user[last_name]={user.LastName}");
+            stripeUrl.Append($"&stripe_user[dob_day]={user.DateOfBirth.Day}");
+            stripeUrl.Append($"&stripe_user[dob_month]={user.DateOfBirth.Month}");
+            stripeUrl.Append($"&stripe_user[dob_year]={user.DateOfBirth.Year}");
+            stripeUrl.Append($"&stripe_user[street_address]={user.Address}");
+            stripeUrl.Append($"&stripe_user[city]={user.City}");
+            stripeUrl.Append($"&stripe_user[zip]={user.ZipCode}");
+            stripeUrl.Append($"&stripe_user[currency]=EUR");
+            return stripeUrl.ToString();
+        }
     }
 }

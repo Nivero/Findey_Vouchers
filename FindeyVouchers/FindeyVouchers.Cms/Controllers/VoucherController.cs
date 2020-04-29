@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FindeyVouchers.Cms.Controllers
 {
+    [Authorize]
     public class VoucherController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,7 +23,7 @@ namespace FindeyVouchers.Cms.Controllers
         }
 
         // GET: Voucher
-        [Authorize]
+
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -31,7 +32,7 @@ namespace FindeyVouchers.Cms.Controllers
         }
 
         // GET: Voucher/Details/5
-        [Authorize]
+
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -50,7 +51,7 @@ namespace FindeyVouchers.Cms.Controllers
         }
 
         // GET: Voucher/Create
-        [Authorize]
+
         public IActionResult Create()
         {
             return View();
@@ -59,7 +60,7 @@ namespace FindeyVouchers.Cms.Controllers
         // POST: Voucher/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize]
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,Image,IsActive,CreatedOn,ValidUntil,Price")]
@@ -70,7 +71,7 @@ namespace FindeyVouchers.Cms.Controllers
                 merchantVoucher.Id = Guid.NewGuid();
                 merchantVoucher.Merchant = await _userManager.GetUserAsync(User);
                 _context.Add(merchantVoucher);
-                
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -78,8 +79,7 @@ namespace FindeyVouchers.Cms.Controllers
             return View(merchantVoucher);
         }
 
-        // GET: Voucher/Edit/5
-        [Authorize]
+
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -99,7 +99,7 @@ namespace FindeyVouchers.Cms.Controllers
         // POST: Voucher/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize]
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id,
@@ -136,7 +136,7 @@ namespace FindeyVouchers.Cms.Controllers
             return View(merchantVoucher);
         }
 
-        [Authorize]
+
         public async Task<IActionResult> ChangeActive(Guid? id)
         {
             var merchantVoucher = await _context.MerchantVouchers.FindAsync(id);
@@ -146,7 +146,7 @@ namespace FindeyVouchers.Cms.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize]
+
         private bool MerchantVoucherExists(Guid id)
         {
             return _context.MerchantVouchers.Any(e => e.Id == id);

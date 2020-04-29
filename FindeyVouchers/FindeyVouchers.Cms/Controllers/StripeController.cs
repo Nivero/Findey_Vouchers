@@ -87,9 +87,9 @@ namespace FindeyVouchers.Cms.Controllers
             // Load the same state value that you randomly generated for your OAuth link.
             var user = await _userManager.GetUserAsync(User);
 
-            var savedState = _context.StripeSecret.FirstOrDefault(x => x.Email.Equals(user.Email))?.Secret;
-
-            return savedState == stateParameter;
+            var savedState = _context.StripeSecret.FirstOrDefault(x => x.Email.Equals(user.Email));
+            
+            return savedState != null && savedState.Secret == stateParameter;
         }
 
         private async Task SaveAccountId(string id)

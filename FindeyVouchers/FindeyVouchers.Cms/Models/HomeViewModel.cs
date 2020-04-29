@@ -2,9 +2,9 @@
 {
     public class HomeViewModel
     {
-        public string StateValue { get; set; }
         public string Email { get; set; }
-        public string ClientId { get; set; }
-        public bool OnboardingComplete { get; set; }
+        public bool AccountComplete { get; set; }
+        public bool StripeComplete { get; set; }
+        public string StripeUrl { get; set; }
     }
 }

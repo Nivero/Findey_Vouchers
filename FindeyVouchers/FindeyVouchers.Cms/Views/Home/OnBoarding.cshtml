@@ -1,11 +1,14 @@
-@using FindeyVouchers.Domain.EfModels
+﻿@using FindeyVouchers.Domain.EfModels
 @model FindeyVouchers.Domain.EfModels.ApplicationUser
 
 <h4>Uw gegevens</h4>
+<p class="font-weight-bold text-danger">
+Bij het verzenden van het formulier bevestigd u dat deze gegevens naar waarheid zijn ingevuld.<br/>
+Deze gegevens zijn nodig voor het ontvangen van betalingen en het aanbieden van vouchers.</p>
 <hr/>
 <div class="row">
     <div class="col-md-4 align-items-center justify-content-center">
-        <form asp-action="Index">
+        <form asp-action="OnBoarding">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
@@ -59,7 +62,7 @@
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary"/>
+                <input type="submit" value="Verzend" class="btn btn-primary"/>
             </div>
         </form>
     </div>

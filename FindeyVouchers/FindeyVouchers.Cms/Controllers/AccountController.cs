@@ -2,12 +2,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using FindeyVouchers.Domain;
 using FindeyVouchers.Domain.EfModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace FindeyVouchers.Cms.Controllers_
+namespace FindeyVouchers.Cms.Controllers
 {
+    [Authorize]
     public class AccountController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -44,7 +46,7 @@ namespace FindeyVouchers.Cms.Controllers_
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(string id,
             [Bind(
-                "StripeAccountId,FirstName,LastName,DateOfBirth,Address,ZipCode,City,Country,BusinessType,PhoneNumber,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")]
+                "StripeAccountId,FirstName,LastName,DateOfBirth,Address,ZipCode,City,Country,CompanyName,BusinessType,PhoneNumber,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")]
             ApplicationUser applicationUser)
         {
             if (id != applicationUser.Id)
@@ -67,6 +69,7 @@ namespace FindeyVouchers.Cms.Controllers_
                     user.PhoneNumber = applicationUser.PhoneNumber;
                     user.Email = applicationUser.Email;
                     user.NormalizedEmail = applicationUser.Email.ToUpper();
+                    user.CompanyName = applicationUser.CompanyName;
 
                     await _userManager.UpdateAsync(user);
                 }

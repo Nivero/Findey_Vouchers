@@ -10,7 +10,7 @@ namespace FindeyVouchers.Domain
             : base(options)
         {
         }
-
         public DbSet<MerchantVoucher> MerchantVouchers { get; set; }
+        public DbSet<StripeSecret> StripeSecret { get; set; }
     }
 }

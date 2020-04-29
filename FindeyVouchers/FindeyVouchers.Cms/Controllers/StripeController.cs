@@ -1,6 +1,12 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using FindeyVouchers.Domain;
+using FindeyVouchers.Domain.EfModels;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Stripe;
 
@@ -8,14 +14,17 @@ namespace FindeyVouchers.Cms.Controllers
 {
     public class StripeController : Controller
     {
-        private readonly StripeClient client;
+        private readonly StripeClient _client;
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public StripeController(
-        )
+        public StripeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
+            _context = context;
+            _userManager = userManager;
             // Set your secret key: remember to switch to your live secret key in production
             // See your keys here: https://dashboard.stripe.com/account/apikeys
-            this.client = new StripeClient("sk_test_iZnEwjRXBzBdmTUdjLWDV8Xn00zsgY41iV");
+            this._client = new StripeClient("sk_test_iZnEwjRXBzBdmTUdjLWDV8Xn00zsgY41iV");
         }
 
         [HttpGet("/connect/oauth")]
@@ -24,10 +33,10 @@ namespace FindeyVouchers.Cms.Controllers
             [FromQuery] string code
         )
         {
-            var service = new OAuthTokenService(client);
+            var service = new OAuthTokenService(_client);
 
             // Assert the state matches the state you provided in the OAuth link (optional).
-            if (!StateMatches(state))
+            if (!StateMatches(state).Result)
             {
                 return StatusCode(
                     StatusCodes.Status403Forbidden,
@@ -70,21 +79,41 @@ namespace FindeyVouchers.Cms.Controllers
             SaveAccountId(connectedAccountId);
 
             // Render some HTML or redirect to a different page.
-            return new OkObjectResult(Json(new {Success = true}));
+            return RedirectToAction("Index", "Home");
         }
 
-        private bool StateMatches(string stateParameter)
+        private async Task<bool> StateMatches(string stateParameter)
         {
             // Load the same state value that you randomly generated for your OAuth link.
-            var savedState = "{{ STATE }}";
+            var user = await _userManager.GetUserAsync(User);
+
+            var savedState = _context.StripeSecret.FirstOrDefault(x => x.Email.Equals(user.Email))?.Secret;
 
             return savedState == stateParameter;
         }
 
-        private void SaveAccountId(string id)
+        private async Task SaveAccountId(string id)
         {
-            // Save the connected account ID from the response to your database.
-            Log.Information($"Connected account ID: {id}");
+            try
+            {
+                var user = await _userManager.GetUserAsync(User);
+                var appUser = _context.Users.FirstOrDefault(x => x.Email.Equals(user.Email));
+                if (appUser != null)
+                {
+                    appUser.StripeAccountId = id;
+                }
+                else
+                {
+                    Log.Error("Error retrieving app user: {0}", user.Id);
+                }
+
+                await _context.SaveChangesAsync();
+                Log.Information($"Connected stripe account ID: {id}");
+            }
+            catch (Exception e)
+            {
+                Log.Error("Error storing stripe account Id: {0}", e);
+            }
         }
     }
 }

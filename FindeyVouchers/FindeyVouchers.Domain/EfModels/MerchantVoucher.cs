@@ -8,6 +8,7 @@ namespace FindeyVouchers.Domain.EfModels
         public MerchantVoucher()
         {
             this.CreatedOn = DateTime.UtcNow;
+            this.ValidUntil = DateTime.Now.AddYears(1);
             this.IsActive = true;
         }
 

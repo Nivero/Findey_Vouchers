@@ -1,5 +1,5 @@
 @model FindeyVouchers.Domain.EfModels.MerchantVoucher
-<h4>MerchantVoucher</h4>
+<h4>Voucher</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -20,11 +20,11 @@
                 <input asp-for="Image" class="form-control" />
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ValidUntil" class="control-label"></label>
-                <input asp-for="ValidUntil" class="form-control" />
-                <span asp-validation-for="ValidUntil" class="text-danger"></span>
-            </div>
+            @* <div class="form-group"> *@
+            @*     <label asp-for="ValidUntil" class="control-label"></label> *@
+            @*     <input asp-for="ValidUntil" class="form-control" disabled/> *@
+            @*     <span asp-validation-for="ValidUntil" class="text-danger"></span> *@
+            @* </div> *@
             <div class="form-group">
                 <label asp-for="Price" class="control-label"></label>
                 <input asp-for="Price" class="form-control" />

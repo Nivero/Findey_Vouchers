@@ -14,13 +14,13 @@ using Microsoft.EntityFrameworkCore;
 namespace FindeyVouchers.Cms.Controllers
 {
     [Authorize]
-    public class VoucherController : Controller
+    public class MerchantVoucherController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IAzureStorageService _azureStorageService;
 
-        public VoucherController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
+        public MerchantVoucherController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
             IAzureStorageService azureStorageService)
         {
             _context = context;
@@ -28,15 +28,14 @@ namespace FindeyVouchers.Cms.Controllers
             _azureStorageService = azureStorageService;
         }
 
-        // GET: Voucher
-
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string query)
         {
             var user = await _userManager.GetUserAsync(User);
             if (string.IsNullOrWhiteSpace(user.CompanyName) || string.IsNullOrWhiteSpace(user.StripeAccountId))
             {
                 return RedirectToAction("Index", "Home");
             }
+            
 
             var vouchers = await _context.MerchantVouchers.Where(x => x.Merchant == user).ToListAsync();
             return View(vouchers);

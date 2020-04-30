@@ -1,0 +1,55 @@
+@model IEnumerable<FindeyVouchers.Domain.EfModels.CustomerVoucher>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PurchasedOn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Code)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmailSent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ValidUntil)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PurchasedOn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Code)
+            </td>
+            <td>
+                @if (item.EmailSent)
+                {
+                    <span class="voucher-status-dot-on"></span>
+                }
+                else
+                {
+                    <span class="voucher-status-dot-off"></span>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ValidUntil)
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+

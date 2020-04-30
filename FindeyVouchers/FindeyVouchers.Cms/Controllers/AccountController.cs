@@ -29,6 +29,10 @@ namespace FindeyVouchers.Cms.Controllers
             {
                 return NotFound();
             }
+            if (string.IsNullOrWhiteSpace(user.CompanyName) || string.IsNullOrWhiteSpace(user.StripeAccountId))
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
             var applicationUser = await _context.Users.FindAsync(user.Id);
             if (applicationUser == null)

@@ -116,7 +116,7 @@ namespace FindeyVouchers.Cms.Controllers
                     user.ZipCode = applicationUser.ZipCode;
                     user.City = applicationUser.City;
                     user.CompanyName = applicationUser.CompanyName;
-                    user.NormalizedCompanyName = applicationUser.CompanyName.Trim();
+                    user.NormalizedCompanyName = applicationUser.CompanyName.Trim().ToLower();
                     user.BusinessType = applicationUser.BusinessType;
                     user.PhoneNumber = applicationUser.PhoneNumber;
                     user.Email = applicationUser.Email;

@@ -1,4 +1,6 @@
 ﻿using System.Drawing;
+using System.Linq;
+using FindeyVouchers.Domain.EfModels;
 
 namespace FindeyVouchers.Interfaces
 {
@@ -6,5 +8,6 @@ namespace FindeyVouchers.Interfaces
     {
         string GenerateVoucherCode(int length);
         Bitmap GenerateQrCodeFromString(string text);
+        IQueryable<MerchantVoucher> RetrieveMerchantVouchers(string companyName);
     }
 }

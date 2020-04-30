@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Text;
+using FindeyVouchers.Domain;
+using FindeyVouchers.Domain.EfModels;
 using FindeyVouchers.Interfaces;
 using QRCoder;
 
@@ -8,14 +12,23 @@ namespace FindeyVouchers.Services
 {
     public class VoucherService : IVoucherService
     {
+        private readonly ApplicationDbContext _context;
+
+        public VoucherService(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         public string GenerateVoucherCode(int length)
         {
             Random random = new Random();
             string characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
             StringBuilder result = new StringBuilder(length);
-            for (int i = 0; i < length; i++) {
+            for (int i = 0; i < length; i++)
+            {
                 result.Append(characters[random.Next(characters.Length)]);
             }
+
             return result.ToString();
         }
 
@@ -26,6 +39,11 @@ namespace FindeyVouchers.Services
             QRCode qrCode = new QRCode(qrCodeData);
             Bitmap qrCodeImage = qrCode.GetGraphic(20);
             return qrCodeImage;
+        }
+
+        public IQueryable<MerchantVoucher> RetrieveMerchantVouchers(string companyName)
+        {
+            return _context.MerchantVouchers.Where(x => x.Merchant.NormalizedCompanyName.Equals(companyName));
         }
     }
 }

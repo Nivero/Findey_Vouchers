@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace FindeyVouchers.Domain.EfModels
 {
@@ -6,11 +7,12 @@ namespace FindeyVouchers.Domain.EfModels
     {
         public Guid Id { get; set; }
         public Customer Customer { get; set; }
-        public DateTime PurchasedOn { get; set; }
-        public decimal Price { get; set; }
-        public string Code { get; set; }
-        public bool EmailSent { get; set; }
-        public DateTime PurchasedDate { get; set; }
-        public DateTime ValidUntil { get; set; }
+        [Display(Name = "Gekocht op")] public DateTime PurchasedOn { get; set; }
+        [Display(Name = "Prijs")] public decimal Price { get; set; }
+        [Display(Name = "Voucher code")] public string Code { get; set; }
+
+        [Display(Name = "Voucher verstuurd")] public bool EmailSent { get; set; }
+
+        [Display(Name = "Geldig tot")] public DateTime ValidUntil { get; set; }
     }
 }

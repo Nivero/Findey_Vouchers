@@ -33,7 +33,6 @@ namespace FindeyVouchers.Domain.Migrations
                     Price = table.Column<decimal>(nullable: false),
                     Code = table.Column<string>(nullable: true),
                     EmailSent = table.Column<bool>(nullable: false),
-                    PurchasedDate = table.Column<DateTime>(nullable: false),
                     ValidUntil = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>

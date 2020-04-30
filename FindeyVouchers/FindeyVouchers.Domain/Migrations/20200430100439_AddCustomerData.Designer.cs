@@ -163,9 +163,6 @@ namespace FindeyVouchers.Domain.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("PurchasedDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("PurchasedOn")
                         .HasColumnType("datetime2");
 

@@ -55,23 +55,25 @@ namespace FindeyVouchers.Services
             }
         }
 
-        public async void DeleteBlobData(string fileUrl)
+        public async void DeleteBlobData(string fileName)
         {
-            Uri uriObj = new Uri(fileUrl);
-            var blobName = Path.GetFileName(uriObj.LocalPath);
+            try
+            {
+                var cloudStorageAccount = CloudStorageAccount.Parse(_accessKey);
+                var cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
+                var strContainerName = _configuration.GetValue<string>("VoucherImageContainerName");
+                var cloudBlobContainer = cloudBlobClient.GetContainerReference(strContainerName);
 
-            var cloudStorageAccount = CloudStorageAccount.Parse(_accessKey);
-            var cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
-            var strContainerName = _configuration.GetValue<string>("VoucherImageContainerName");
-            var cloudBlobContainer = cloudBlobClient.GetContainerReference(strContainerName);
+                // get block blob refarence    
+                var blockBlob = cloudBlobContainer.GetBlockBlobReference(fileName);
 
-            var pathPrefix = DateTime.Now.ToUniversalTime().ToString("yyyy-MM-dd") + "/";
-            var blobDirectory = cloudBlobContainer.GetDirectoryReference(pathPrefix);
-            // get block blob refarence    
-            var blockBlob = blobDirectory.GetBlockBlobReference(blobName);
-
-            // delete blob from container        
-            await blockBlob.DeleteAsync();
+                // delete blob from container        
+                await blockBlob.DeleteAsync();
+            }
+            catch (Exception ex)
+            {
+                Log.Error("An error occured uploading file {0}", ex);
+            }
         }
 
         private string GenerateFileName(string fileName)

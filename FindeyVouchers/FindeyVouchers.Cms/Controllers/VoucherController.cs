@@ -1,9 +1,12 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using FindeyVouchers.Domain;
 using FindeyVouchers.Domain.EfModels;
+using FindeyVouchers.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +18,14 @@ namespace FindeyVouchers.Cms.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IAzureStorageService _azureStorageService;
 
-        public VoucherController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public VoucherController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
+            IAzureStorageService azureStorageService)
         {
             _context = context;
             _userManager = userManager;
+            _azureStorageService = azureStorageService;
         }
 
         // GET: Voucher
@@ -31,6 +37,7 @@ namespace FindeyVouchers.Cms.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
+
             var vouchers = await _context.MerchantVouchers.Where(x => x.Merchant == user).ToListAsync();
             return View(vouchers);
         }
@@ -67,13 +74,16 @@ namespace FindeyVouchers.Cms.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Image,IsActive,CreatedOn,ValidUntil,Price")]
-            MerchantVoucher merchantVoucher)
+        public async Task<IActionResult> Create(MerchantVoucher merchantVoucher,
+            [FromForm(Name = "ImageFile")] IFormFile file)
         {
             if (ModelState.IsValid)
             {
                 merchantVoucher.Id = Guid.NewGuid();
                 merchantVoucher.Merchant = await _userManager.GetUserAsync(User);
+
+                // Upload file
+                merchantVoucher.Image = await UploadFile(file);
                 _context.Add(merchantVoucher);
 
                 await _context.SaveChangesAsync();
@@ -106,9 +116,8 @@ namespace FindeyVouchers.Cms.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id,
-            [Bind("Id,Name,Description,Image,IsActive,CreatedOn,ValidUntil,Price")]
-            MerchantVoucher merchantVoucher)
+        public async Task<IActionResult> Edit(Guid id, MerchantVoucher merchantVoucher,
+            [FromForm(Name = "ImageFile")] IFormFile file)
         {
             if (id != merchantVoucher.Id)
             {
@@ -119,6 +128,12 @@ namespace FindeyVouchers.Cms.Controllers
             {
                 try
                 {
+                    if (file != null)
+                    {
+                        _azureStorageService.DeleteBlobData(merchantVoucher.Image);
+                        merchantVoucher.Image = await UploadFile(file);
+                    }
+
                     _context.Update(merchantVoucher);
                     await _context.SaveChangesAsync();
                 }
@@ -154,6 +169,19 @@ namespace FindeyVouchers.Cms.Controllers
         private bool MerchantVoucherExists(Guid id)
         {
             return _context.MerchantVouchers.Any(e => e.Id == id);
+        }
+
+        private async Task<string> UploadFile(IFormFile file)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                byte[] bytes = memoryStream.ToArray();
+
+                var result =
+                    await _azureStorageService.UploadFileToBlobAsync(file.FileName, bytes, file.ContentType);
+                return result;
+            }
         }
     }
 }

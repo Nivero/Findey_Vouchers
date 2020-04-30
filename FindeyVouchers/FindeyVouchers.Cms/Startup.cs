@@ -72,6 +72,7 @@ namespace FindeyVouchers.Cms
             });
             
             services.AddTransient<IVoucherService, VoucherService>();
+            services.AddTransient<IAzureStorageService, AzureStorageService>();
             // services.AddTransient<IEmailSender, IdentityCoreEmailSender>();
             // services.Configure<Domain.SendGrid>(Configuration);
         }

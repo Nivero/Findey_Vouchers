@@ -8,7 +8,6 @@ namespace FindeyVouchers.Domain.EfModels
         public MerchantVoucher()
         {
             this.CreatedOn = DateTime.UtcNow;
-            this.ValidUntil = DateTime.Now.AddYears(1);
             this.IsActive = true;
         }
 
@@ -27,11 +26,6 @@ namespace FindeyVouchers.Domain.EfModels
         [Display(Name = "Aangemaakt op")]
         [DataType(DataType.Date)]
         public DateTime CreatedOn { get; set; }
-
-        [Display(Name = "Geldig tot")]
-        [DataType(DataType.Date)]
-        public DateTime ValidUntil { get; set; }
-
         [Display(Name = "Prijs")] public Decimal Price { get; set; }
     }
 }

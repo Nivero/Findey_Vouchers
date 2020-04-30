@@ -19,12 +19,19 @@ namespace FindeyVouchers.Domain.EfModels
 
         [Display(Name = "Postcode")]
         [RegularExpression(@"^\d{4}?[aA-zZ]{2}$", ErrorMessage = "Ongeldige postcode")]
+
         public string ZipCode { get; set; }
 
         [Display(Name = "Stad")] public string City { get; set; }
 
         [Display(Name = "Land")] public string Country { get; set; } = "NL";
-            [Display(Name = "Bedrijfsnaam")] public string CompanyName { get; set; }
+
+        [Display(Name = "Bedrijfsnaam")]
+        [RegularExpression(@"^[a-zA-Z0-9_]*$",
+            ErrorMessage = "Bedrijfsnaam mag alleen alfanumerieke tekens bevatten.")]
+        public string CompanyName { get; set; }
+
+        public string NormalizedCompanyName { get; set; }
         [Display(Name = "Rechtsvorm bedrijf")] public BusinessType BusinessType { get; set; }
 
         [DataType(DataType.PhoneNumber)]

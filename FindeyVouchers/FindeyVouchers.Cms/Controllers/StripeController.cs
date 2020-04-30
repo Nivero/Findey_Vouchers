@@ -28,7 +28,7 @@ namespace FindeyVouchers.Cms.Controllers
         }
 
         [HttpGet("/connect/oauth")]
-        public IActionResult HandleOAuthRedirect(
+        public async Task<IActionResult> HandleOAuthRedirect(
             [FromQuery] string state,
             [FromQuery] string code
         )
@@ -76,7 +76,7 @@ namespace FindeyVouchers.Cms.Controllers
             }
 
             var connectedAccountId = response.StripeUserId;
-            SaveAccountId(connectedAccountId);
+            await SaveAccountId(connectedAccountId);
 
             // Render some HTML or redirect to a different page.
             return RedirectToAction("Index", "Home");

@@ -64,10 +64,13 @@ namespace FindeyVouchers.Cms.Controllers
             {
                 Email = user.Email.ToLower(),
                 AccountComplete = !string.IsNullOrWhiteSpace(user.CompanyName),
-                StripeComplete = !String.IsNullOrWhiteSpace(user.StripeAccountId),
-                StripeUrl = GenerateStripeUrl(user, secret)
+                StripeComplete = !String.IsNullOrWhiteSpace(user.StripeAccountId)
             };
-            
+            if (!string.IsNullOrWhiteSpace(user.CompanyName))
+            {
+                model.StripeUrl = GenerateStripeUrl(user, secret);
+            }
+
 
             return View(model);
         }
@@ -113,6 +116,7 @@ namespace FindeyVouchers.Cms.Controllers
                     user.ZipCode = applicationUser.ZipCode;
                     user.City = applicationUser.City;
                     user.CompanyName = applicationUser.CompanyName;
+                    user.NormalizedCompanyName = applicationUser.CompanyName.Trim();
                     user.BusinessType = applicationUser.BusinessType;
                     user.PhoneNumber = applicationUser.PhoneNumber;
                     user.Email = applicationUser.Email;
@@ -167,6 +171,7 @@ namespace FindeyVouchers.Cms.Controllers
             {
                 businessType = "individual";
             }
+
             StringBuilder stripeUrl = new StringBuilder("https://connect.stripe.com/express/oauth/authorize");
             stripeUrl.Append($"?client_id={_configuration.GetValue<string>("StripeClientId")}");
             stripeUrl.Append($"&state={secret}");

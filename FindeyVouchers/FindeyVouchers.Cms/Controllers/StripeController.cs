@@ -101,6 +101,7 @@ namespace FindeyVouchers.Cms.Controllers
                 if (appUser != null)
                 {
                     appUser.StripeAccountId = id;
+                    appUser.PhoneNumberConfirmed = true;
                 }
                 else
                 {

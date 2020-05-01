@@ -35,13 +35,16 @@ namespace FindeyVouchers.Cms.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            
+
 
             var vouchers = await _context.MerchantVouchers.Where(x => x.Merchant == user).ToListAsync();
+            foreach (var item in vouchers)
+            {
+                item.AmountSold = _context.CustomerVouchers.Count(x => x.VoucherMerchant == item);
+            }
+
             return View(vouchers);
         }
-
-        // GET: Voucher/Details/5
 
         public async Task<IActionResult> Details(Guid? id)
         {
@@ -66,10 +69,6 @@ namespace FindeyVouchers.Cms.Controllers
         {
             return View();
         }
-
-        // POST: Voucher/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -108,10 +107,6 @@ namespace FindeyVouchers.Cms.Controllers
 
             return View(merchantVoucher);
         }
-
-        // POST: Voucher/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 
         [HttpPost]
         [ValidateAntiForgeryToken]

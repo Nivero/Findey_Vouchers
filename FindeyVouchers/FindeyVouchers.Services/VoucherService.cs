@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using FindeyVouchers.Domain;
 using FindeyVouchers.Domain.EfModels;
 using FindeyVouchers.Interfaces;
 using QRCoder;
+using Serilog;
 
 namespace FindeyVouchers.Services
 {
@@ -44,6 +46,27 @@ namespace FindeyVouchers.Services
         public IQueryable<MerchantVoucher> RetrieveMerchantVouchers(string companyName)
         {
             return _context.MerchantVouchers.Where(x => x.Merchant.NormalizedCompanyName.Equals(companyName));
+        }
+
+        public bool UpdatePrice(Guid id, decimal price)
+        {
+            try
+            {
+                var voucher = _context.CustomerVouchers.FirstOrDefault(x => x.Id == id);
+                if (voucher != null)
+                {
+                    voucher.Price = price;
+                    _context.SaveChanges();
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Error updating price in voucher: {id}, {e}");
+                return false;
+            }
         }
     }
 }

@@ -68,7 +68,7 @@ namespace FindeyVouchers.Cms.Controllers
                     user.PhoneNumber = applicationUser.PhoneNumber;
                     user.Email = applicationUser.Email;
                     user.NormalizedEmail = applicationUser.Email.ToUpper();
-                    user.CompanyName = applicationUser.CompanyName;
+                    
 
                     await _userManager.UpdateAsync(user);
                 }
@@ -86,7 +86,6 @@ namespace FindeyVouchers.Cms.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-
             return View(applicationUser);
         }
 

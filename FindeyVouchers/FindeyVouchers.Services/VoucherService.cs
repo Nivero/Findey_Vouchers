@@ -10,6 +10,7 @@ using FindeyVouchers.Domain;
 using FindeyVouchers.Domain.EfModels;
 using FindeyVouchers.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using QRCoder;
 using Serilog;
 
@@ -74,7 +75,7 @@ namespace FindeyVouchers.Services
         {
             try
             {
-                var voucher = _context.CustomerVouchers.FirstOrDefault(x => x.Id == id);
+                var voucher = _context.CustomerVouchers.Include(x => x.VoucherMerchant).FirstOrDefault(x => x.Id == id);
                 if (voucher != null)
                 {
                     voucher.IsUsed = true;

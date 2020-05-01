@@ -1,7 +1,6 @@
 @model CustomerVoucherViewModel
 <form asp-controller="CustomerVoucher" asp-action="Index" method="get">
     <p>
-
         Zoek op voucher code: <input type="text" asp-for="SearchQuery"/>
         <input type="submit" value="Filter"/>
     </p>
@@ -13,16 +12,19 @@
             @Html.DisplayNameFor(model => model.Vouchers.First().PurchasedOn)
         </th>
         <th>
-            @Html.DisplayNameFor(model =>  model.Vouchers.First().Price)
+            @Html.DisplayNameFor(model => model.Vouchers.First().Price)
         </th>
         <th>
-            @Html.DisplayNameFor(model =>  model.Vouchers.First().Code)
+            @Html.DisplayNameFor(model => model.Vouchers.First().Code)
         </th>
         <th>
-            @Html.DisplayNameFor(model =>  model.Vouchers.First().EmailSent)
+            @Html.DisplayNameFor(model => model.Vouchers.First().ValidUntil)
         </th>
         <th>
-            @Html.DisplayNameFor(model =>  model.Vouchers.First().ValidUntil)
+            @Html.DisplayNameFor(model => model.Vouchers.First().EmailSent)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Vouchers.First().IsUsed)
         </th>
         <th></th>
     </tr>
@@ -35,26 +37,36 @@
                 @Html.DisplayFor(modelItem => item.PurchasedOn)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Price)
+                €@Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Code)
             </td>
             <td>
-                @if (item.EmailSent)
-                {
-                    <span class="voucher-status-dot-on"></span>
-                }
-                else
-                {
-                    <span class="voucher-status-dot-off"></span>
-                }
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.ValidUntil)
             </td>
             <td>
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                @if (item.EmailSent)
+                {
+                    <span class="voucher-status-dot-on d-flex justify-content-center"></span>
+                }
+                else
+                {
+                    <span class="voucher-status-dot-warning d-flex justify-content-center"></span>
+                }
+            </td>
+            <td>
+                @if (!item.IsUsed)
+                {
+                    <span class="voucher-status-dot-on d-flex justify-content-center"></span>
+                }
+                else
+                {
+                    <span class="voucher-status-dot-off d-flex justify-content-center"></span>
+                }
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
             </td>
         </tr>
     }

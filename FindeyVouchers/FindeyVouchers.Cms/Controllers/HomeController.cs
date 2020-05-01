@@ -95,8 +95,6 @@ namespace FindeyVouchers.Cms.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> OnBoarding(string id,
-            [Bind(
-                "StripeAccountId,FirstName,LastName,DateOfBirth,Address,ZipCode,City,Country,CompanyName,BusinessType,PhoneNumber,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")]
             ApplicationUser applicationUser)
         {
             if (id != applicationUser.Id)

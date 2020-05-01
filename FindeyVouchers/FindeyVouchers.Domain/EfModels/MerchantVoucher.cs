@@ -13,6 +13,7 @@ namespace FindeyVouchers.Domain.EfModels
         {
             this.CreatedOn = DateTime.UtcNow;
             this.IsActive = true;
+            this.AmountSold = 0;
         }
 
         public Guid Id { get; set; }
@@ -37,7 +38,17 @@ namespace FindeyVouchers.Domain.EfModels
         [NotMapped]
         [AllowedExtensions(new string[] {".jpg", ".png", ".gif", ".jpeg"})]
         public IFormFile ImageFile { get; set; }
+
+        [NotMapped] [Display(Name = "Aantal verkocht")] public int AmountSold { get; set; }
+        [Display(Name = "Type voucher")] public VoucherType VoucherType { get; set; }
     }
+
+    public enum VoucherType
+    {
+        [Display(Name = "Waardebon")] Voucher,
+        [Display(Name = "Prepaid voucher")] PrepaidCard
+    }
+
 
     internal class AllowedExtensionsAttribute : ValidationAttribute
     {

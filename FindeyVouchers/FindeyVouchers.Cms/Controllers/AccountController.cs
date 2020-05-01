@@ -43,14 +43,9 @@ namespace FindeyVouchers.Cms.Controllers
             return View(applicationUser);
         }
 
-        // POST: Account/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(string id,
-            [Bind(
-                "StripeAccountId,FirstName,LastName,DateOfBirth,Address,ZipCode,City,Country,CompanyName,BusinessType,PhoneNumber,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")]
             ApplicationUser applicationUser)
         {
             if (id != applicationUser.Id)
@@ -73,7 +68,7 @@ namespace FindeyVouchers.Cms.Controllers
                     user.PhoneNumber = applicationUser.PhoneNumber;
                     user.Email = applicationUser.Email;
                     user.NormalizedEmail = applicationUser.Email.ToUpper();
-                    user.CompanyName = applicationUser.CompanyName;
+                    
 
                     await _userManager.UpdateAsync(user);
                 }
@@ -91,7 +86,6 @@ namespace FindeyVouchers.Cms.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-
             return View(applicationUser);
         }
 

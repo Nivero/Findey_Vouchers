@@ -94,7 +94,11 @@ namespace FindeyVouchers.Services
             voucher.Merchant = user;
 
             // Upload file
-            voucher.Image = await UploadFile(image);
+            if (image != null)
+            {
+                voucher.Image = await UploadFile(image);
+            }
+
             _context.Add(voucher);
 
             await _context.SaveChangesAsync();

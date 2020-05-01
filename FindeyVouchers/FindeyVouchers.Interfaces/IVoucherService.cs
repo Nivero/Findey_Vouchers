@@ -11,6 +11,7 @@ namespace FindeyVouchers.Interfaces
         Bitmap GenerateQrCodeFromString(string text);
         IQueryable<MerchantVoucher> RetrieveMerchantVouchers(string companyName);
 
-        bool UpdatePrice(Guid id, decimal price);
+        void UpdatePrice(Guid id, decimal price);
+        void InvalidateVoucher(Guid id);
     }
 }

@@ -48,7 +48,7 @@ namespace FindeyVouchers.Services
             return _context.MerchantVouchers.Where(x => x.Merchant.NormalizedCompanyName.Equals(companyName));
         }
 
-        public bool UpdatePrice(Guid id, decimal price)
+        public void UpdatePrice(Guid id, decimal price)
         {
             try
             {
@@ -57,15 +57,28 @@ namespace FindeyVouchers.Services
                 {
                     voucher.Price = price;
                     _context.SaveChanges();
-                    return true;
                 }
-
-                return false;
             }
             catch (Exception e)
             {
                 Log.Error($"Error updating price in voucher: {id}, {e}");
-                return false;
+            }
+        }
+
+        public void InvalidateVoucher(Guid id)
+        {
+            try
+            {
+                var voucher = _context.CustomerVouchers.FirstOrDefault(x => x.Id == id);
+                if (voucher != null)
+                {
+                    voucher.IsUsed = true;
+                    _context.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Error invalidating voucher with id: {id}, {e}");
             }
         }
     }

@@ -68,17 +68,15 @@ namespace FindeyVouchers.Cms.Controllers
 
         public async Task<IActionResult> Invalidate(Guid? id)
         {
-            var customerVoucher = await _context.CustomerVouchers.FirstOrDefaultAsync(m => m.Id == id);
-            if (customerVoucher != null)
+            if (id != null)
             {
                 try
                 {
-                    customerVoucher.IsUsed = true;
-                    await _context.SaveChangesAsync();
+                    _voucherService.InvalidateVoucher(id.Value);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Error invalidating voucher with code {0} error: {1}", customerVoucher.Code, e);
+                    Log.Error("Error invalidating voucher with id {0} error: {1}", id, e);
                 }
             }
 
@@ -97,6 +95,7 @@ namespace FindeyVouchers.Cms.Controllers
                     return RedirectToAction("Details", "CustomerVoucher", new {id = customerVoucher.Id});
                 }
             }
+
             var model = await _context.CustomerVouchers.Include(x => x.Customer)
                 .Include(x => x.VoucherMerchant)
                 .FirstOrDefaultAsync(m => m.Id == customerVoucher.Id);

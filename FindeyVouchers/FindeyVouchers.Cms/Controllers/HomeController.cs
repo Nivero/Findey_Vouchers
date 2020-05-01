@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 
 namespace FindeyVouchers.Cms.Controllers
@@ -102,6 +103,10 @@ namespace FindeyVouchers.Cms.Controllers
                 return NotFound();
             }
 
+            if (_context.Users.Any(x => x.CompanyName.Equals(applicationUser.CompanyName)))
+            {
+                ModelState.AddModelError(string.Empty, "Bedrijfsnaam is al in gebruik. Neem contact op met de beheerder.");
+            }
             if (ModelState.IsValid)
             {
                 try

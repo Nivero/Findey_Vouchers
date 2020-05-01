@@ -68,7 +68,6 @@ namespace FindeyVouchers.Cms.Controllers
 
         public async Task<IActionResult> Invalidate(Guid? id)
         {
-
             var customerVoucher = await _context.CustomerVouchers.FirstOrDefaultAsync(m => m.Id == id);
             if (customerVoucher != null)
             {
@@ -79,13 +78,29 @@ namespace FindeyVouchers.Cms.Controllers
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Error invalidating voucher with code {0}", customerVoucher.Code);
+                    Log.Error("Error invalidating voucher with code {0} error: {1}", customerVoucher.Code, e);
                 }
-
             }
 
             return RedirectToAction("Details", "CustomerVoucher", new {id = id});
+        }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RetractAmount(CustomerVoucher customerVoucher)
+        {
+            if (ModelState.IsValid)
+            {
+                if (customerVoucher != null)
+                {
+                    _voucherService.UpdatePrice(customerVoucher.Id, customerVoucher.Price);
+                    return RedirectToAction("Details", "CustomerVoucher", new {id = customerVoucher.Id});
+                }
+            }
+            var model = await _context.CustomerVouchers.Include(x => x.Customer)
+                .Include(x => x.VoucherMerchant)
+                .FirstOrDefaultAsync(m => m.Id == customerVoucher.Id);
+            return View("Details", model);
         }
 
         private bool CustomerVoucherExists(Guid id)

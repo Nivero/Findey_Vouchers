@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Stripe;
+using System.Text.Json;
 
 namespace FindeyVouchers.Website.Controllers
 {
@@ -11,8 +9,9 @@ namespace FindeyVouchers.Website.Controllers
     [Route("[controller]")]
     public class PaymentController : ControllerBase
     {
-        [HttpGet]
-        public IEnumerable<WeatherForecast> InitiatePayment()
+        [HttpPost]
+        [Route("intent")]
+        public IActionResult InitiatePaymentIntent([FromBody] object company)
         {
             // Set your secret key. Remember to switch to your live secret key in production!
             // See your keys here: https://dashboard.stripe.com/account/apikeys
@@ -23,17 +22,19 @@ namespace FindeyVouchers.Website.Controllers
             {
                 PaymentMethodTypes = new List<string>
                 {
-                    "card",
+                    "ideal", 
+                    "card"
                 },
-                Amount = 2000,
+                Amount = 1000,
                 Currency = "eur",
-                ApplicationFeeAmount = 123,
+                ApplicationFeeAmount = 1,
                 TransferData = new PaymentIntentTransferDataOptions
                 {
-                    Destination = "{{CONNECTED_STRIPE_ACCOUNT_ID}}",
+                    Destination = "acct_1Gdc8VBSzed9ODwd",
                 },
             };
-            service.Create(createOptions);
+            var intent = service.Create(createOptions);
+            return Ok(new {client_secret = intent.ClientSecret});
         }
     }
 }

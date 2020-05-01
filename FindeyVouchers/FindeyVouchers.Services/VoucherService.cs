@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using FindeyVouchers.Domain;
 using FindeyVouchers.Domain.EfModels;
 using FindeyVouchers.Interfaces;
+using Microsoft.AspNetCore.Http;
 using QRCoder;
 using Serilog;
 
@@ -14,11 +17,13 @@ namespace FindeyVouchers.Services
 {
     public class VoucherService : IVoucherService
     {
+        private readonly IAzureStorageService _azureStorageService;
         private readonly ApplicationDbContext _context;
 
-        public VoucherService(ApplicationDbContext context)
+        public VoucherService(ApplicationDbContext context, IAzureStorageService azureStorageService)
         {
             _context = context;
+            _azureStorageService = azureStorageService;
         }
 
         public string GenerateVoucherCode(int length)
@@ -65,7 +70,7 @@ namespace FindeyVouchers.Services
             }
         }
 
-        public void InvalidateVoucher(Guid id)
+        public void InvalidateCustomerVoucher(Guid id)
         {
             try
             {
@@ -80,6 +85,55 @@ namespace FindeyVouchers.Services
             {
                 Log.Error($"Error invalidating voucher with id: {id}, {e}");
             }
+        }
+
+        public async Task CreateMerchantVoucher(MerchantVoucher voucher, IFormFile image, ApplicationUser user)
+        {
+            voucher.Id = Guid.NewGuid();
+            voucher.Merchant = user;
+
+            // Upload file
+            voucher.Image = await UploadFile(image);
+            _context.Add(voucher);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateMerchantVoucher(MerchantVoucher voucher, IFormFile image)
+        {
+            try
+            {
+                if (image != null)
+                {
+                    _azureStorageService.DeleteBlobData(voucher.Image);
+                    voucher.Image = await UploadFile(image);
+                }
+
+                _context.Update(voucher);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Error updateing merchant voucher with id: {voucher.Id}, {e}");
+            }
+        }
+
+        public async Task DeactivateMerchantVoucher(Guid id)
+        {
+            var merchantVoucher = await _context.MerchantVouchers.FindAsync(id);
+            merchantVoucher.IsActive = !merchantVoucher.IsActive;
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task<string> UploadFile(IFormFile file)
+        {
+            await using var memoryStream = new MemoryStream();
+            await file.CopyToAsync(memoryStream);
+            var bytes = memoryStream.ToArray();
+
+            var result =
+                await _azureStorageService.UploadFileToBlobAsync(file.FileName, bytes, file.ContentType);
+            return result;
         }
     }
 }

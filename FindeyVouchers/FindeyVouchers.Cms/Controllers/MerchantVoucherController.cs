@@ -18,14 +18,14 @@ namespace FindeyVouchers.Cms.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IAzureStorageService _azureStorageService;
+        private readonly IVoucherService _voucherService;
 
         public MerchantVoucherController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
-            IAzureStorageService azureStorageService)
+            IVoucherService voucherService)
         {
             _context = context;
             _userManager = userManager;
-            _azureStorageService = azureStorageService;
+            _voucherService = voucherService;
         }
 
         public async Task<IActionResult> Index(string query)
@@ -63,8 +63,6 @@ namespace FindeyVouchers.Cms.Controllers
             return View(merchantVoucher);
         }
 
-        // GET: Voucher/Create
-
         public IActionResult Create()
         {
             return View();
@@ -77,20 +75,13 @@ namespace FindeyVouchers.Cms.Controllers
         {
             if (ModelState.IsValid)
             {
-                merchantVoucher.Id = Guid.NewGuid();
-                merchantVoucher.Merchant = await _userManager.GetUserAsync(User);
-
-                // Upload file
-                merchantVoucher.Image = await UploadFile(file);
-                _context.Add(merchantVoucher);
-
-                await _context.SaveChangesAsync();
+                var user = await _userManager.GetUserAsync(User);
+                await _voucherService.CreateMerchantVoucher(merchantVoucher, file, user);
                 return RedirectToAction(nameof(Index));
             }
 
             return View(merchantVoucher);
         }
-
 
         public async Task<IActionResult> Edit(Guid? id)
         {
@@ -120,28 +111,7 @@ namespace FindeyVouchers.Cms.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    if (file != null)
-                    {
-                        _azureStorageService.DeleteBlobData(merchantVoucher.Image);
-                        merchantVoucher.Image = await UploadFile(file);
-                    }
-
-                    _context.Update(merchantVoucher);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MerchantVoucherExists(merchantVoucher.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await _voucherService.UpdateMerchantVoucher(merchantVoucher, file);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -152,9 +122,7 @@ namespace FindeyVouchers.Cms.Controllers
 
         public async Task<IActionResult> ChangeActive(Guid? id)
         {
-            var merchantVoucher = await _context.MerchantVouchers.FindAsync(id);
-            merchantVoucher.IsActive = !merchantVoucher.IsActive;
-            await _context.SaveChangesAsync();
+            if (id != null) await _voucherService.DeactivateMerchantVoucher(id.Value);
 
             return RedirectToAction(nameof(Index));
         }
@@ -163,19 +131,6 @@ namespace FindeyVouchers.Cms.Controllers
         private bool MerchantVoucherExists(Guid id)
         {
             return _context.MerchantVouchers.Any(e => e.Id == id);
-        }
-
-        private async Task<string> UploadFile(IFormFile file)
-        {
-            using (var memoryStream = new MemoryStream())
-            {
-                await file.CopyToAsync(memoryStream);
-                byte[] bytes = memoryStream.ToArray();
-
-                var result =
-                    await _azureStorageService.UploadFileToBlobAsync(file.FileName, bytes, file.ContentType);
-                return result;
-            }
         }
     }
 }

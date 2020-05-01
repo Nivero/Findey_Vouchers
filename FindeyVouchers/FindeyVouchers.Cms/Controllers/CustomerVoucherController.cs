@@ -72,7 +72,7 @@ namespace FindeyVouchers.Cms.Controllers
             {
                 try
                 {
-                    _voucherService.InvalidateVoucher(id.Value);
+                    _voucherService.InvalidateCustomerVoucher(id.Value);
                 }
                 catch (Exception e)
                 {

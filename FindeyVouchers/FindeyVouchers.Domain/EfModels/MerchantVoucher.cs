@@ -14,6 +14,7 @@ namespace FindeyVouchers.Domain.EfModels
             this.CreatedOn = DateTime.UtcNow;
             this.IsActive = true;
             this.AmountSold = 0;
+            this.Image = "default-image.jpeg";
         }
 
         public Guid Id { get; set; }

@@ -31,6 +31,11 @@ namespace FindeyVouchers.Cms.Controllers
         public async Task<IActionResult> Index(string searchQuery)
         {
             var user = await _userManager.GetUserAsync(User);
+            if (string.IsNullOrWhiteSpace(user.CompanyName) || string.IsNullOrWhiteSpace(user.StripeAccountId))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             var customerVouchers = _context.CustomerVouchers.Where(x => x.VoucherMerchant.Merchant == user);
 
             if (!string.IsNullOrEmpty(searchQuery))

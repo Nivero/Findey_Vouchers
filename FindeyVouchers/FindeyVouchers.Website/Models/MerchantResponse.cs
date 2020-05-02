@@ -1,6 +1,11 @@
 ﻿namespace FindeyVouchers.Website.Models
 {
-    public class MerchantResponse
+    public class VoucherPageResponse
+    {
+        public Merchant Merchant { get; set; }
+    }
+
+    public class Merchant
     {
         public string Name { get; set; }
         public string Website { get; set; }

@@ -14,9 +14,8 @@ export default class VoucherPageHeader extends Component {
 
 
     render() {
-        console.log(this.props.merchant)
-        return (
-            <div className="d-flex justify-content-start background-color-default text-white">
+        if (this.props.merchant) {
+            return (<div className="d-flex justify-content-start background-color-default text-white">
                 <div className="mr-5 w-75 p-2 text-center">Company name</div>
                 <div className="d-flex justify-content-center flex-column border-left p-2 mt-2 mb-2">
                     <div className="d-block">
@@ -39,7 +38,30 @@ export default class VoucherPageHeader extends Component {
                     </div>
                 </div>
             </div>
-        );
+            );
+        }else{
+            return (<div className="d-flex justify-content-start background-color-default text-white">
+                <div className="mr-5 w-75 p-2 text-center">Company name</div>
+                <div className="d-flex justify-content-center flex-column border-left p-2 mt-2 mb-2">
+                    <div className="d-block">
+                        <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2"/>
+                    </div>
+                    <div className="d-block">
+                        <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2"/>
+                        <a href="" className="text-white">
+                        </a>
+                    </div>
+                    <div className="d-block">
+                        <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2"/>
+                    </div>
+                    <div className="d-block">
+                        <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2"/>
+                    </div>
+                </div>
+            </div>
+            );
+        }
+        
     }
 
 

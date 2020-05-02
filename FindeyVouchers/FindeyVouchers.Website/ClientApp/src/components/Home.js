@@ -17,7 +17,7 @@ export class Home extends Component {
         const requestOptions = {
             method: 'GET',
         };
-        fetch(`merchant/info/nivero`, requestOptions)
+        fetch(`merchant/nivero`, requestOptions)
             .then((response) => response.json())
             .then((response) => {
                 this.setState({
@@ -26,10 +26,9 @@ export class Home extends Component {
             });
     }
     render() {
-        
         return (
             <div className="d-flex flex-column justify-content-start">
-                <VoucherPageHeader merchant={this.state.response}/>
+                <VoucherPageHeader merchant={this.state.response.merchant}/>
                 <div className="d-flex flex-row justify-content-center">
                     <Voucher/>
                 </div>
@@ -43,7 +42,6 @@ export class Home extends Component {
                     <Voucher/>
                 </div>
                 <CheckoutBar/>
-
             </div>
 
         );

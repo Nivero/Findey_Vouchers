@@ -15,19 +15,24 @@ namespace FindeyVouchers.Website.Controllers
             _merchantService = merchantService;
         }
 
-        [HttpGet("info/{name}")]
-        public IActionResult Info([FromRoute]string name)
+        [HttpGet("{name}")]
+        public IActionResult Info([FromRoute] string name)
         {
             var merchant = _merchantService.GetMerchantInfo(name);
+
             if (merchant != null)
             {
-                return Ok(new MerchantResponse
+                var response = new VoucherPageResponse
                 {
-                    Name = merchant.CompanyName,
-                    Email = merchant.Email,
-                    PhoneNumber = merchant.PhoneNumber,
-                    Website = "https://www.nivero.io"
-                });
+                    Merchant = new Merchant
+                    {
+                        Name = merchant.CompanyName,
+                        Email = merchant.Email,
+                        PhoneNumber = merchant.PhoneNumber,
+                        Website = merchant.Website
+                    }
+                };
+                return Ok(response);
             }
 
             return NotFound();

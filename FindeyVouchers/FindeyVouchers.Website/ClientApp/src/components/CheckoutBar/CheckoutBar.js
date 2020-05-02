@@ -14,7 +14,7 @@ export default class VoucherPageHeader extends Component {
     render() {
         return (
             <div className="fixed-bottom">
-                <div className="container">
+                <div className="container bg-white">
                     <div
                         className="d-flex flex-row justify-content-between border-left border-top border-right rounded-top">
                         <div className="d-flex flex-row p-3">

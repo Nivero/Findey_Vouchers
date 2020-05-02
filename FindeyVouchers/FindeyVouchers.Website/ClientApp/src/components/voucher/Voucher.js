@@ -51,7 +51,7 @@ export default class Voucher extends Component {
                     </div>
                 </div>
                 <div className="d-flex flex-column justify-content-between m-3 w-25">
-                    <div className="d-flex flex-row justify-content-end text-danger voucher-reduction">eventuele
+                    <div className="d-flex flex-row justify-content-end text-danger text-custom-large">eventuele
                         korting
                     </div>
                     <div className="d-flex flex-row justify-content-end">€ 5.00</div>

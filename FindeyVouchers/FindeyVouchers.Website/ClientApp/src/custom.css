@@ -12,3 +12,11 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+.text-custom-large{
+  font-size: 1.25em;
+}
+
+.background-color-default{
+  background: #a59d99;
+}

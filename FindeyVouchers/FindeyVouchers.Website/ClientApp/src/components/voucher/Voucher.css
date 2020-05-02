@@ -1,0 +1,30 @@
+﻿.voucher-image{
+    width: 150px;
+    height: 150px;
+}
+
+.voucher-title{
+    font-size: 1.5em;
+}
+.voucher-reduction{
+    font-size: 1.25em;
+}
+
+.voucher-border-bottom {
+    border-top: 1px solid white;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    border-bottom: 1px solid #dee2e6;
+    transition: border-color 0.2s linear;
+    -moz-transition: border-color 0.2s linear;    /* FF3.7+ */
+    -o-transition: border-color 0.2s linear;      /* Opera 10.5 */
+    -webkit-transition: border-color 0.2s linear; /* Saf3.2+, Chrome */
+}
+
+.voucher-border-bottom:hover {
+    border: 1px solid #dee2e6;
+}
+
+.button-hover:hover{
+    cursor: pointer;
+}

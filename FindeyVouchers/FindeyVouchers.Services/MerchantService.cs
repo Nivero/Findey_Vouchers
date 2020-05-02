@@ -16,8 +16,14 @@ namespace FindeyVouchers.Services
 
         public ApplicationUser GetMerchantInfo(string merchantName)
         {
-            var merchant = _context.Users.FirstOrDefault(x => x.CompanyName.Equals(merchantName));
-            return merchant ?? null;
+            if (merchantName != null)
+            {
+                var merchant =
+                    _context.Users.FirstOrDefault(x => x.NormalizedCompanyName.Equals(merchantName.ToLower()));
+                return merchant ?? null;
+            }
+
+            return null;
         }
     }
 }

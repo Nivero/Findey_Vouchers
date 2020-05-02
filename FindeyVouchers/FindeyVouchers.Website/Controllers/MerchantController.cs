@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FindeyVouchers.Website.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class MerchantController : Controller
     {
         private readonly IMerchantService _merchantService;
@@ -13,9 +15,10 @@ namespace FindeyVouchers.Website.Controllers
             _merchantService = merchantService;
         }
 
-        public IActionResult Info([FromBody] object name)
+        [HttpGet("info/{name}")]
+        public IActionResult Info([FromRoute]string name)
         {
-            var merchant = _merchantService.GetMerchantInfo((string)name);
+            var merchant = _merchantService.GetMerchantInfo(name);
             if (merchant != null)
             {
                 return Ok(new MerchantResponse
@@ -23,13 +26,11 @@ namespace FindeyVouchers.Website.Controllers
                     Name = merchant.CompanyName,
                     Email = merchant.Email,
                     PhoneNumber = merchant.PhoneNumber,
-                    Website = "tent"
+                    Website = "https://www.nivero.io"
                 });
             }
-            else
-            {
-                return NotFound();
-            }
+
+            return NotFound();
         }
     }
 }

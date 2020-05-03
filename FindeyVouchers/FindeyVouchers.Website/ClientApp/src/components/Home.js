@@ -13,18 +13,10 @@ export class Home extends Component {
     }
 
     AddToCart(id) {
-        let dict = this.state.shoppingCart;
-        if (dict.key) {
-            this.state.shoppingCart.push({key: id, value: this.state.shoppingCart.key + 1})
-        } else {
-            this.state.shoppingCart.push({key: id, value: 1})
-        }
+
     }
 
     RemoveFromCart(id) {
-        if (this.state.shoppingCart.key && this.state.shoppingCart.key > 0) {
-            this.state.shoppingCart.push({key: id, value: this.state.shoppingCart.key - 1})
-        }
 
     }
 
@@ -36,6 +28,8 @@ export class Home extends Component {
         const requestOptions = {
             method: 'GET',
         };
+        // Merchant name should be here.
+        // It will be the first part of the url IE. nivero.findey.co
         fetch(`merchant/nivero`, requestOptions)
             .then((response) => response.json())
             .then((response) => {

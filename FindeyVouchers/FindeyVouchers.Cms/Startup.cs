@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -77,8 +78,9 @@ namespace FindeyVouchers.Cms
             
             services.AddTransient<IVoucherService, VoucherService>();
             services.AddTransient<IAzureStorageService, AzureStorageService>();
-            // services.AddTransient<IEmailSender, IdentityCoreEmailSender>();
-            // services.Configure<Domain.SendGrid>(Configuration);
+            services.AddTransient<IEmailSender, IdentityCoreEmailSender>();
+            services.AddTransient<IMailService, MailService>();
+            services.Configure<Domain.SendGrid>(Configuration);
             services.BuildServiceProvider().GetService<ApplicationDbContext>().Database.Migrate();
         }
 

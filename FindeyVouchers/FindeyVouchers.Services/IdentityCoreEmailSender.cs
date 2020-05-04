@@ -23,25 +23,20 @@ namespace FindeyVouchers.Services
         public async Task<Response> Execute(string apiKey, string subject, string message, string email)
         {
             var client = new SendGridClient(apiKey);
-            //TODO: put the email in appsettings
-            var from = new EmailAddress("noreply@findey.co", Options.SendGridUser);
-            var to = new EmailAddress(email);
+            var msg = new SendGridMessage()
+            {
+                From = new EmailAddress("noreply@findey.co", Options.SendGridUser),
+                Subject = subject,
+                PlainTextContent = message,
+                HtmlContent = message
+            };
+            msg.AddTo(new EmailAddress(email));
 
-            var msg = MailHelper.CreateSingleEmail(from, to, subject, message, message);
+            // Disable click tracking.
+            // See https://sendgrid.com/docs/User_Guide/Settings/tracking.html
+            msg.SetClickTracking(false, false);
+
             return await client.SendEmailAsync(msg);
-
-            // var client = new SendGridClient(apiKey);
-            // var msg = new SendGridMessage()
-            // {
-            //     From = new EmailAddress("noreply@finde.co", Options.SendGridUser),
-            //     Subject = subject,
-            //     PlainTextContent = message,
-            //     HtmlContent = message
-            // };
-            // var tmp = MailHelper.CreateSingleEmail(msg.From, new EmailAddress(email), subject, msg.PlainTextContent, msg.HtmlContent);
-            // // msg.AddTo(new EmailAddress(email));
-            //
-            // return client.SendEmailAsync(tmp);
         }
     }
 }

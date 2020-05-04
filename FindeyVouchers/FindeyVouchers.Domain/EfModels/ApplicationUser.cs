@@ -38,6 +38,7 @@ namespace FindeyVouchers.Domain.EfModels
         [RegularExpression(@"^06?\d{8}$", ErrorMessage = "Gebruik 06 en alleen getallen.")]
         [Display(Name = "Telefoonnummer")]
         public override string PhoneNumber { get; set; }
+        public string Website { get; set; }
     }
 
     public enum BusinessType

@@ -123,6 +123,7 @@ namespace FindeyVouchers.Cms.Controllers
                     user.BusinessType = applicationUser.BusinessType;
                     user.PhoneNumber = applicationUser.PhoneNumber;
                     user.Email = applicationUser.Email;
+                    user.Website = applicationUser.Website;
                     user.NormalizedEmail = applicationUser.Email.ToUpper();
 
                     await _userManager.UpdateAsync(user);
@@ -181,6 +182,7 @@ namespace FindeyVouchers.Cms.Controllers
             stripeUrl.Append($"&suggested_capabilities[]=transfers");
             stripeUrl.Append($"&suggested_capabilities[]=transfers");
             stripeUrl.Append($"&stripe_user[email]={user.Email}");
+            stripeUrl.Append($"&stripe_user[url]={user.Website}");
             stripeUrl.Append($"&stripe_user[country]={user.Country}");
             stripeUrl.Append($"&stripe_user[phone_number]={user.PhoneNumber.Substring(1)}");
             stripeUrl.Append($"&stripe_user[business_name]={user.CompanyName}");

@@ -21,7 +21,6 @@ namespace FindeyVouchers.Cms.Controllers
             _userManager = userManager;
         }
 
-        // GET: Account/Edit/5
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -68,6 +67,7 @@ namespace FindeyVouchers.Cms.Controllers
                     user.PhoneNumber = applicationUser.PhoneNumber;
                     user.Email = applicationUser.Email;
                     user.NormalizedEmail = applicationUser.Email.ToUpper();
+                    user.Website = applicationUser.Website;
                     
 
                     await _userManager.UpdateAsync(user);

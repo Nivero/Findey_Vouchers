@@ -6,6 +6,6 @@ namespace FindeyVouchers.Interfaces
 {
     public interface IMailService
     {
-        Task<Response> SendVoucherMail(Customer customer, ApplicationUser user);
+        Task<Response> SendVoucherMail(Customer customer, ApplicationUser user, CustomerVoucher voucher);
     }
 }

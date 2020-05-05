@@ -114,6 +114,11 @@ namespace FindeyVouchers.Services
             await _context.SaveChangesAsync();
         }
 
+        public List<VoucherCategory> GetCategories(ApplicationUser user)
+        {
+            return _context.VoucherCategories.Where(x => x.Merchant == user).ToList();
+        }
+
         private string GetImageNameFromEnum(DefaultImages image)
         {
             var value = "";

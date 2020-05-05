@@ -22,9 +22,11 @@ namespace FindeyVouchers.Domain.EfModels
         public ApplicationUser Merchant { get; set; }
 
         [Display(Name = "Naam van de voucher")]
+        [Required]
         public string Name { get; set; }
 
         [Display(Name = "Beschrijving van de voucher")]
+        [Required]
         public string Description { get; set; }
 
         [Display(Name = "Upload voucher afbeelding")]
@@ -36,7 +38,7 @@ namespace FindeyVouchers.Domain.EfModels
         [DataType(DataType.Date)]
         public DateTime CreatedOn { get; set; }
 
-        [Display(Name = "Prijs")] public Decimal Price { get; set; }
+        [Display(Name = "Prijs")] [Required] public Decimal Price { get; set; }
 
         [NotMapped]
         [AllowedExtensions(new string[] {".jpg", ".png", ".gif", ".jpeg"})]
@@ -50,17 +52,24 @@ namespace FindeyVouchers.Domain.EfModels
         [Display(Name = "Aantal verkocht")]
         public int AmountSold { get; set; }
 
-        [Display(Name = "Type voucher")] public VoucherType VoucherType { get; set; }
+        [Display(Name = "Type voucher")]
+        [Required]
+        public VoucherType VoucherType { get; set; }
+
+        [Display(Name = "Categorie voucher")]
+        public VoucherCategory Category { get; set; }
     }
 
     public enum VoucherType
     {
         [Display(Name = "Waardebon")] Voucher,
         [Display(Name = "Prepaid voucher")] PrepaidCard
-    }    
+    }
+
     public enum DefaultImages
     {
-        [Display(Name = "Selecteer afbeelding...")] Default,
+        [Display(Name = "Selecteer afbeelding...")]
+        Default,
         [Display(Name = "Zwart")] Black,
         [Display(Name = "Blauw")] Blue,
         [Display(Name = "Brons")] Bronze,

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,5 +20,6 @@ namespace FindeyVouchers.Interfaces
         Task UpdateMerchantVoucher(MerchantVoucher merchantVoucher, DefaultImages file);
         Task DeactivateMerchantVoucher(Guid id);
         Task CreateMerchantVoucher(MerchantVoucher voucher, DefaultImages image, ApplicationUser user);
+        List<VoucherCategory> GetCategories(ApplicationUser user);
     }
 }

@@ -76,7 +76,14 @@ namespace FindeyVouchers.Cms.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userManager.GetUserAsync(User);
-                await _voucherService.CreateMerchantVoucher(merchantVoucher, file, user);
+                if (merchantVoucher.DefaultImages == DefaultImages.Default)
+                {
+                    await _voucherService.CreateMerchantVoucher(merchantVoucher, file, user);
+                }
+                else
+                {
+                    await _voucherService.CreateMerchantVoucher(merchantVoucher, merchantVoucher.DefaultImages, user);
+                }
                 return RedirectToAction(nameof(Index));
             }
 
@@ -111,7 +118,15 @@ namespace FindeyVouchers.Cms.Controllers
 
             if (ModelState.IsValid)
             {
-                await _voucherService.UpdateMerchantVoucher(merchantVoucher, file);
+                if (merchantVoucher.DefaultImages == DefaultImages.Default)
+                {
+                    await _voucherService.UpdateMerchantVoucher(merchantVoucher, file);
+                }
+                else
+                {
+                    await _voucherService.UpdateMerchantVoucher(merchantVoucher, merchantVoucher.DefaultImages);
+                }
+                
 
                 return RedirectToAction(nameof(Index));
             }

@@ -22,6 +22,16 @@
                 <span asp-validation-for="ImageFile" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="DefaultImages" class="control-label"></label>
+                <select asp-for="DefaultImages" class="form-control" asp-items="Html.GetEnumSelectList<DefaultImages>()" onchange="showImage(this)"></select>
+                <span asp-validation-for="DefaultImages" class="text-danger"></span>
+            </div>
+            <div class="form-group" id="imageDiv" hidden>
+                <img class="shadow" id="displayImage" src="https://findeystorage.blob.core.windows.net/voucher-images/default-images/Black.png" width="300" height="150">
+            </div>
+
+
+            <div class="form-group">
                 <label asp-for="Price" class="control-label"></label>
                 <input asp-for="Price" class="form-control"/>
                 <span asp-validation-for="Price" class="text-danger"></span>
@@ -43,3 +53,26 @@
 <div>
     <a asp-action="Index">Terug naar overzicht</a>
 </div>
+<script>            
+
+function showImage(dropdown){
+let imageList = [
+    "Black.png",
+    "Blue.png",
+    "Bronze.png",
+    "Gold.png",
+    "Green.png",
+    "Pink.png",
+    "Silver.png",
+    "White.png",
+    "Yellow.png"
+];
+    if(dropdown.value > 0 ){
+        document.getElementById("imageDiv").removeAttribute("hidden");
+        document.getElementById("displayImage").src = "https://findeystorage.blob.core.windows.net/voucher-images/default-images/"+imageList[dropdown.value-1];
+    }else{
+        document.getElementById("imageDiv").setAttribute("hidden", true);
+    }
+
+}
+</script>

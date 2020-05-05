@@ -15,5 +15,6 @@ namespace FindeyVouchers.Domain
         public DbSet<StripeSecret> StripeSecret { get; set; }
         public DbSet<CustomerVoucher> CustomerVouchers { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<VoucherCategory> VoucherCategories { get; set; }
     }
 }

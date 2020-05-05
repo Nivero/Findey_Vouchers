@@ -12,7 +12,10 @@
             @Html.DisplayNameFor(model => model.AmountSold)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Image)
+            Afbeelding
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Category)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.CreatedOn)
@@ -39,6 +42,9 @@
             <td>
                 https://findeystorage.blob.core.windows.net/voucher-images/@Html.DisplayFor(modelItem => item.Image)
             </td>
+            <th>
+                @Html.DisplayFor(modelItem => item.Category.Name)
+            </th>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedOn)
             </td>

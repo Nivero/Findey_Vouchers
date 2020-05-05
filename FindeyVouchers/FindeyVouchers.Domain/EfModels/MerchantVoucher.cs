@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
@@ -11,10 +12,10 @@ namespace FindeyVouchers.Domain.EfModels
     {
         public MerchantVoucher()
         {
-            this.CreatedOn = DateTime.UtcNow;
-            this.IsActive = true;
-            this.AmountSold = 0;
-            this.Image = "default-image.jpeg";
+            CreatedOn = DateTime.UtcNow;
+            IsActive = true;
+            AmountSold = 0;
+            Image = "default-images/Black.png";
         }
 
         public Guid Id { get; set; }
@@ -26,7 +27,8 @@ namespace FindeyVouchers.Domain.EfModels
         [Display(Name = "Beschrijving van de voucher")]
         public string Description { get; set; }
 
-        [Display(Name = "Voucher afbeelding")] public string Image { get; set; }
+        [Display(Name = "Upload voucher afbeelding")]
+        public string Image { get; set; }
 
         [Display(Name = "Actief")] public bool IsActive { get; set; }
 
@@ -40,7 +42,14 @@ namespace FindeyVouchers.Domain.EfModels
         [AllowedExtensions(new string[] {".jpg", ".png", ".gif", ".jpeg"})]
         public IFormFile ImageFile { get; set; }
 
-        [NotMapped] [Display(Name = "Aantal verkocht")] public int AmountSold { get; set; }
+        [NotMapped]
+        [Display(Name = "Of selecteer een standaard afbeelding")]
+        public DefaultImages DefaultImages { get; set; }
+
+        [NotMapped]
+        [Display(Name = "Aantal verkocht")]
+        public int AmountSold { get; set; }
+
         [Display(Name = "Type voucher")] public VoucherType VoucherType { get; set; }
     }
 
@@ -48,6 +57,19 @@ namespace FindeyVouchers.Domain.EfModels
     {
         [Display(Name = "Waardebon")] Voucher,
         [Display(Name = "Prepaid voucher")] PrepaidCard
+    }    
+    public enum DefaultImages
+    {
+        [Display(Name = "Selecteer afbeelding...")] Default,
+        [Display(Name = "Zwart")] Black,
+        [Display(Name = "Blauw")] Blue,
+        [Display(Name = "Brons")] Bronze,
+        [Display(Name = "Goud")] Gold,
+        [Display(Name = "Groen")] Green,
+        [Display(Name = "Roze")] Pink,
+        [Display(Name = "Zilver")] Silver,
+        [Display(Name = "Wit")] White,
+        [Display(Name = "Geel")] Yellow
     }
 
 

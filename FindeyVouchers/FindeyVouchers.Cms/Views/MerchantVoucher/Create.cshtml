@@ -1,5 +1,5 @@
 @using FindeyVouchers.Domain.EfModels
-@model FindeyVouchers.Domain.EfModels.MerchantVoucher
+@model MerchantVoucherViewModel
 <h4>Voucher</h4>
 <hr/>
 <div class="row">
@@ -7,41 +7,44 @@
         <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control"/>
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="Voucher.Name" class="control-label"></label>
+                <input asp-for="Voucher.Name" class="form-control" required/>
+                <span asp-validation-for="Voucher.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control"/>
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label asp-for="Voucher.Description" class="control-label"></label>
+                <input asp-for="Voucher.Description" class="form-control" required/>
+                <span asp-validation-for="Voucher.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Image" class="control-label"></label>
-                <input asp-for="ImageFile" class="form-control-file" type="file">
-                <span asp-validation-for="ImageFile" class="text-danger"></span>
+                <label asp-for="Voucher.Image" class="control-label"></label>
+                <input asp-for="Voucher.ImageFile" class="form-control-file" type="file">
+                <span asp-validation-for="Voucher.ImageFile" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DefaultImages" class="control-label"></label>
-                <select asp-for="DefaultImages" class="form-control" asp-items="Html.GetEnumSelectList<DefaultImages>()" onchange="showImage(this)"></select>
-                <span asp-validation-for="DefaultImages" class="text-danger"></span>
+                <label asp-for="Voucher.DefaultImages" class="control-label"></label>
+                <select asp-for="Voucher.DefaultImages" class="form-control" asp-items="Html.GetEnumSelectList<DefaultImages>()" onchange="showImage(this)"></select>
+                <span asp-validation-for="Voucher.DefaultImages" class="text-danger"></span>
             </div>
             <div class="form-group" id="imageDiv" hidden>
                 <img class="shadow" id="displayImage" src="https://findeystorage.blob.core.windows.net/voucher-images/default-images/Black.png" width="300" height="150">
             </div>
-
-
             <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control"/>
-                <span asp-validation-for="Price" class="text-danger"></span>
+                <label asp-for="Voucher.Price" class="control-label"></label>
+                <input asp-for="Voucher.Price" class="form-control" required/>
+                <span asp-validation-for="Voucher.Price" class="text-danger"></span>
+            </div>            
+            <div class="form-group">
+                <label asp-for="Voucher.Category" class="control-label"></label>
+                @Html.DropDownListFor(m => m.Categories, new SelectList(Model.Categories, "CategoryId", "CategoryName"), new { @class = "form-control" })
+                <span asp-validation-for="Voucher.VoucherType" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="VoucherType" class="control-label"></label>
+                <label asp-for="Voucher.VoucherType" class="control-label"></label>
                 <span class="small d-md-block">Bij een waardebon moet het hele bedrag gebruikt worden. Bij een prepaid voucher kan een deel van het bedrag besteed worden terwijl de voucher nog steeds geldig blijft.</span>
                 <span class="small d-md-block text-danger">Het type kan niet meer aangepast worden na het creëren van een voucher.</span>
-                <select asp-for="VoucherType" class="form-control" asp-items="Html.GetEnumSelectList<VoucherType>()"></select>
-                <span asp-validation-for="VoucherType" class="text-danger"></span>
+                <select asp-for="Voucher.VoucherType" class="form-control" asp-items="Html.GetEnumSelectList<VoucherType>()" required></select>
+                <span asp-validation-for="Voucher.VoucherType" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Verzend" class="btn btn-primary"/>

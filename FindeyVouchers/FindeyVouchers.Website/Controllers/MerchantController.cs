@@ -20,22 +20,9 @@ namespace FindeyVouchers.Website.Controllers
         [HttpGet("{name}")]
         public IActionResult Info([FromRoute] string name)
         {
-            var merchant = _merchantService.GetMerchantInfo(name);
-            var vouchers = _voucherService.RetrieveMerchantVouchers(name);
-            if (merchant != null)
+            var response = _voucherService.RetrieveMerchantVouchers(name);
+            if (response != null)
             {
-                var response = new VoucherPageResponse
-                {
-                    Merchant = new Merchant
-                    {
-                        Name = merchant.CompanyName,
-                        Email = merchant.Email,
-                        PhoneNumber = merchant.PhoneNumber,
-                        Website = merchant.Website
-                    },
-                    Vouchers = vouchers
-                    
-                };
                 return Ok(response);
             }
 

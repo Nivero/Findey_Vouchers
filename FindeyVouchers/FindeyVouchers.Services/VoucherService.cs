@@ -10,7 +10,9 @@ using FindeyVouchers.Domain;
 using FindeyVouchers.Domain.EfModels;
 using FindeyVouchers.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using QRCoder;
 using Serilog;
 
@@ -20,11 +22,13 @@ namespace FindeyVouchers.Services
     {
         private readonly IAzureStorageService _azureStorageService;
         private readonly ApplicationDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public VoucherService(ApplicationDbContext context, IAzureStorageService azureStorageService)
+        public VoucherService(ApplicationDbContext context, IAzureStorageService azureStorageService, IConfiguration configuration)
         {
             _context = context;
             _azureStorageService = azureStorageService;
+            _configuration = configuration;
         }
 
         public string GenerateVoucherCode(int length)
@@ -49,9 +53,43 @@ namespace FindeyVouchers.Services
             return qrCodeImage;
         }
 
-        public IQueryable<MerchantVoucher> RetrieveMerchantVouchers(string companyName)
+        public MerchantVoucherResponse RetrieveMerchantVouchers(string companyName)
         {
-            return _context.MerchantVouchers.Where(x => x.Merchant.NormalizedCompanyName.Equals(companyName));
+            string url = _configuration.GetValue<string>("VoucherImageContainerUrl");
+            var merchant = _context.Users.FirstOrDefault(x => x.NormalizedCompanyName.Equals(companyName));
+            if (merchant == null) return null;
+            var response = new MerchantVoucherResponse
+            {
+                Merchant = new Merchant
+                {
+                    Name = merchant.CompanyName,
+                    Email = merchant.Email,
+                    PhoneNumber = merchant.PhoneNumber,
+                    Website = merchant.Website
+                },
+                Vouchers = new List<Voucher>()
+            };
+            var vouchers = _context.MerchantVouchers.Include(x => x.Category).Where(x => x.Merchant == merchant);
+            foreach (var item in vouchers)
+            {
+                var tmp = new Voucher
+                {
+                    Id = item.Id,
+                    Description = item.Description,
+                    Image = url + item.Image,
+                    Category = new Category
+                    {
+                        Id = item.Category.Id,
+                        Name = item.Category.Name
+                    },
+                    Price = item.Price,
+                    Name = item.Name,
+                    VoucherType = item.VoucherType
+                };
+                response.Vouchers.Add(tmp);
+            }
+
+            return response;
         }
 
         public void UpdatePrice(Guid id, decimal price)
@@ -75,7 +113,8 @@ namespace FindeyVouchers.Services
         {
             try
             {
-                var voucher = _context.CustomerVouchers.Include(x => x.VoucherMerchant).FirstOrDefault(x => x.Id == id);
+                var voucher = _context.CustomerVouchers.Include(x => x.VoucherMerchant)
+                    .FirstOrDefault(x => x.Id == id);
                 if (voucher != null)
                 {
                     voucher.IsUsed = true;
@@ -191,7 +230,8 @@ namespace FindeyVouchers.Services
             {
                 Log.Error($"Error updateing merchant voucher with id: {voucher.Id}, {e}");
             }
-        }        
+        }
+
         public async Task UpdateMerchantVoucher(MerchantVoucher voucher, DefaultImages image)
         {
             try

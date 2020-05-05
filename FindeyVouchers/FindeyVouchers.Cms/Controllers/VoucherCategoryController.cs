@@ -121,35 +121,6 @@ namespace FindeyVouchers.Cms.Controllers
             return View(voucherCategory);
         }
 
-        // GET: VoucherCategory/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var voucherCategory = await _context.VoucherCategories
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (voucherCategory == null)
-            {
-                return NotFound();
-            }
-
-            return View(voucherCategory);
-        }
-
-        // POST: VoucherCategory/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            var voucherCategory = await _context.VoucherCategories.FindAsync(id);
-            _context.VoucherCategories.Remove(voucherCategory);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
         private bool VoucherCategoryExists(Guid id)
         {
             return _context.VoucherCategories.Any(e => e.Id == id);

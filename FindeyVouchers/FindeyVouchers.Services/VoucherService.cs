@@ -104,6 +104,71 @@ namespace FindeyVouchers.Services
             await _context.SaveChangesAsync();
         }
 
+        public async Task CreateMerchantVoucher(MerchantVoucher voucher, DefaultImages image, ApplicationUser user)
+        {
+            voucher.Id = Guid.NewGuid();
+            voucher.Merchant = user;
+            voucher.Image = $"default-images/{GetImageNameFromEnum(image)}";
+            _context.Add(voucher);
+
+            await _context.SaveChangesAsync();
+        }
+
+        private string GetImageNameFromEnum(DefaultImages image)
+        {
+            var value = "";
+            switch (image)
+            {
+                case DefaultImages.Black:
+                {
+                    value = "Black.png";
+                    break;
+                }
+                case DefaultImages.Blue:
+                {
+                    value = "Blue.png";
+                    break;
+                }
+                case DefaultImages.Bronze:
+                {
+                    value = "Bronze.png";
+                    break;
+                }
+                case DefaultImages.White:
+                {
+                    value = "White.png";
+                    break;
+                }
+                case DefaultImages.Yellow:
+                {
+                    value = "Yellow.png";
+                    break;
+                }
+                case DefaultImages.Gold:
+                {
+                    value = "Gold.png";
+                    break;
+                }
+                case DefaultImages.Green:
+                {
+                    value = "Green.png";
+                    break;
+                }
+                case DefaultImages.Pink:
+                {
+                    value = "Pink.png";
+                    break;
+                }
+                case DefaultImages.Silver:
+                {
+                    value = "Silver.png";
+                    break;
+                }
+            }
+
+            return value;
+        }
+
         public async Task UpdateMerchantVoucher(MerchantVoucher voucher, IFormFile image)
         {
             try
@@ -113,6 +178,20 @@ namespace FindeyVouchers.Services
                     _azureStorageService.DeleteBlobData(voucher.Image);
                     voucher.Image = await UploadFile(image);
                 }
+
+                _context.Update(voucher);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Error updateing merchant voucher with id: {voucher.Id}, {e}");
+            }
+        }        
+        public async Task UpdateMerchantVoucher(MerchantVoucher voucher, DefaultImages image)
+        {
+            try
+            {
+                voucher.Image = $"default-images/{GetImageNameFromEnum(image)}";
 
                 _context.Update(voucher);
                 await _context.SaveChangesAsync();

@@ -16,6 +16,8 @@ namespace FindeyVouchers.Interfaces
         void InvalidateCustomerVoucher(Guid id);
         Task CreateMerchantVoucher(MerchantVoucher voucher, IFormFile image, ApplicationUser user);
         Task UpdateMerchantVoucher(MerchantVoucher merchantVoucher, IFormFile file);
+        Task UpdateMerchantVoucher(MerchantVoucher merchantVoucher, DefaultImages file);
         Task DeactivateMerchantVoucher(Guid id);
+        Task CreateMerchantVoucher(MerchantVoucher voucher, DefaultImages image, ApplicationUser user);
     }
 }

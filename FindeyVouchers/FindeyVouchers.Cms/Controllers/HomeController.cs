@@ -105,8 +105,10 @@ namespace FindeyVouchers.Cms.Controllers
 
             if (_context.Users.Any(x => x.CompanyName.Equals(applicationUser.CompanyName)))
             {
-                ModelState.AddModelError(string.Empty, "Bedrijfsnaam is al in gebruik. Neem contact op met de beheerder.");
+                ModelState.AddModelError(string.Empty,
+                    "Bedrijfsnaam is al in gebruik. Neem contact op met de beheerder.");
             }
+
             if (ModelState.IsValid)
             {
                 try

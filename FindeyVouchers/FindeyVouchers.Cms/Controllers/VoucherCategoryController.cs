@@ -24,6 +24,10 @@ namespace FindeyVouchers.Cms.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
+            if (string.IsNullOrWhiteSpace(user.CompanyName) || string.IsNullOrWhiteSpace(user.StripeAccountId))
+            {
+                return RedirectToAction("Index", "Home");
+            }
             var categories = _context.VoucherCategories.Where(x => x.Merchant == user);
             return View(categories);
         }
@@ -35,6 +39,7 @@ namespace FindeyVouchers.Cms.Controllers
             {
                 return NotFound();
             }
+
 
             var voucherCategory = await _context.VoucherCategories
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -67,6 +72,7 @@ namespace FindeyVouchers.Cms.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(voucherCategory);
         }
 
@@ -83,6 +89,7 @@ namespace FindeyVouchers.Cms.Controllers
             {
                 return NotFound();
             }
+
             return View(voucherCategory);
         }
 
@@ -116,8 +123,10 @@ namespace FindeyVouchers.Cms.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(voucherCategory);
         }
 

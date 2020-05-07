@@ -1,10 +1,16 @@
+using System;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using FindeyVouchers.Domain;
 using FindeyVouchers.Domain.EfModels;
+using FindeyVouchers.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FindeyVouchers.Cms.Controllers
@@ -13,12 +19,17 @@ namespace FindeyVouchers.Cms.Controllers
     public class AccountController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IEmailSender _emailSender;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMerchantService _merchantService;
 
-        public AccountController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public AccountController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
+            IEmailSender emailSender, IMerchantService merchantService)
         {
             _context = context;
             _userManager = userManager;
+            _emailSender = emailSender;
+            _merchantService = merchantService;
         }
 
         public async Task<IActionResult> Index()
@@ -28,6 +39,7 @@ namespace FindeyVouchers.Cms.Controllers
             {
                 return NotFound();
             }
+
             if (string.IsNullOrWhiteSpace(user.CompanyName) || string.IsNullOrWhiteSpace(user.StripeAccountId))
             {
                 return RedirectToAction("Index", "Home");
@@ -69,7 +81,7 @@ namespace FindeyVouchers.Cms.Controllers
                     user.NormalizedEmail = applicationUser.Email.ToUpper();
                     user.Website = applicationUser.Website;
                     user.Description = applicationUser.Description;
-                    
+
 
                     await _userManager.UpdateAsync(user);
                 }
@@ -87,7 +99,51 @@ namespace FindeyVouchers.Cms.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
+
             return View(applicationUser);
+        }
+
+        public async Task<IActionResult> ResetPassword()
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.GetUserAsync(User);
+                try
+                {
+                    await DoResetPassword(user);
+                    ModelState.AddModelError(string.Empty, "Er is een email verstuurd.");
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ApplicationUserExists(user.Id))
+                    {
+                        return NotFound();
+                    }
+                }
+
+                return View(nameof(Index), user);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        private async Task DoResetPassword(ApplicationUser user)
+        {
+            // For more information on how to enable account confirmation and password reset please 
+            // visit https://go.microsoft.com/fwlink/?LinkID=532713
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            var callbackUrl = Url.Page(
+                "/Account/ResetPassword",
+                pageHandler: null,
+                values: new {area = "Identity", code},
+                protocol: Request.Scheme);
+
+            await _emailSender.SendEmailAsync(
+                user.Email,
+                "Reset Password",
+                _merchantService.GetPasswordForgetEmailContent(user.CompanyName, callbackUrl));
         }
 
         private bool ApplicationUserExists(string id)

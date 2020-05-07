@@ -65,7 +65,9 @@ namespace FindeyVouchers.Services
                     Name = merchant.CompanyName,
                     Email = merchant.Email,
                     PhoneNumber = merchant.PhoneNumber,
-                    Website = merchant.Website
+                    Website = merchant.Website,
+                    Address = $"{merchant.Address}, {merchant.City}",
+                    Description = merchant.Description
                 },
                 Vouchers = new List<Voucher>()
             };

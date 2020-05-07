@@ -1,7 +1,19 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { CART_ADD, CART_REMOVE } from '../../../../redux/actions';
-import { Row, Col, Card, CardImg, Modal ,ModalBody, ModalHeader, ModalFooter, CardTitle, Button, ButtonGroup } from 'reactstrap';
+import {connect} from 'react-redux';
+import {CART_ADD, CART_REMOVE} from '../../../../redux/actions';
+import {
+    Row,
+    Col,
+    Card,
+    CardImg,
+    Modal,
+    ModalBody,
+    ModalHeader,
+    ModalFooter,
+    CardTitle,
+    Button,
+    ButtonGroup
+} from 'reactstrap';
 import './voucher.css';
 
 class Voucher extends React.Component {
@@ -15,53 +27,52 @@ class Voucher extends React.Component {
         this.handleVoucherAdd = this.handleVoucherAdd.bind(this);
     }
 
-    calcDiscount(price, precentage){
-        return (price * (1-(precentage/100))).toFixed(2);
+    calcDiscount(price, precentage) {
+        return (price * (1 - (precentage / 100))).toFixed(2);
     }
 
-    toggle = () =>{
+    toggle = () => {
         this.setState({modal: !this.state.modal});
     }
 
-    handleVoucherRemove(){
-        if(this.state.amountOfVoucher > 0){
-            this.setState({amountOfVoucher: this.state.amountOfVoucher - 1 });
+    handleVoucherRemove() {
+        if (this.state.amountOfVoucher > 0) {
+            this.setState({amountOfVoucher: this.state.amountOfVoucher - 1});
             this.props.remove();
         }
     }
 
-    handleVoucherAdd(){
-        this.setState({amountOfVoucher: this.state.amountOfVoucher + 1 });
+    handleVoucherAdd() {
+        this.setState({amountOfVoucher: this.state.amountOfVoucher + 1});
         this.props.add();
     }
 
-    render(){
+    render() {
         return (
-            <Card body className="mci-card">
+            <Card body className="mci-card m-1 mb-2">
                 <Row>
                     <Col md="3">
-                        <CardImg className="mci-card-image" src={this.props.data.image} alt="Name of image" />
-                        { this.props.data.prepaidAmount && <span className="mci-prepaid-amount"> € { this.props.data.prepaidAmount }  </span> }
+                        <CardImg className="mci-card-image" src={this.props.data.image} alt="Name of image"/>
                     </Col>
                     <Col md="6">
                         <Row>
-                            <CardTitle className="text-uppercase h4"> { this.props.data.name } </CardTitle>
+                            <CardTitle className="text-uppercase h4"> {this.props.data.name} </CardTitle>
                         </Row>
                         <Row>
                             <span className="mci-voucher-discription text-muted"> 
-                                { (this.props.data.description.length > 150) 
-                                    ?   <div>
-                                        { this.props.data.description.substring(0, 150) + ' ... ' }
+                                {(this.props.data.description.length > 150)
+                                    ? <div>
+                                        {this.props.data.description.substring(0, 150) + ' ... '}
                                         <span className="mci-readmore" onClick={this.toggle}>Read more</span>
                                         <Modal isOpen={this.state.modal} toggle={this.toggle}>
-                                        <ModalHeader toggle={this.toggle}> { this.props.data.name } </ModalHeader>
-                                        <ModalBody>
-                                            { this.props.data.description }
-                                        </ModalBody>
-                                        <ModalFooter>
-                                            <Button color="secondary" onClick={this.toggle}>Close</Button>
-                                        </ModalFooter>
-                                    </Modal>
+                                            <ModalHeader toggle={this.toggle}> {this.props.data.name} </ModalHeader>
+                                            <ModalBody>
+                                                {this.props.data.description}
+                                            </ModalBody>
+                                            <ModalFooter>
+                                                <Button color="secondary" onClick={this.toggle}>Close</Button>
+                                            </ModalFooter>
+                                        </Modal>
                                     </div>
                                     : this.props.data.description
                                 }
@@ -70,17 +81,14 @@ class Voucher extends React.Component {
                         <Row>
                             <ButtonGroup>
                                 <Button outline onClick={this.handleVoucherRemove} size="sm">-</Button>
-                                <Button outline color="secondary" size="sm" disabled > { this.state.amountOfVoucher } </Button>
+                                <Button outline color="secondary" size="sm"
+                                        disabled> {this.state.amountOfVoucher} </Button>
                                 <Button outline onClick={this.handleVoucherAdd} size="sm">+</Button>
                             </ButtonGroup>
                         </Row>
                     </Col>
                     <Col md="3" className="text-right position-relative">
-                        { this.props.data.discount && <p className="font-weight-bold mci-discount"> { this.props.data.discount }% discount</p> }
-                            { this.props.data.discount 
-                                ? <span className="mci-price font-weight-bold"> <del className="mci-orginal-price font-weight-normal"> € { this.props.data.price } </del> € { this.calcDiscount(this.props.data.price, this.props.data.discount) } </span> 
-                                : <span className="mci-price font-weight-bold"> € { this.props.data.price } </span> 
-                            }
+                        <span className="mci-price font-weight-bold"> € {this.props.data.price} </span>
                     </Col>
                 </Row>
             </Card>
@@ -89,9 +97,9 @@ class Voucher extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch, voucherProps) => {
-    return { 
-        remove: () => dispatch({ type: CART_REMOVE, payload: { voucher: voucherProps.data }}),
-        add: () => dispatch({ type: CART_ADD, payload: { voucher: voucherProps.data }})
+    return {
+        remove: () => dispatch({type: CART_REMOVE, payload: {voucher: voucherProps.data}}),
+        add: () => dispatch({type: CART_ADD, payload: {voucher: voucherProps.data}})
     };
 };
 

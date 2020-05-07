@@ -28,7 +28,9 @@ export default class App extends React.Component {
     }
 
     componentDidMount() {
+        this.setState({loadingBarProgress: 40})
         this.fetchMerchant();
+        this.setState({loadingBarProgress: 80})
     }
 
     async fetchMerchant() {

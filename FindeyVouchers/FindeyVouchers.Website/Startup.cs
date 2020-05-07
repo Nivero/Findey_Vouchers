@@ -1,4 +1,5 @@
 using FindeyVouchers.Domain;
+using FindeyVouchers.Domain.EfModels;
 using FindeyVouchers.Interfaces;
 using FindeyVouchers.Services;
 using Microsoft.AspNetCore.Builder;
@@ -30,6 +31,7 @@ namespace FindeyVouchers.Website
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/build"; });
             services.AddTransient<IMerchantService, MerchantService>();

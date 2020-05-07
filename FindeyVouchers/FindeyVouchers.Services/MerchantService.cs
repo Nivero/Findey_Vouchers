@@ -27,7 +27,7 @@ namespace FindeyVouchers.Services
             {
                 var merchant =
                     _context.Users.FirstOrDefault(x => x.NormalizedCompanyName.Equals(merchantName.ToLower()));
-                return merchant ?? null;
+                return merchant;
             }
 
             return null;

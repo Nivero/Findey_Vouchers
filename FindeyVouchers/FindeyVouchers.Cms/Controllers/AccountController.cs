@@ -21,15 +21,15 @@ namespace FindeyVouchers.Cms.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IEmailSender _emailSender;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IMerchantService _merchantService;
+        private readonly IMailService _mailService;
 
         public AccountController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
-            IEmailSender emailSender, IMerchantService merchantService)
+            IEmailSender emailSender, IMailService mailService)
         {
             _context = context;
             _userManager = userManager;
             _emailSender = emailSender;
-            _merchantService = merchantService;
+            _mailService = mailService;
         }
 
         public async Task<IActionResult> Index()
@@ -140,10 +140,11 @@ namespace FindeyVouchers.Cms.Controllers
                 values: new {area = "Identity", code},
                 protocol: Request.Scheme);
 
+            var msg = _mailService.GetPasswordForgetEmail(user.CompanyName, callbackUrl);
             await _emailSender.SendEmailAsync(
                 user.Email,
-                "Reset Password",
-                _merchantService.GetPasswordForgetEmailContent(user.CompanyName, callbackUrl));
+                "Je wachtwoord opnieuw instellen",
+                "test");
         }
 
         private bool ApplicationUserExists(string id)

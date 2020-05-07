@@ -20,13 +20,12 @@ namespace FindeyVouchers.Cms.Areas.Identity.Pages.Account
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
-        private readonly IMerchantService _merchantService;
-
-        public ForgotPasswordModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender, IMerchantService merchantService)
+        private readonly IMailService _mailService;
+        public ForgotPasswordModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender, IMailService mailService)
         {
             _userManager = userManager;
             _emailSender = emailSender;
-            _merchantService = merchantService;
+            _mailService = mailService;
         }
 
         [BindProperty] public InputModel Input { get; set; }
@@ -69,8 +68,8 @@ namespace FindeyVouchers.Cms.Areas.Identity.Pages.Account
 
             await _emailSender.SendEmailAsync(
                 user.Email,
-                "Reset Password",
-                _merchantService.GetPasswordForgetEmailContent(user.CompanyName, callbackUrl));
+                "Je wachtwoord opnieuw instellen",
+                _mailService.GetPasswordForgetEmail(user.CompanyName, callbackUrl));
         }
     }
 }

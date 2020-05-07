@@ -68,6 +68,7 @@ namespace FindeyVouchers.Cms.Controllers
                     user.Email = applicationUser.Email;
                     user.NormalizedEmail = applicationUser.Email.ToUpper();
                     user.Website = applicationUser.Website;
+                    user.Description = applicationUser.Description;
                     
 
                     await _userManager.UpdateAsync(user);

@@ -24,7 +24,6 @@ if (elmButton) {
                     } else {
                         elmButton.removeAttribute("disabled");
                         elmButton.textContent = "<Something went wrong>";
-                        console.log("data", data);
                     }
                 });
         },

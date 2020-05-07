@@ -70,13 +70,11 @@ class CheckoutForm extends React.Component {
     });
 
     if (payload.error) {
-      console.log('[error]', payload.error);
       this.setState({
         errorMessage: payload.error.message,
         paymentMethod: null,
       });
     } else {
-      console.log('[PaymentMethod]', payload.paymentMethod);
       this.setState({
         paymentMethod: payload.paymentMethod,
         errorMessage: null,
@@ -176,6 +174,7 @@ const Checkout = (props) => {
   const toggleBANK = () => { setIsOpenBANK(!isOpenBANK); setIsOpenIDEAL(isOpenBANK);};
 
   total = props.cartTotal;
+  console.log(props.cartItems)
   return (
     <Container className="p-3 bg-secondary my-2 rounded">
       <span className="text-center text-light"><h1>Your Order</h1></span>
@@ -187,13 +186,15 @@ const Checkout = (props) => {
             </ToastHeader>
             <ToastBody>
             <ListGroup>
-              { 
+              {
                 props.cartItems.map(item => {
                   if(item.amount > 0){
-                    return <ListGroupItem key={item.id}>{item.amount} x {item.name}</ListGroupItem>
+                    let totalItemPrice = item.price * item.amount;
+                    return <ListGroupItem key={item.id}>{item.amount} x {item.name}<span className="float-right font-weight-bold">€ {totalItemPrice}</span></ListGroupItem>
                   }
                 })  
               }
+              <ListGroupItem className="fixed-bottom">Totaal: <span className="float-right font-weight-bold">€ {props.cartTotal}</span></ListGroupItem>
             </ListGroup>
             </ToastBody>
           </Toast>

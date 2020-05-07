@@ -1,0 +1,48 @@
+{
+    "vouchers": [
+        {
+            "id": "67ec0c92-c281-4837-a33c-066c79f9307e",
+            "name": "Waardebon test",
+            "description": "Dit is een lange beschrijving om de toggle modal te kunnen testen en om de beschrijving af te korten tot een bepaald aantal karakters, een beetje blablabla maar wel handig voor een demo code",
+            "image": "https://via.placeholder.com/150",
+            "price": 9.00,
+            "category": {
+                "id": "41960f25-b493-4c71-bbd8-eea3d9b752da",
+                "name": "Waardebonnen"
+            },
+            "voucherType": 0
+        },
+        {
+            "id": "9da9ecbf-9577-485f-b0df-85282c221593",
+            "name": "test",
+            "description": "test",
+            "image": "https://via.placeholder.com/150x300",
+            "price": 213.00,
+            "category": {
+                "id": "998d9935-311f-4e64-bdcf-6fc87af476d0",
+                "name": "TEST32"
+            },
+            "voucherType": 0,
+            "discount": 20
+        },
+        {
+            "id": "5cb135cf-32a0-4908-a027-bcd0b132f8e3",
+            "name": "prepaid test",
+            "description": "joehoe",
+            "image": "https://via.placeholder.com/720x480",
+            "price": 12.00,
+            "category": {
+                "id": "964f25da-b4e8-4c84-aa6e-96e1391fb962",
+                "name": "Prepaid"
+            },
+            "voucherType": 1,
+            "prepaidAmount": 36
+        }
+    ],
+    "merchant": {
+        "name": "Nivero",
+        "website": "https://www.nivero.io",
+        "email": "rasjaad10@msn.com",
+        "phoneNumber": "0618410352"
+    }
+}

@@ -1,0 +1,65 @@
+.mci-card {
+    border: none !important;
+    border-top: 2px solid grey !important;
+    border-radius: 0 !important;
+    transition: 0.5s;
+}
+
+.mci-card:first-of-type {
+    border: none !important;
+}
+
+.mci-card:hover {
+    border: 3px solid grey !important;    
+    border-radius: 10px !important;
+    z-index: 100;
+}
+
+.mci-card:hover:hover ~ .mci-card  {
+    border: none !important;
+}
+
+.mci-card-image {
+    max-width: 300px !important;
+    max-height: 200px !important;   
+    height: 170px !important;
+}
+
+.mci-orginal-price {
+    color: grey;
+    padding-right: 20px;
+}
+
+.mci-discount {
+    color: red;
+}
+
+.mci-price {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 30px;
+}
+
+.mci-voucher-discription {
+    max-height: 100px;
+    min-height: 80px;
+    overflow: auto;
+}
+
+.mci-readmore {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+.mci-prepaid-amount {
+    position: absolute;
+    bottom: 0px;
+    right: 15px;
+    background-color: white;
+    z-index: 10;
+    padding: 5px;
+    border-right: 1px solid lightgrey;
+    border-bottom: 1px solid lightgrey;
+    border-radius: 5px;
+}

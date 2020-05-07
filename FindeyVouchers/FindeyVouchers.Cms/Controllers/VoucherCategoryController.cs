@@ -62,12 +62,15 @@ namespace FindeyVouchers.Cms.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] VoucherCategory voucherCategory)
+        public async Task<IActionResult> Create(VoucherCategory voucherCategory)
         {
+            var exist = _context.VoucherCategories.Any(x => x.Ranking == voucherCategory.Ranking);
+            if(exist) ModelState.AddModelError(string.Empty, "Positie al in gebruik.");
             if (ModelState.IsValid)
             {
                 voucherCategory.Id = Guid.NewGuid();
                 voucherCategory.Merchant = await _userManager.GetUserAsync(User);
+                
                 _context.Add(voucherCategory);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -98,13 +101,14 @@ namespace FindeyVouchers.Cms.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name")] VoucherCategory voucherCategory)
+        public async Task<IActionResult> Edit(Guid id,VoucherCategory voucherCategory)
         {
             if (id != voucherCategory.Id)
             {
                 return NotFound();
             }
-
+            var exist = _context.VoucherCategories.Any(x => x.Ranking == voucherCategory.Ranking);
+            if(exist) ModelState.AddModelError(string.Empty, "Positie al in gebruik.");
             if (ModelState.IsValid)
             {
                 try

@@ -9,6 +9,9 @@
         <th>
             @Html.DisplayNameFor(model => model.Name)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Ranking)
+        </th>
         <th></th>
     </tr>
     </thead>
@@ -18,6 +21,9 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ranking)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Wijzig</a> |

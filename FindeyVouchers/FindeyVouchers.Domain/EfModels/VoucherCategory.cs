@@ -9,6 +9,8 @@ namespace FindeyVouchers.Domain.EfModels
         public Guid Id { get; set; }
         [Display(Name = "Categorie naam")]
         public string Name { get; set; }
+        [Display(Name = "Positie")]
+        public int Ranking { get; set; }
         public ApplicationUser Merchant { get; set; }
     }
 }

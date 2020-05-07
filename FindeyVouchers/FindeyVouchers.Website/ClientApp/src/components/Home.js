@@ -29,7 +29,7 @@ export class Home extends Component {
             method: 'GET',
         };
         // Merchant name should be here.
-        // It will be the first part of the url IE. nivero.findey.co
+        // It will be the first part of the url IE. nivero.findey.nl
         fetch(`merchant/nivero`, requestOptions)
             .then((response) => response.json())
             .then((response) => {

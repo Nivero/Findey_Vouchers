@@ -25,7 +25,7 @@ namespace FindeyVouchers.Services
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
-                From = new EmailAddress("noreply@findey.co", Options.SendGridUser),
+                From = new EmailAddress("noreply@findey.nl", Options.SendGridUser),
                 Subject = subject,
                 PlainTextContent = message,
                 HtmlContent = message
@@ -36,7 +36,8 @@ namespace FindeyVouchers.Services
             // See https://sendgrid.com/docs/User_Guide/Settings/tracking.html
             msg.SetClickTracking(false, false);
 
-            return await client.SendEmailAsync(msg);
+            var response = await client.SendEmailAsync(msg);
+            return response;
         }
     }
 }

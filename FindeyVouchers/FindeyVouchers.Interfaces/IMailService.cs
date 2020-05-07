@@ -7,5 +7,7 @@ namespace FindeyVouchers.Interfaces
     public interface IMailService
     {
         Task<Response> SendVoucherMail(Customer customer, ApplicationUser user, CustomerVoucher voucher);
+        public string GetPasswordForgetEmail(string username, string url);
+        string GetVerificationEmail(string username, string url);
     }
 }

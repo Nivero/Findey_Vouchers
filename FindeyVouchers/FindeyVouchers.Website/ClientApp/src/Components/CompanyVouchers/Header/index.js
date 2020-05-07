@@ -10,7 +10,7 @@ export default class Header extends React.Component {
         <Row>
           <Col className="text-center">
             <span className="text-uppercase">
-              Overview Vouchers
+              Overzicht vouchers
             </span>
           </Col>
         </Row>

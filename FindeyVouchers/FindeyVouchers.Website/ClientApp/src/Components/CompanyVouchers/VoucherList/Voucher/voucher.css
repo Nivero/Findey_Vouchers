@@ -1,13 +1,11 @@
 .mci-card:hover {
-    border: 1px solid grey !important;    
-    border-radius: 10px;
-    transition: 0.2s;
+    border: 1px solid grey !important;
 }
 
 .mci-card{
     border: 1px solid white !important;
     border-bottom: 1px solid grey !important;
-    border-radius: 5px;
+    border-radius: 2px;
     transition: 0.2s;
 }
 

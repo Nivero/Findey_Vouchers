@@ -80,6 +80,7 @@ namespace FindeyVouchers.Cms
             services.AddTransient<IAzureStorageService, AzureStorageService>();
             services.AddTransient<IEmailSender, IdentityCoreEmailSender>();
             services.AddTransient<IMailService, MailService>();
+            services.AddTransient<IMerchantService, MerchantService>();
             services.Configure<Domain.SendGrid>(Configuration);
             services.BuildServiceProvider().GetService<ApplicationDbContext>().Database.Migrate();
         }

@@ -16,8 +16,6 @@ export default class OrderOverview extends React.Component {
     }
 
     render() {
-        console.log("joehoe")
-        console.log(this.props.cartItems)
         return (
             <Col sm="12" md="5" className="d-flex justify-content-center">
                 <Toast className="mci-toast">

@@ -1,18 +1,15 @@
 ﻿import React from 'react';
 import {Button, Card, CardBody, Col, Collapse, Row, Toast, ToastBody, ToastHeader} from 'reactstrap';
-import {loadStripe} from '@stripe/stripe-js';
 import {
     CardCvcElement,
     CardExpiryElement,
     CardNumberElement,
-    Elements,
-    IdealBankElement
+    ElementsConsumer,
+    IdealBankElement,
 } from '@stripe/react-stripe-js';
 
 import {ErrorResult, Result} from './util';
 import './checkout.css';
-
-let total = 0;
 
 const ELEMENT_OPTIONS = {
     style: {
@@ -30,7 +27,7 @@ const ELEMENT_OPTIONS = {
     },
 };
 
-export default class CheckoutForm extends React.Component {
+class CheckoutForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -42,8 +39,14 @@ export default class CheckoutForm extends React.Component {
             paymentMethod: null,
             isOpenIDEAL: false,
             isOpenBANK: false,
-            stripePromise: loadStripe('pk_test_t9hsTVk7AWp7pZI7UmZKKQ7r00PyLH5QmB')
         };
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(event) {
+        this.setState({
+            [event.target.name]: event.target.value
+        })
     }
 
     toggleIDEAL = () => {
@@ -58,35 +61,37 @@ export default class CheckoutForm extends React.Component {
 
     handleSubmit = async (event) => {
         event.preventDefault();
-        const {elements, ideal, cartTotal} = this.props;
-        const {name, stripePromise} = this.state;
 
-        if (!stripePromise || !elements) {
+        const {firstname, lastname, isOpenIDEAL} = this.state;
+        const {stripe, elements} = this.props;
+
+        if (!stripe || !elements) {
             return;
         }
         const data = {
             companyName: "Nivero",
-            Amount: total * 100
+            Amount: 10 * 100
         }
-        console.log(JSON.stringify(data));
+        console.log(this.props.total);
         const requestOptions = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
         };
-
+        console.log(firstname + " " + lastname)
         var response = await fetch(`payment/intent`, requestOptions)
             .then(function (response) {
                 return response.json();
             })
             .then(function (responseJson) {
-                var clientSecret = responseJson.client_secret;
-                if (ideal.ideal) {
-                    const {error} = stripePromise.confirmIdealPayment(clientSecret, {
+                let clientSecret = responseJson.client_secret;
+                console.log(clientSecret);
+                if (isOpenIDEAL) {
+                    const {error} = stripe.confirmIdealPayment(clientSecret, {
                         payment_method: {
                             ideal: elements.getElement(IdealBankElement),
                             billing_details: {
-                                name: name,
+                                name: lastname,
                             },
                         },
                         return_url: 'https://google.com',
@@ -97,11 +102,11 @@ export default class CheckoutForm extends React.Component {
                         console.log(error.message);
                     }
                 } else {
-                    const result = stripePromise.confirmCardPayment(clientSecret, {
+                    const result = stripe.confirmCardPayment(clientSecret, {
                         payment_method: {
                             card: elements.getElement(CardNumberElement),
                             billing_details: {
-                                name: name,
+                                name: lastname,
                             },
                         }
                     }).then(function (response) {
@@ -128,8 +133,8 @@ export default class CheckoutForm extends React.Component {
     };
 
     render() {
+        const {stripe} = this.props
         return (
-
             <Col sm="12" md="7" className="justify-content-center">
                 <form onSubmit={this.handleSubmit} className="m-0 p-0">
                     <Row>
@@ -141,33 +146,41 @@ export default class CheckoutForm extends React.Component {
                                 <Col sm="12" md="6" className="d-inline-block">
                                     <label htmlFor="firstname">First Name</label>
                                     <input
-                                        id="firstname"
+                                        name="firstname"
                                         required
                                         placeholder="Uw voornaam"
+                                        value={this.state.firstname}
+                                        onChange={this.handleChange}
                                     />
                                 </Col>
                                 <Col sm="12" md="6" className="d-inline-block">
                                     <label htmlFor="lastname">Last Name</label>
                                     <input
-                                        id="lastname"
+                                        name="lastname"
                                         required
                                         placeholder="Uw achternaam"
+                                        value={this.state.lastname}
+                                        onChange={this.handleChange}
                                     />
                                 </Col>
                                 <Col sm="12" md="6" className="d-inline-block">
                                     <label htmlFor="name">Email</label>
                                     <input
-                                        id="email"
+                                        name="email"
                                         required
-                                        placeholder="example@hotmail.com"
+                                        placeholder="voorbeeld@hotmail.com"
+                                        value={this.state.email}
+                                        onChange={this.handleChange}
                                     />
                                 </Col>
                                 <Col sm="12" md="6" className="d-inline-block">
                                     <label htmlFor="name">Phone Number</label>
                                     <input
-                                        id="phoneNumber"
+                                        name="phoneNumber"
                                         required
                                         placeholder="012 123 1234"
+                                        value={this.state.phoneNumber}
+                                        onChange={this.handleChange}
                                     />
                                 </Col>
                             </ToastBody>
@@ -190,55 +203,51 @@ export default class CheckoutForm extends React.Component {
                                 <Collapse isOpen={this.state.isOpenIDEAL}>
                                     <Card>
                                         <CardBody>
-                                            <Elements stripe={this.state.stripePromise}>
-                                                <div>
-                                                    <label htmlFor="ideal">iDEAL</label>
-                                                    <IdealBankElement
-                                                        id="ideal"
-                                                        options={ELEMENT_OPTIONS}
-                                                    />
-                                                </div>
-                                            </Elements>
+                                            <div>
+                                                <label htmlFor="ideal">iDEAL</label>
+                                                <IdealBankElement
+                                                    id="ideal"
+                                                    options={ELEMENT_OPTIONS}
+                                                />
+                                            </div>
                                         </CardBody>
                                     </Card>
                                     <button className="mci-checkout-button" type="submit"
-                                            disabled={!this.state.stripePromise}>
+                                            disabled={!stripe}>
                                         Confirm & Pay € {this.props.total}
                                     </button>
                                 </Collapse>
                                 <Collapse isOpen={this.state.isOpenBank}>
                                     <Card>
                                         <CardBody>
-                                            <Elements stripe={this.state.stripePromise}>
-                                                <div>
-                                                    <label htmlFor="cardNumber">Card Number</label>
-                                                    <CardNumberElement
-                                                        id="cardNumber"
-                                                        options={ELEMENT_OPTIONS}
-                                                    />
-                                                    <label htmlFor="expiry">Card Expiration</label>
-                                                    <CardExpiryElement
-                                                        id="expiry"
-                                                        options={ELEMENT_OPTIONS}
-                                                    />
-                                                    <label htmlFor="cvc">CVC</label>
-                                                    <CardCvcElement
-                                                        id="cvc"
-                                                        options={ELEMENT_OPTIONS}
-                                                    />
-                                                    {this.state.errorMessage &&
-                                                    <ErrorResult>{this.state.errorMessage}</ErrorResult>}
-                                                    {this.state.paymentMethod && (
-                                                        <Result>Got
-                                                            PaymentMethod: {this.state.paymentMethod.id}</Result>
-                                                    )}
-                                                    <br/>
-                                                </div>
-                                            </Elements>
+                                            <div>
+                                                <label htmlFor="cardNumber">Card Number</label>
+                                                <CardNumberElement
+                                                    id="cardNumber"
+                                                    options={ELEMENT_OPTIONS}
+                                                />
+                                                <label htmlFor="expiry">Card Expiration</label>
+                                                <CardExpiryElement
+                                                    id="expiry"
+                                                    options={ELEMENT_OPTIONS}
+                                                />
+                                                <label htmlFor="cvc">CVC</label>
+                                                <CardCvcElement
+                                                    id="cvc"
+                                                    options={ELEMENT_OPTIONS}
+                                                />
+                                                {this.state.errorMessage &&
+                                                <ErrorResult>{this.state.errorMessage}</ErrorResult>}
+                                                {this.state.paymentMethod && (
+                                                    <Result>Got
+                                                        PaymentMethod: {this.state.paymentMethod.id}</Result>
+                                                )}
+                                                <br/>
+                                            </div>
                                         </CardBody>
                                     </Card>
                                     <button className="mci-checkout-button" type="submit"
-                                            disabled={!this.state.stripePromise}>
+                                            disabled={!stripe}>
                                         Confirm & Pay € {this.props.total}
                                     </button>
                                 </Collapse>
@@ -248,6 +257,16 @@ export default class CheckoutForm extends React.Component {
                 </form>
             </Col>
 
+        );
+    }
+}
+
+export const InjectedCheckoutForm = (totalAmount) => {
+    return (
+        <ElementsConsumer>
+            {({stripe, elements}) => (
+                <CheckoutForm stripe={stripe} elements={elements} total={totalAmount.totalAmount}/>
+            )}
+        </ElementsConsumer>
     );
-    }
-    }
+}

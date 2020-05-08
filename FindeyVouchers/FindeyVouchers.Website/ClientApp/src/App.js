@@ -10,6 +10,8 @@ import data from './response.json';
 import {Provider} from 'react-redux';
 import {createStore} from 'redux';
 import reducer from './redux/reducer';
+import CheckoutStatusSuccess from "./Components/CheckoutStatus/CheckoutStatusSuccess";
+import CheckoutStatusError from "./Components/CheckoutStatus/CheckoutStatusError";
 
 
 const initialStore = {
@@ -66,7 +68,8 @@ export default class App extends React.Component {
                 <Provider store={store}>
                     <Route exact path="/" component={() => <CompanyVouchers data={response}/>}/>
                     <Route exact path="/checkout" component={Checkout}/>
-                    <Route exact path="/checkout-status" component={CheckoutStatus}/>
+                    <Route exact path="/checkout-status/success" component={CheckoutStatusSuccess}/>
+                    <Route exact path="/checkout-status/error" component={CheckoutStatusError}/>
                 </Provider> : ""
         );
     }

@@ -7,7 +7,7 @@ import {
     ElementsConsumer,
     IdealBankElement,
 } from '@stripe/react-stripe-js';
-
+import {useHistory} from "react-router-dom";
 import {ErrorResult, Result} from './util';
 import './checkout.css';
 
@@ -43,6 +43,13 @@ class CheckoutForm extends React.Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+
+    redirect() {
+
+        const history = useHistory();
+        history.push("/checkout-status/success");
+    }
+
     handleChange(event) {
         this.setState({
             [event.target.name]: event.target.value
@@ -62,7 +69,7 @@ class CheckoutForm extends React.Component {
     handleSubmit = async (event) => {
         event.preventDefault();
 
-        const {firstname, lastname, isOpenIDEAL} = this.state;
+        const {firstname, lastname, email, phoneNumber, isOpenIDEAL} = this.state;
         const {stripe, elements, total} = this.props;
 
         if (!stripe || !elements) {
@@ -77,7 +84,7 @@ class CheckoutForm extends React.Component {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
         };
-        
+
         var response = await fetch(`payment/intent`, requestOptions)
             .then(function (response) {
                 return response.json();
@@ -116,18 +123,33 @@ class CheckoutForm extends React.Component {
                         } else {
                             // The payment has been processed!
                             if (result.paymentIntent.status === 'succeeded') {
-                                console.log(result);
-                                // Show a success message to your customer
-                                // There's a risk of the customer closing the window before callback
-                                // execution. Set up a webhook or plugin to listen for the
-                                // payment_intent.succeeded event that handles any business critical
-                                // post-payment actions.
+                                var data = {
+                                    customer: {
+                                        firstname: firstname,
+                                        lastname: lastname,
+                                        email: email,
+                                        phoneNumber: phoneNumber
+                                    },
+                                    paymentStatus: result.paymentIntent.status,
+                                    amount: result.paymentIntent.amount,
+                                    created: result.paymentIntent.created,
+                                    stripeId: result.paymentIntent.id
+                                }
+                                const requestOptions = {
+                                    method: 'POST',
+                                    headers: {'Content-Type': 'application/json'},
+                                    body: JSON.stringify(data)
+                                };
+                                return fetch(`payment/success`, requestOptions)
+                                    .then(function (response) {
+                                        return response;
+                                    });
                             }
                         }
                     });
                 }
-
             });
+
     };
 
     render() {

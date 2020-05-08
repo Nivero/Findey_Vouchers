@@ -2,6 +2,7 @@ using FindeyVouchers.Domain;
 using FindeyVouchers.Domain.EfModels;
 using FindeyVouchers.Interfaces;
 using FindeyVouchers.Services;
+using FindeyVouchers.Website.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -37,6 +38,8 @@ namespace FindeyVouchers.Website
             services.AddTransient<IMerchantService, MerchantService>();
             services.AddTransient<IVoucherService, VoucherService>();
             services.AddTransient<IAzureStorageService, AzureStorageService>();
+            services.AddTransient<IPaymentService, PaymentService>();
+            services.AddTransient<ICustomerService, CustomerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

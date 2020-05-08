@@ -14,20 +14,22 @@ namespace FindeyVouchers.Services
             _context = context;
         }
 
-        public void CreateCustomer(Customer customer)
+        public Customer CreateCustomer(Customer customer)
         {
             var existing = _context.Customers.FirstOrDefault(x => x.Email.ToLower().Equals(customer.Email.ToLower()));
             if (existing != null)
             {
                 _context.Customers.Add(customer);
+                _context.SaveChanges();
+                return customer;
             }
 
             {
                 existing = customer;
                 _context.Customers.Update(existing);
+                _context.SaveChanges();
+                return existing;
             }
-
-            _context.SaveChanges();
         }
     }
 }

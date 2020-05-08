@@ -4,6 +4,6 @@ namespace FindeyVouchers.Interfaces
 {
     public interface ICustomerService
     {
-        void CreateCustomer(Customer customer);
+        Customer CreateCustomer(Customer customer);
     }
 }

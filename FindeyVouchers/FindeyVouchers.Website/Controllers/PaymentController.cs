@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
 using System.Text.Json;
+using FindeyVouchers.Domain.EfModels;
 using FindeyVouchers.Interfaces;
 using FindeyVouchers.Website.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -14,10 +15,17 @@ namespace FindeyVouchers.Website.Controllers
     public class PaymentController : ControllerBase
     {
         private readonly IMerchantService _merchantService;
+        private readonly ICustomerService _customerService;
+        private readonly IPaymentService _paymentService;
+        private readonly IVoucherService _voucherService;
 
-        public PaymentController(IMerchantService merchantService)
+        public PaymentController(IMerchantService merchantService, ICustomerService customerService,
+            IPaymentService paymentService, IVoucherService voucherService)
         {
             _merchantService = merchantService;
+            _customerService = customerService;
+            _paymentService = paymentService;
+            _voucherService = voucherService;
         }
 
         [HttpPost]
@@ -56,9 +64,10 @@ namespace FindeyVouchers.Website.Controllers
             var service = new PaymentIntentService();
             var intent = service.Create(createOptions);
             return Ok(new {client_secret = intent.ClientSecret});
-        }        
+        }
+
         [HttpPost]
-        [Route("succes")]
+        [Route("success")]
         public IActionResult FinishOrder([FromBody] JsonElement body)
         {
             // Save user
@@ -69,8 +78,16 @@ namespace FindeyVouchers.Website.Controllers
             {
                 PropertyNameCaseInsensitive = true,
             };
-            var response = JsonSerializer.Deserialize<PaymentIntentRequest>(body.ToString(), options);
-
+            var response = JsonSerializer.Deserialize<PaymentSuccessRequest>(body.ToString(), options);
+            var customer = _customerService.CreateCustomer(response.Customer);
+            var paymentId = _paymentService.CreatePayment(new Payment
+            {
+                Amount = response.Amount,
+                Status = response.PaymentStatus,
+                StripeId = response.PaymentId,
+                Created = new DateTime().AddSeconds(response.Created)
+            });
+            _voucherService.GenerateVoucherCode(customer, paymentId);
             return Ok();
         }
     }

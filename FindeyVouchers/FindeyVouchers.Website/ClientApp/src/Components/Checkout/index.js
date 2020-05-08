@@ -16,7 +16,7 @@ const
                 <Row>
                     <OrderOverView cartItems={props.cartItems} cartTotal={props.cartTotal}/>
                     <Elements stripe={stripePromise}>
-                        <InjectedCheckoutForm totalAmount={props.cartTotal}/>
+                        <InjectedCheckoutForm totalAmount={props.cartTotal} cartItems={props.cartItems}/>
                     </Elements>
 
                 </Row>

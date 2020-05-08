@@ -7,7 +7,6 @@ import {
     ElementsConsumer,
     IdealBankElement,
 } from '@stripe/react-stripe-js';
-import {useHistory} from "react-router-dom";
 import {ErrorResult, Result} from './util';
 import './checkout.css';
 
@@ -44,12 +43,6 @@ class CheckoutForm extends React.Component {
     }
 
 
-    redirect() {
-
-        const history = useHistory();
-        history.push("/checkout-status/success");
-    }
-
     handleChange(event) {
         this.setState({
             [event.target.name]: event.target.value
@@ -70,8 +63,7 @@ class CheckoutForm extends React.Component {
         event.preventDefault();
 
         const {firstname, lastname, email, phoneNumber, isOpenIDEAL} = this.state;
-        const {stripe, elements, total} = this.props;
-
+        const {stripe, elements, total, cartItems} = this.props;
         if (!stripe || !elements) {
             return;
         }
@@ -133,8 +125,10 @@ class CheckoutForm extends React.Component {
                                     paymentStatus: result.paymentIntent.status,
                                     amount: result.paymentIntent.amount,
                                     created: result.paymentIntent.created,
-                                    stripeId: result.paymentIntent.id
+                                    stripeId: result.paymentIntent.id,
+                                    voucher: cartItems
                                 }
+                                console.log(data);
                                 const requestOptions = {
                                     method: 'POST',
                                     headers: {'Content-Type': 'application/json'},
@@ -142,7 +136,7 @@ class CheckoutForm extends React.Component {
                                 };
                                 return fetch(`payment/success`, requestOptions)
                                     .then(function (response) {
-                                        return response;
+                                        console.log(response)
                                     });
                             }
                         }
@@ -281,11 +275,13 @@ class CheckoutForm extends React.Component {
     }
 }
 
-export const InjectedCheckoutForm = (totalAmount) => {
+export const InjectedCheckoutForm = (props) => {
+
     return (
         <ElementsConsumer>
             {({stripe, elements}) => (
-                <CheckoutForm stripe={stripe} elements={elements} total={totalAmount.totalAmount}/>
+                <CheckoutForm stripe={stripe} elements={elements} total={props.totalAmount}
+                              cartItems={props.cartItems}/>
             )}
         </ElementsConsumer>
     );

@@ -87,7 +87,7 @@ namespace FindeyVouchers.Website.Controllers
                 StripeId = response.PaymentId,
                 Created = new DateTime().AddSeconds(response.Created)
             });
-            _voucherService.GenerateVoucherCode(customer, paymentId);
+            
             return Ok();
         }
     }

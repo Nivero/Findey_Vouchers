@@ -16,5 +16,6 @@ namespace FindeyVouchers.Domain
         public DbSet<CustomerVoucher> CustomerVouchers { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<VoucherCategory> VoucherCategories { get; set; }
+        public DbSet<Payment> Payments { get; set; }
     }
 }

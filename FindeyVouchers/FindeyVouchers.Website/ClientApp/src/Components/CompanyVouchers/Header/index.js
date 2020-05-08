@@ -24,7 +24,8 @@ export default class Header extends React.Component {
                         </Row>
                         <Row>
                             <Col>
-                                {this.props.merchant.description ? this.props.merchant.description : "Welkom bij de kadobonnen winkel! Scroll naar beneden voor ons aanbod." }
+                                {this.props.merchant.description ? this.props.merchant.description : "Hieronder vindt u de vouchers die wij beschikbaar hebben gesteld. Na uw aankoop ontvangt u een e-mail met daarin de vouchers die besteed kunnen worden bij onze onderneming. \n" +
+                                    "We willen u alvast bedanken en graag tot snel!" }
                             </Col>
                         </Row>
                     </Col>

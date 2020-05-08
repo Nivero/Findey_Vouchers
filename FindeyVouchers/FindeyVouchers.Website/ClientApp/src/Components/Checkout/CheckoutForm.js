@@ -63,29 +63,27 @@ class CheckoutForm extends React.Component {
         event.preventDefault();
 
         const {firstname, lastname, isOpenIDEAL} = this.state;
-        const {stripe, elements} = this.props;
+        const {stripe, elements, total} = this.props;
 
         if (!stripe || !elements) {
             return;
         }
         const data = {
             companyName: "Nivero",
-            Amount: 10 * 100
+            Amount: total * 100
         }
-        console.log(this.props.total);
         const requestOptions = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
         };
-        console.log(firstname + " " + lastname)
+        
         var response = await fetch(`payment/intent`, requestOptions)
             .then(function (response) {
                 return response.json();
             })
             .then(function (responseJson) {
                 let clientSecret = responseJson.client_secret;
-                console.log(clientSecret);
                 if (isOpenIDEAL) {
                     const {error} = stripe.confirmIdealPayment(clientSecret, {
                         payment_method: {

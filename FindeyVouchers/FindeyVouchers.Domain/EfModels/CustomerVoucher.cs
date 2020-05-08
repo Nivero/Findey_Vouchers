@@ -30,5 +30,7 @@ namespace FindeyVouchers.Domain.EfModels
         
         [Display(Name = "Voucher geldig?")]
         public bool IsUsed { get; set; }
+        
+        public Payment Payment { get; set; }
     }
 }

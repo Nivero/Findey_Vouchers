@@ -12,7 +12,7 @@ const
     Checkout = (props) => {
         return (
             <Container className="p-3 bg-secondary my-2 rounded">
-                <span className="text-center text-light"><h1>Your Order</h1></span>
+                <span className="text-center text-light"><h1>Uw Bestelling</h1></span>
                 <Row>
                     <OrderOverView cartItems={props.cartItems} cartTotal={props.cartTotal}/>
                     <Elements stripe={stripePromise}>

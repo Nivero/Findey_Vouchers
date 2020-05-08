@@ -56,6 +56,22 @@ namespace FindeyVouchers.Website.Controllers
             var service = new PaymentIntentService();
             var intent = service.Create(createOptions);
             return Ok(new {client_secret = intent.ClientSecret});
+        }        
+        [HttpPost]
+        [Route("succes")]
+        public IActionResult FinishOrder([FromBody] JsonElement body)
+        {
+            // Save user
+            // Wait for payment complete
+            // Connect payment to user
+            // Generate emails
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+            };
+            var response = JsonSerializer.Deserialize<PaymentIntentRequest>(body.ToString(), options);
+
+            return Ok();
         }
     }
 }

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FindeyVouchers.Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200505141013_AddCategories")]
-    partial class AddCategories
+    [Migration("20200510122250_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,6 +50,9 @@ namespace FindeyVouchers.Domain.Migrations
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(256)")
@@ -140,9 +143,6 @@ namespace FindeyVouchers.Domain.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Prefix")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Customers");
@@ -166,6 +166,12 @@ namespace FindeyVouchers.Domain.Migrations
                     b.Property<bool>("IsUsed")
                         .HasColumnType("bit");
 
+                    b.Property<Guid?>("MerchantVoucherId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PaymentId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
@@ -175,14 +181,13 @@ namespace FindeyVouchers.Domain.Migrations
                     b.Property<DateTime>("ValidUntil")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("VoucherMerchantId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("VoucherMerchantId");
+                    b.HasIndex("MerchantVoucherId");
+
+                    b.HasIndex("PaymentId");
 
                     b.ToTable("CustomerVouchers");
                 });
@@ -231,6 +236,25 @@ namespace FindeyVouchers.Domain.Migrations
                     b.ToTable("MerchantVouchers");
                 });
 
+            modelBuilder.Entity("FindeyVouchers.Domain.EfModels.Payment", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<float>("Amount")
+                        .HasColumnType("real");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Payments");
+                });
+
             modelBuilder.Entity("FindeyVouchers.Domain.EfModels.StripeSecret", b =>
                 {
                     b.Property<string>("Email")
@@ -255,6 +279,9 @@ namespace FindeyVouchers.Domain.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Ranking")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -404,9 +431,13 @@ namespace FindeyVouchers.Domain.Migrations
                         .WithMany()
                         .HasForeignKey("CustomerId");
 
-                    b.HasOne("FindeyVouchers.Domain.EfModels.MerchantVoucher", "VoucherMerchant")
+                    b.HasOne("FindeyVouchers.Domain.EfModels.MerchantVoucher", "MerchantVoucher")
                         .WithMany()
-                        .HasForeignKey("VoucherMerchantId");
+                        .HasForeignKey("MerchantVoucherId");
+
+                    b.HasOne("FindeyVouchers.Domain.EfModels.Payment", "Payment")
+                        .WithMany()
+                        .HasForeignKey("PaymentId");
                 });
 
             modelBuilder.Entity("FindeyVouchers.Domain.EfModels.MerchantVoucher", b =>

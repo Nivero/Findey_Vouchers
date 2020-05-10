@@ -34,16 +34,70 @@ namespace FindeyVouchers.Domain.Migrations
                     PasswordHash = table.Column<string>(nullable: true),
                     SecurityStamp = table.Column<string>(nullable: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
-                    PhoneNumber = table.Column<string>(nullable: true),
                     PhoneNumberConfirmed = table.Column<bool>(nullable: false),
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    StripeAccountId = table.Column<string>(nullable: true),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    DateOfBirth = table.Column<DateTime>(nullable: false),
+                    Address = table.Column<string>(nullable: true),
+                    ZipCode = table.Column<string>(nullable: true),
+                    City = table.Column<string>(nullable: true),
+                    Country = table.Column<string>(nullable: true),
+                    CompanyName = table.Column<string>(nullable: true),
+                    NormalizedCompanyName = table.Column<string>(nullable: true),
+                    BusinessType = table.Column<int>(nullable: false),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    Website = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Customers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Customers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Payments",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    Amount = table.Column<float>(nullable: false),
+                    Created = table.Column<DateTime>(nullable: false),
+                    Status = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Payments", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StripeSecret",
+                columns: table => new
+                {
+                    Email = table.Column<string>(nullable: false),
+                    Secret = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StripeSecret", x => x.Email);
                 });
 
             migrationBuilder.CreateTable(
@@ -152,6 +206,96 @@ namespace FindeyVouchers.Domain.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "VoucherCategories",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Ranking = table.Column<int>(nullable: false),
+                    MerchantId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VoucherCategories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_VoucherCategories_AspNetUsers_MerchantId",
+                        column: x => x.MerchantId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MerchantVouchers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    MerchantId = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: false),
+                    Description = table.Column<string>(nullable: false),
+                    Image = table.Column<string>(nullable: true),
+                    IsActive = table.Column<bool>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    Price = table.Column<decimal>(nullable: false),
+                    VoucherType = table.Column<int>(nullable: false),
+                    CategoryId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MerchantVouchers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MerchantVouchers_VoucherCategories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "VoucherCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MerchantVouchers_AspNetUsers_MerchantId",
+                        column: x => x.MerchantId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CustomerVouchers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    CustomerId = table.Column<Guid>(nullable: true),
+                    MerchantVoucherId = table.Column<Guid>(nullable: true),
+                    PurchasedOn = table.Column<DateTime>(nullable: false),
+                    Price = table.Column<decimal>(nullable: false),
+                    Code = table.Column<string>(nullable: true),
+                    EmailSent = table.Column<bool>(nullable: false),
+                    ValidUntil = table.Column<DateTime>(nullable: false),
+                    IsUsed = table.Column<bool>(nullable: false),
+                    PaymentId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomerVouchers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CustomerVouchers_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CustomerVouchers_MerchantVouchers_MerchantVoucherId",
+                        column: x => x.MerchantVoucherId,
+                        principalTable: "MerchantVouchers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CustomerVouchers_Payments_PaymentId",
+                        column: x => x.PaymentId,
+                        principalTable: "Payments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -190,6 +334,36 @@ namespace FindeyVouchers.Domain.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomerVouchers_CustomerId",
+                table: "CustomerVouchers",
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomerVouchers_MerchantVoucherId",
+                table: "CustomerVouchers",
+                column: "MerchantVoucherId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomerVouchers_PaymentId",
+                table: "CustomerVouchers",
+                column: "PaymentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MerchantVouchers_CategoryId",
+                table: "MerchantVouchers",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MerchantVouchers_MerchantId",
+                table: "MerchantVouchers",
+                column: "MerchantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VoucherCategories_MerchantId",
+                table: "VoucherCategories",
+                column: "MerchantId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -210,7 +384,25 @@ namespace FindeyVouchers.Domain.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "CustomerVouchers");
+
+            migrationBuilder.DropTable(
+                name: "StripeSecret");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Customers");
+
+            migrationBuilder.DropTable(
+                name: "MerchantVouchers");
+
+            migrationBuilder.DropTable(
+                name: "Payments");
+
+            migrationBuilder.DropTable(
+                name: "VoucherCategories");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

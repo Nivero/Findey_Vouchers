@@ -10,7 +10,7 @@ namespace FindeyVouchers.Domain
         public Merchant Merchant { get; set; }
     }
 
-    public class Merchant
+    public partial class Merchant
     {
         public string Name { get; set; }
         public string Website { get; set; }

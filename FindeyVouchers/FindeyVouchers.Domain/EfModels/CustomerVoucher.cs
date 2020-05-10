@@ -13,7 +13,7 @@ namespace FindeyVouchers.Domain.EfModels
 
         public Guid Id { get; set; }
         public Customer Customer { get; set; }
-        public MerchantVoucher VoucherMerchant { get; set; }
+        public MerchantVoucher MerchantVoucher { get; set; }
 
         [Display(Name = "Gekocht op")]
         [DataType(DataType.Date)]

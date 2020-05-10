@@ -15,11 +15,24 @@ namespace FindeyVouchers.Services
             _context = context;
         }
 
-        public Guid CreatePayment(Payment payment)
+        public void CreatePayment(Payment payment)
         {
             _context.Payments.Add(payment);
             _context.SaveChanges();
-            return payment.Id;
+        }
+
+        public void UpdatePayment(PaymentStatusResponse response)
+        {
+            var payment = _context.Payments.FirstOrDefault(x => x.Id == response.PaymentId);
+            if (payment != null)
+            {
+                payment.Amount = response.Amount;
+                payment.Status = response.PaymentStatus;
+                payment.Error = response.ErrorMessage;
+                payment.Created = new DateTime().AddMilliseconds(response.Created);
+                _context.Update(payment);
+                _context.SaveChanges();
+            }
         }
     }
 }

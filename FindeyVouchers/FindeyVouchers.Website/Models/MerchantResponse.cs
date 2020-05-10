@@ -9,7 +9,7 @@ namespace FindeyVouchers.Website.Models
         public IQueryable<MerchantVoucher>  Vouchers { get; set; }
     }
 
-    public class Merchant
+    public partial class Merchant
     {
         public string Name { get; set; }
         public string Website { get; set; }

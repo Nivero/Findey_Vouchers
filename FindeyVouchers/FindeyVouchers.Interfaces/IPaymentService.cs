@@ -1,10 +1,12 @@
 ﻿using System;
+using FindeyVouchers.Domain;
 using FindeyVouchers.Domain.EfModels;
 
 namespace FindeyVouchers.Interfaces
 {
     public interface IPaymentService
     {
-        Guid CreatePayment(Payment payment);
+        void CreatePayment(Payment payment);
+        void UpdatePayment(PaymentStatusResponse response);
     }
 }

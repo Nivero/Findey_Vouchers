@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
 using System.Text.Json;
+using FindeyVouchers.Domain;
 using FindeyVouchers.Domain.EfModels;
 using FindeyVouchers.Interfaces;
 using FindeyVouchers.Website.Models;
@@ -12,14 +13,14 @@ namespace FindeyVouchers.Website.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class PaymentController : ControllerBase
+    public class OrderController : ControllerBase
     {
         private readonly IMerchantService _merchantService;
         private readonly ICustomerService _customerService;
         private readonly IPaymentService _paymentService;
         private readonly IVoucherService _voucherService;
 
-        public PaymentController(IMerchantService merchantService, ICustomerService customerService,
+        public OrderController(IMerchantService merchantService, ICustomerService customerService,
             IPaymentService paymentService, IVoucherService voucherService)
         {
             _merchantService = merchantService;
@@ -29,7 +30,7 @@ namespace FindeyVouchers.Website.Controllers
         }
 
         [HttpPost]
-        [Route("intent")]
+        [Route("payment/intent")]
         public IActionResult InitiatePaymentIntent([FromBody] JsonElement body)
         {
             // Set your secret key. Remember to switch to your live secret key in production!
@@ -67,26 +68,47 @@ namespace FindeyVouchers.Website.Controllers
         }
 
         [HttpPost]
-        [Route("success")]
+        [Route("payment/response")]
         public IActionResult FinishOrder([FromBody] JsonElement body)
         {
-            // Save user
-            // Wait for payment complete
-            // Connect payment to user
-            // Generate emails
+
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
             };
-            var response = JsonSerializer.Deserialize<PaymentSuccessRequest>(body.ToString(), options);
-            var customer = _customerService.CreateCustomer(response.Customer);
-            var paymentId = _paymentService.CreatePayment(new Payment
+            var response = JsonSerializer.Deserialize<PaymentStatusResponse>(body.ToString(), options);
+            _paymentService.UpdatePayment(response);
+            _voucherService.CreateAndSendVouchers(response.PaymentId);
+            return Ok();
+        }
+        
+        
+        [HttpPost]
+        [Route("create")]
+        public IActionResult CreateOrder([FromBody] JsonElement body)
+        {
+            // create user
+            // create customer voucher for user
+
+            var options = new JsonSerializerOptions
             {
-                Amount = response.Amount,
-                Status = response.PaymentStatus,
-                StripeId = response.PaymentId,
-                Created = new DateTime().AddSeconds(response.Created)
+                PropertyNameCaseInsensitive = true,
+            };
+            var response = JsonSerializer.Deserialize<CreateOrderRequest>(body.ToString(), options);
+            var customer = _customerService.CreateCustomer(response.Customer);
+            _paymentService.CreatePayment(new Payment
+            {
+                Id = response.PaymentId,
+                Amount = 0,
+                Status = null,
+                Created = DateTime.Now
             });
+            
+            foreach (var merchantVoucher in response.Vouchers)
+            {
+                _voucherService.CreateCustomerVoucher(customer, merchantVoucher, response.PaymentId);
+            }
+
             
             return Ok();
         }

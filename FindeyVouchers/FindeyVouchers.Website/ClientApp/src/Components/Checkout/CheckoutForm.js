@@ -38,8 +38,11 @@ class CheckoutForm extends React.Component {
             paymentMethod: null,
             isOpenIDEAL: false,
             isOpenBANK: false,
+            secret: ''
         };
         this.handleChange = this.handleChange.bind(this);
+        this.setClientSecret();
+
     }
 
 
@@ -58,93 +61,147 @@ class CheckoutForm extends React.Component {
         this.setState({isOpenIDEAL: false, isOpenBank: true});
     };
 
-
-    handleSubmit = async (event) => {
-        event.preventDefault();
-
-        const {firstname, lastname, email, phoneNumber, isOpenIDEAL} = this.state;
-        const {stripe, elements, total, cartItems} = this.props;
-        if (!stripe || !elements) {
-            return;
-        }
-        const data = {
-            companyName: "Nivero",
-            Amount: total * 100
-        }
+    createOrder = (data) => {
         const requestOptions = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
         };
+        fetch(`order/create`, requestOptions)
+            .then((response) => {
+                return response;
+            }).then((responseJson) => {
+            return responseJson;
+        });
+    }
 
-        var response = await fetch(`payment/intent`, requestOptions)
-            .then(function (response) {
+    setClientSecret = () => {
+        const intentData = {
+            companyName: "Nivero",
+            Amount: this.props.total * 100
+        }
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(intentData)
+        };
+
+        fetch(`order/payment/intent`, requestOptions)
+            .then((response) => {
                 return response.json();
             })
-            .then(function (responseJson) {
-                let clientSecret = responseJson.client_secret;
-                if (isOpenIDEAL) {
-                    const {error} = stripe.confirmIdealPayment(clientSecret, {
-                        payment_method: {
-                            ideal: elements.getElement(IdealBankElement),
-                            billing_details: {
-                                name: lastname,
-                            },
-                        },
-                        return_url: 'https://google.com',
-                    });
+            .then((responseJson) => {
+                this.setState({secret: responseJson.client_secret})
+            });
+    }
 
-                    if (error) {
-                        // Show error to your customer.
-                        console.log(error.message);
-                    }
-                } else {
-                    const result = stripe.confirmCardPayment(clientSecret, {
-                        payment_method: {
-                            card: elements.getElement(CardNumberElement),
-                            billing_details: {
-                                name: lastname,
-                            },
-                        }
-                    }).then(function (response) {
-                        return response;
-                    }).then(function (result) {
-                        if (result.error) {
-                            // Show error to your customer (e.g., insufficient funds)
-                            console.log(result.error.message);
-                        } else {
-                            // The payment has been processed!
-                            if (result.paymentIntent.status === 'succeeded') {
-                                var data = {
-                                    customer: {
-                                        firstname: firstname,
-                                        lastname: lastname,
-                                        email: email,
-                                        phoneNumber: phoneNumber
-                                    },
-                                    paymentStatus: result.paymentIntent.status,
-                                    amount: result.paymentIntent.amount,
-                                    created: result.paymentIntent.created,
-                                    stripeId: result.paymentIntent.id,
-                                    voucher: cartItems
-                                }
-                                console.log(data);
-                                const requestOptions = {
-                                    method: 'POST',
-                                    headers: {'Content-Type': 'application/json'},
-                                    body: JSON.stringify(data)
-                                };
-                                return fetch(`payment/success`, requestOptions)
-                                    .then(function (response) {
-                                        console.log(response)
-                                    });
-                            }
-                        }
-                    });
+
+    handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const {firstname, lastname, email, phoneNumber, isOpenIDEAL, secret} = this.state;
+        const {stripe, elements, cartItems} = this.props;
+        if (!stripe || !elements) {
+            return;
+        }
+
+        this.createOrder({
+            customer: {
+                firstname: firstname,
+                lastname: lastname,
+                email: email,
+                phoneNumber: phoneNumber
+            },
+            vouchers: cartItems,
+            paymentId: secret.substr(0, secret.indexOf("_secret"))
+        });
+
+        if (isOpenIDEAL) {
+            const {error} = stripe.confirmIdealPayment(secret, {
+                payment_method: {
+                    ideal: elements.getElement(IdealBankElement),
+                    billing_details: {
+                        name: lastname,
+                    },
+                },
+                return_url: 'https://google.com',
+            });
+
+            if (error) {
+                // Show error to your customer.
+                console.log(error.message);
+            }
+        } else {
+            const result = await stripe.confirmCardPayment(secret, {
+                payment_method: {
+                    card: elements.getElement(CardNumberElement),
+                    billing_details: {
+                        name: lastname,
+                    },
                 }
             });
 
-    };
+            const data = {
+                paymentStatus: result.paymentIntent.status,
+                amount: result.paymentIntent.amount,
+                created: result.paymentIntent.created,
+                paymentId: result.paymentIntent.id,
+                errorMessage: result.error ? result.error.message : ""
+            }
+            const requestOptions = {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            };
+            fetch(`order/payment/response`, requestOptions)
+                .then(function (response) {
+                    if (result.error) {
+                        window.location.href = "/checkout-status/error";
+                    } else {
+                        if (result.paymentIntent.status === 'succeeded') {
+                            window.location.href = "/checkout-status/success";
+                        }
+                    }
+                });
+        }
+
+        // const result = stripe.confirmCardPayment(secret, {
+        //     payment_method: {
+        //         card: elements.getElement(CardNumberElement),
+        //         billing_details: {
+        //             name: lastname,
+        //         },
+        //     }
+        // }).then( (response)=> {
+        //     return response;
+        // }).then( (result) =>{
+        //     const data = {
+        //         paymentStatus: result.paymentIntent.status,
+        //         amount: result.paymentIntent.amount,
+        //         created: result.paymentIntent.created,
+        //         paymentId: result.paymentIntent.id,
+        //         errorMessage: result.error.message
+        //     }
+        //     const requestOptions = {
+        //         method: 'POST',
+        //         headers: {'Content-Type': 'application/json'},
+        //         body: JSON.stringify(data)
+        //     };
+        //     fetch(`payment/success`, requestOptions)
+        //         .then( function(response){
+        //             if (result.error) {
+        //                 window.location.href = "/checkout-status/error";
+        //             } else {
+        //                 if (result.paymentIntent.status === 'succeeded') {
+        //                     window.location.href = "/checkout-status/success";
+        //                 }
+        //             }
+        //         });
+        //
+        //
+        // });
+    }
+
 
     render() {
         const {stripe} = this.props
@@ -244,6 +301,7 @@ class CheckoutForm extends React.Component {
                                                 <CardExpiryElement
                                                     id="expiry"
                                                     options={ELEMENT_OPTIONS}
+
                                                 />
                                                 <label htmlFor="cvc">CVC</label>
                                                 <CardCvcElement

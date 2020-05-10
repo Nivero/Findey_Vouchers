@@ -8,5 +8,6 @@ namespace FindeyVouchers.Domain.EfModels
         public float Amount { get; set; }
         public DateTime Created { get; set; }
         public string Status { get; set; }
+        public string Error { get; set; }
     }
 }

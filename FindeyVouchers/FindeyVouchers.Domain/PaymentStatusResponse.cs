@@ -1,14 +1,11 @@
-﻿using FindeyVouchers.Domain.EfModels;
-
-namespace FindeyVouchers.Website.Models
+﻿namespace FindeyVouchers.Domain
 {
-    public class PaymentSuccessRequest
+    public class PaymentStatusResponse
     {
-        public Customer Customer { get; set; }
         public string PaymentId { get; set; }
         public string PaymentStatus { get; set; }
         public int Amount { get; set; }
         public long Created { get; set; }
-        
+        public string ErrorMessage { get; set; }
     }
 }

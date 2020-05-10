@@ -81,7 +81,8 @@ namespace FindeyVouchers.Domain.Migrations
                     Id = table.Column<string>(nullable: false),
                     Amount = table.Column<float>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
-                    Status = table.Column<string>(nullable: true)
+                    Status = table.Column<string>(nullable: true),
+                    Error = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

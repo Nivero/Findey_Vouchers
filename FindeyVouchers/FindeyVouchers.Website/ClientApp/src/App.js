@@ -2,7 +2,6 @@ import React from 'react';
 import {Route, Switch} from 'react-router-dom';
 import CompanyVouchers from './Components/CompanyVouchers';
 import Checkout from './Components/Checkout';
-import LoadingBar from 'react-top-loading-bar';
 //vervangen door call in App()
 //Tot hier
 import {Provider} from 'react-redux';
@@ -57,8 +56,8 @@ export default class App extends React.Component {
         if (error) {
             return (
                 <Switch>
-                    <Route path="/checkout-status/success" component={CheckoutStatusSuccess}/>
-                    <Route path="/checkout-status/error" component={CheckoutStatusError}/>
+                    <Route exact path="/checkout-status/success" component={CheckoutStatusSuccess}/>
+                    <Route exact path="/checkout-status/error" component={CheckoutStatusError}/>
                 </Switch>)
         } else if (!isLoaded) {
             return <div>Loading...</div>;
@@ -75,10 +74,10 @@ export default class App extends React.Component {
 
                 <Provider store={store}>
                     <Switch>
-                        <Route path="/" component={() => <CompanyVouchers data={response}/>}/>
-                        <Route path="/checkout" component={Checkout}/>
-                        <Route path="/checkout-status/success" component={CheckoutStatusSuccess}/>
-                        <Route path="/checkout-status/error" component={CheckoutStatusError}/>
+                        <Route exact path="/" component={() => <CompanyVouchers data={response}/>}/>
+                        <Route exact path="/checkout" component={Checkout}/>
+                        <Route exact path="/checkout-status/success" component={CheckoutStatusSuccess}/>
+                        <Route exact path="/checkout-status/error" component={CheckoutStatusError}/>
                     </Switch>
                 </Provider>
             );

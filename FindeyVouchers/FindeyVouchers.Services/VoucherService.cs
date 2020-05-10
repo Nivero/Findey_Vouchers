@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using FindeyVouchers.Domain;
 using FindeyVouchers.Domain.EfModels;
 using FindeyVouchers.Interfaces;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using QRCoder;
@@ -288,11 +287,29 @@ namespace FindeyVouchers.Services
                 var body = _mailService.GetVoucherHtmlBody(vouchers.First().MerchantVoucher.Merchant.CompanyName,
                     sb.ToString());
                 var response = await _mailService.SendMail(vouchers.First().Customer.Email, subject, body);
+                if (response.StatusCode == HttpStatusCode.Accepted)
+                {
+                    SetEmailSend(vouchers, true);
+                }
             }
             catch (Exception e)
             {
                 Log.Error($"{e}");
             }
+        }
+
+        private void SetEmailSend(List<CustomerVoucher> vouchers ,bool sent)
+        {
+            foreach (var voucher in vouchers)
+            {
+                var dbVoucher = _context.CustomerVouchers.FirstOrDefault(x => x.Id == voucher.Id);
+                if (dbVoucher != null)
+                {
+                    dbVoucher.EmailSent = true;
+                    _context.Update(dbVoucher);
+                }
+            }
+            _context.SaveChangesAsync();
         }
 
         public async Task DeactivateMerchantVoucher(Guid id)

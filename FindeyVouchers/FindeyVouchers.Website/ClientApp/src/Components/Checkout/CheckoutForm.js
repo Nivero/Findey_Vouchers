@@ -218,6 +218,7 @@ class CheckoutForm extends React.Component {
                                     <label htmlFor="firstname">First Name</label>
                                     <input
                                         name="firstname"
+                                        type="text"
                                         required
                                         placeholder="Uw voornaam"
                                         value={this.state.firstname}
@@ -228,6 +229,7 @@ class CheckoutForm extends React.Component {
                                     <label htmlFor="lastname">Last Name</label>
                                     <input
                                         name="lastname"
+                                        type="text"
                                         required
                                         placeholder="Uw achternaam"
                                         value={this.state.lastname}
@@ -238,6 +240,7 @@ class CheckoutForm extends React.Component {
                                     <label htmlFor="name">Email</label>
                                     <input
                                         name="email"
+                                        type="email"
                                         required
                                         placeholder="voorbeeld@hotmail.com"
                                         value={this.state.email}
@@ -248,6 +251,7 @@ class CheckoutForm extends React.Component {
                                     <label htmlFor="name">Phone Number</label>
                                     <input
                                         name="phoneNumber"
+                                        type="tel"
                                         required
                                         placeholder="012 123 1234"
                                         value={this.state.phoneNumber}

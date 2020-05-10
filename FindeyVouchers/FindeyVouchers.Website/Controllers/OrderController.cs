@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
 using System.Text.Json;
+using System.Threading.Tasks;
 using FindeyVouchers.Domain;
 using FindeyVouchers.Domain.EfModels;
 using FindeyVouchers.Interfaces;
@@ -69,7 +70,7 @@ namespace FindeyVouchers.Website.Controllers
 
         [HttpPost]
         [Route("payment/response")]
-        public IActionResult FinishOrder([FromBody] JsonElement body)
+        public async Task<IActionResult> FinishOrder([FromBody] JsonElement body)
         {
 
             var options = new JsonSerializerOptions
@@ -78,7 +79,7 @@ namespace FindeyVouchers.Website.Controllers
             };
             var response = JsonSerializer.Deserialize<PaymentStatusResponse>(body.ToString(), options);
             _paymentService.UpdatePayment(response);
-            _voucherService.CreateAndSendVouchers(response.PaymentId);
+            await _voucherService.CreateAndSendVouchers(response.PaymentId);
             return Ok();
         }
         

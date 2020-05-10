@@ -287,7 +287,7 @@ namespace FindeyVouchers.Services
                 var subject = $"Je vouchers van {vouchers.First().MerchantVoucher.Merchant.CompanyName}";
                 var body = _mailService.GetVoucherHtmlBody(vouchers.First().MerchantVoucher.Merchant.CompanyName,
                     sb.ToString());
-                await _mailService.SendMail(vouchers.First().Customer.Email, subject, body);
+                var response = await _mailService.SendMail(vouchers.First().Customer.Email, subject, body);
             }
             catch (Exception e)
             {

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Route} from 'react-router-dom';
+import {Route, Switch} from 'react-router-dom';
 import CompanyVouchers from './Components/CompanyVouchers';
 import Checkout from './Components/Checkout';
 import LoadingBar from 'react-top-loading-bar';
@@ -15,13 +15,11 @@ import CheckoutStatusError from "./Components/CheckoutStatus/CheckoutStatusError
 export default class App extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {response: {}, loadingBarProgress: 15};
+        this.state = {response: {}, isLoaded: false, error: null};
     }
 
     componentDidMount() {
-        this.setState({loadingBarProgress: 40})
         this.fetchMerchant();
-        this.setState({loadingBarProgress: 80})
     }
 
 
@@ -36,23 +34,36 @@ export default class App extends React.Component {
         // It will be the first part of the url IE. nivero.findey.nl
         fetch(`merchant/nivero`, requestOptions)
             .then((response) => response.json())
-            .then((response) => {
-                this.setState({
-                    response: response,
-                    loadingBarProgress: 100
+            .then(
+                (result) => {
+                    this.setState({
+                        isLoaded: true,
+                        response: result
+                    });
+                },
+                // Note: it's important to handle errors here
+                // instead of a catch() block so that we don't swallow
+                // exceptions from actual bugs in components.
+                (error) => {
+                    this.setState({
+                        isLoaded: true,
+                        error
+                    });
                 });
-            });
     }
 
     render() {
-        if (this.state.loadingBarProgress < 99) {
-            return (<LoadingBar
-                progress={this.state.loadingBarProgress}
-                height={3}
-                color='red'
-            />)
+        const {isLoaded, response, error} = this.state;
+        if (error) {
+            return (
+                <Switch>
+                    <Route path="/checkout-status/success" component={CheckoutStatusSuccess}/>
+                    <Route path="/checkout-status/error" component={CheckoutStatusError}/>
+                </Switch>)
+        } else if (!isLoaded) {
+            return <div>Loading...</div>;
         } else {
-            const {response} = this.state;
+
             const initialStore = {
                 cartItems: response.vouchers,
                 cartTotal: 0,
@@ -63,11 +74,14 @@ export default class App extends React.Component {
             return (
 
                 <Provider store={store}>
-                    <Route exact path="/" component={() => <CompanyVouchers data={response}/>}/>
-                    <Route exact path="/checkout" component={Checkout}/>
-                    <Route exact path="/checkout-status/success" component={CheckoutStatusSuccess}/>
-                    <Route exact path="/checkout-status/error" component={CheckoutStatusError}/>
-                </Provider>)
+                    <Switch>
+                        <Route path="/" component={() => <CompanyVouchers data={response}/>}/>
+                        <Route path="/checkout" component={Checkout}/>
+                        <Route path="/checkout-status/success" component={CheckoutStatusSuccess}/>
+                        <Route path="/checkout-status/error" component={CheckoutStatusError}/>
+                    </Switch>
+                </Provider>
+            );
         }
     }
 }

@@ -23,6 +23,7 @@ namespace FindeyVouchers.Interfaces
         Task CreateMerchantVoucher(MerchantVoucher voucher, DefaultImages image, ApplicationUser user);
         List<VoucherCategory> GetCategories(ApplicationUser user);
         void CreateCustomerVoucher(Customer customer, Voucher merchantVoucher, string responsePaymentId);
-        Task CreateAndSendVouchers(string responsePaymentId);
+        Task CreateAndSendVouchers(List<CustomerVoucher> vouchers);
+        Task HandleFulfillment(string responsePaymentId);
     }
 }

@@ -29,6 +29,7 @@ namespace FindeyVouchers.Domain
         public decimal Price { get; set; }
         public Category Category { get; set; }
         public VoucherType VoucherType { get; set; }
+        public int Amount { get; set; }
     }
 
     public class Category

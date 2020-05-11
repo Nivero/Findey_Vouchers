@@ -23,14 +23,16 @@ namespace FindeyVouchers.Services
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly IMailService _mailService;
+        private readonly IMerchantService _merchantService;
 
         public VoucherService(ApplicationDbContext context, IAzureStorageService azureStorageService,
-            IConfiguration configuration, IMailService mailService)
+            IConfiguration configuration, IMailService mailService, IMerchantService merchantService)
         {
             _context = context;
             _azureStorageService = azureStorageService;
             _configuration = configuration;
             _mailService = mailService;
+            _merchantService = merchantService;
         }
 
         public string GenerateVoucherCode(int length)
@@ -267,24 +269,31 @@ namespace FindeyVouchers.Services
             _context.SaveChanges();
         }
 
-        public async Task CreateAndSendVouchers(string responsePaymentId)
+        public async Task HandleFulfillment(string responsePaymentId)
+        {
+            var vouchers = _context.CustomerVouchers.Include(x => x.Customer)
+                .Include(x => x.MerchantVoucher)
+                .Include(x => x.MerchantVoucher.Merchant)
+                .Where(x => x.Payment.Id == responsePaymentId).ToList();
+
+            await CreateAndSendVouchers(vouchers);
+            await _merchantService.CreateAndSendMerchantNotification(vouchers);
+        }
+        public async Task CreateAndSendVouchers(List<CustomerVoucher> vouchers)
         {
             try
             {
-                var vouchers = _context.CustomerVouchers.Include(x => x.Customer)
-                    .Include(x => x.MerchantVoucher)
-                    .Include(x => x.MerchantVoucher.Merchant)
-                    .Where(x => x.Payment.Id == responsePaymentId).ToList();
+
                 StringBuilder sb = new StringBuilder();
                 foreach (var customerVoucher in vouchers)
                 {
                     var emailVoucher =
-                        _mailService.GetVoucherHtml(customerVoucher, GenerateQrCodeFromString(customerVoucher.Code));
+                        _mailService.GetVoucherSoldHtml(customerVoucher, GenerateQrCodeFromString(customerVoucher.Code));
                     sb.Append(emailVoucher);
                 }
 
                 var subject = $"Je vouchers van {vouchers.First().MerchantVoucher.Merchant.CompanyName}";
-                var body = _mailService.GetVoucherHtmlBody(vouchers.First().MerchantVoucher.Merchant.CompanyName,
+                var body = _mailService.GetVoucherSoldHtmlBody(vouchers.First().MerchantVoucher.Merchant.CompanyName,
                     sb.ToString());
                 var response = await _mailService.SendMail(vouchers.First().Customer.Email, subject, body);
                 if (response.StatusCode == HttpStatusCode.Accepted)

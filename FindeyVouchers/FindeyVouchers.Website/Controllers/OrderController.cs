@@ -72,18 +72,18 @@ namespace FindeyVouchers.Website.Controllers
         [Route("payment/response")]
         public async Task<IActionResult> FinishOrder([FromBody] JsonElement body)
         {
-
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
             };
             var response = JsonSerializer.Deserialize<PaymentStatusResponse>(body.ToString(), options);
             _paymentService.UpdatePayment(response);
-            await _voucherService.CreateAndSendVouchers(response.PaymentId);
+            await _voucherService.HandleFulfillment(response.PaymentId);
+
             return Ok();
         }
-        
-        
+
+
         [HttpPost]
         [Route("create")]
         public IActionResult CreateOrder([FromBody] JsonElement body)
@@ -104,13 +104,16 @@ namespace FindeyVouchers.Website.Controllers
                 Status = null,
                 Created = DateTime.Now
             });
-            
+
             foreach (var merchantVoucher in response.Vouchers)
             {
-                _voucherService.CreateCustomerVoucher(customer, merchantVoucher, response.PaymentId);
+                for (int i = 0; i < merchantVoucher.Amount; i++)
+                {
+                    _voucherService.CreateCustomerVoucher(customer, merchantVoucher, response.PaymentId);
+                }
             }
 
-            
+
             return Ok();
         }
     }

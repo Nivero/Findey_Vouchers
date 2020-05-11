@@ -28,15 +28,6 @@ namespace FindeyVouchers.Services
             _imageUrl = config.GetValue<string>("VoucherImageContainerUrl");
         }
 
-// public Task<Response> SendVoucherMail(List<CustomerVoucher> vouchers)
-// {
-// var subject = $"Je vouchers van {vouchers.First().MerchantVoucher.Merchant.CompanyName}";
-//
-// string content = GetVoucherEmail(vouchers);
-// return SendMail(vouchers.First().Customer.Email, subject, content);
-// }
-
-
         public async Task<Response> SendMail(string receiverAddress, string subject, string body)
         {
             var client = new SendGridClient(_apiKey);
@@ -63,7 +54,7 @@ namespace FindeyVouchers.Services
 
 // TODO fix params.
 // Also mupltiple vouchers.
-        public string GetVoucherHtml(CustomerVoucher voucher, Bitmap bmp)
+        public string GetVoucherSoldHtml(CustomerVoucher voucher, Bitmap bmp)
         {
             StringBuilder htmlVoucher = new StringBuilder();
 
@@ -77,10 +68,26 @@ namespace FindeyVouchers.Services
             return htmlVoucher.ToString();
         }
 
-        public string GetVoucherHtmlBody(string companyName, string htmlVouchers)
+        public string GetVoucherSoldHtmlBody(string companyName, string htmlVouchers)
         {
             return
                 $"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"><html xmlns=\"http://www.w3.org/1999/xhtml\"> <head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link href=\"https://fonts.googleapis.com/css?family=Open+Sans\" rel=\"stylesheet\"> </head> <table align=\"center\" width=\"600\" style=\" font-family: Open Sans\"><tr style=\" font-weight: bold;\"> <td><div class=\"header mb-2 pb-2\" style=\"border-bottom: 1px solid grey;margin-bottom: 2em;padding-bottom: 2em; text-align: center; font-weight:bold;\"> <div class=\"text-red\" style=\"color: #f54266;\">Findey</div> <div>Vouchers</div></div> </td></tr><tr> <td><div class=\"mb-2\" style=\"margin-bottom: 2em; text-align: center\">Gefeliciteerd met je vouchers(s)!</div><div class=\"text-center mb-2\" style=\"margin-bottom: 2em; text-align: center;\"> Je kan de vouchers(s) verzilveren door ze te laten scannen bij {companyName}!</div><div>{htmlVouchers}</div> </td></tr><tr> <td style=\"text-align: center; margin-bottom: 2em;\"><div class=\"font-bold mb-2\" style=\"margin-bottom: 2em;font-weight: bold;\"><span class=\"text-red\" style=\"color: #f54266;\">Findey</span> Vouchers & {companyName}</div><div class=\"text-grey\" style=\"color: grey; margin-bottom: 2em;\"> <div>Hulp nodig?</div> <div>Stuur ons een e-mail via</div> <div>info@findey.co</div></div> </td></tr> </table></html>";
+        }
+        
+        public string GetVoucherNoticiationHtml(MerchantVoucher voucher, int count)
+        {
+            StringBuilder htmlVoucher = new StringBuilder();
+
+            ImageConverter converter = new ImageConverter();
+            var voucherImageUrl = _imageUrl + voucher.Image;
+            htmlVoucher.Append($"             <table width=\"600\" style=\"margin-bottom: 1em;\">               <tr style=\"display: inline-block; border-bottom: 1px solid grey; width:600px; padding-bottom: 10px;\">                  <td style=\"display:inline-block;\">                     <img src=\"{voucherImageUrl}\" style=\"width: 300px; height: 150px;\">                  </td>                  <td style=\"display: inline-block; vertical-align: top; margin:5px;\">                     <div style=\"font-weight: bold\">{voucher.Name}</div>                     <div style=\"font-weight: bold\">€ {voucher.Price}</div>                     <div>Aantal: <span style=\"font-weight: bold\"> {count}</span> </div>                  </td>               </tr>            </table>");
+            return htmlVoucher.ToString();
+        }
+
+        public string GetVoucherNotificationHtmlBody(string companyName, string htmlVouchers, decimal totalAmount, int totalCount)
+        {
+            return
+                $"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"><html xmlns=\"http://www.w3.org/1999/xhtml\">   <head>      <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">      <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">      <link href=\"https://fonts.googleapis.com/css?family=Open+Sans\" rel=\"stylesheet\">   </head>   <table align=\"center\" width=\"600\" style=\"font-family: Open Sans\">      <tr  style=\" font-weight: bold;\">         <td>            <div class=\"header mb-2 pb-2\" style=\"border-bottom: 1px solid grey;margin-bottom: 2em;padding-bottom: 2em; text-align: center; font-weight:bold;\">               <div class=\"text-red\" style=\"color: #f54266;\">Findey</div>               <div>Vouchers</div>            </div>         </td>      </tr>      <tr>         <td>            <div class=\"mb-2\" style=\"margin-bottom: 2em; text-align: center\">Beste, {companyName}</div>            <div class=\"text-center mb-2\" style=\"margin-bottom: 2em; text-align: center;\">               Er zijn vouchers verkocht! Hieronder volgt een overzicht van de bestelling!            </div>            <div class=\"text-center mb-2\" style=\"margin-bottom: 2em; text-align: center;\">               De bestelling bevat:            </div>            {htmlVouchers}        </td>      </tr>      <tr>         <td style=\"text-align: center; border-bottom: 1px solid grey;margin-bottom: 2em;padding-bottom: 2em;\">            <div class=\"font-bold mb-2\">Totale omzet: €{totalAmount}</div>            <div class=\"font-bold mb-2\">Aantal verkocht: {totalCount}</div>         </td>      </tr>      <tr>         <td style=\"text-align: center; margin-bottom: 2em;\">            <div class=\"font-bold mb-2\" style=\"margin-bottom: 2em;font-weight: bold;\"><span class=\"text-red\" style=\"color: #f54266;\">Findey</span> Vouchers</div>            <div class=\"text-grey\" style=\"color: grey; margin-bottom: 2em;\">               <div>Hulp nodig?</div>               <div>Stuur ons een e-mail via</div>               <div>info@findey.co</div>            </div>            <div style=\"font-weight: bold;\">Let op! U bent verantwoordelijk dat de vouchers verzilverd worden voor de juiste producten en/of diensten.</div>         </td>      </tr>   </table></html>";
         }
     }
 }

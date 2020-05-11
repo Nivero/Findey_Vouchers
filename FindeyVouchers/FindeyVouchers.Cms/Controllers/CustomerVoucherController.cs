@@ -71,7 +71,7 @@ namespace FindeyVouchers.Cms.Controllers
             return View(customerVoucher);
         }
 
-        public async Task<IActionResult> Invalidate(Guid? id)
+        public RedirectToActionResult Invalidate(Guid? id)
         {
             if (id != null)
             {

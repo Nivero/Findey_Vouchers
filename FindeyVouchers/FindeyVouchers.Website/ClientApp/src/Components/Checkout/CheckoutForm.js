@@ -67,6 +67,7 @@ class CheckoutForm extends React.Component {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
         };
+        console.log(data);
         fetch(`order/create`, requestOptions)
             .then((response) => {
                 return response;
@@ -164,42 +165,6 @@ class CheckoutForm extends React.Component {
                     }
                 });
         }
-
-        // const result = stripe.confirmCardPayment(secret, {
-        //     payment_method: {
-        //         card: elements.getElement(CardNumberElement),
-        //         billing_details: {
-        //             name: lastname,
-        //         },
-        //     }
-        // }).then( (response)=> {
-        //     return response;
-        // }).then( (result) =>{
-        //     const data = {
-        //         paymentStatus: result.paymentIntent.status,
-        //         amount: result.paymentIntent.amount,
-        //         created: result.paymentIntent.created,
-        //         paymentId: result.paymentIntent.id,
-        //         errorMessage: result.error.message
-        //     }
-        //     const requestOptions = {
-        //         method: 'POST',
-        //         headers: {'Content-Type': 'application/json'},
-        //         body: JSON.stringify(data)
-        //     };
-        //     fetch(`payment/success`, requestOptions)
-        //         .then( function(response){
-        //             if (result.error) {
-        //                 window.location.href = "/checkout-status/error";
-        //             } else {
-        //                 if (result.paymentIntent.status === 'succeeded') {
-        //                     window.location.href = "/checkout-status/success";
-        //                 }
-        //             }
-        //         });
-        //
-        //
-        // });
     }
 
 

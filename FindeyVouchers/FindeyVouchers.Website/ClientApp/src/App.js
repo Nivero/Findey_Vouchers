@@ -8,6 +8,7 @@ import reducer from './redux/reducer';
 import CheckoutStatusSuccess from "./Components/CheckoutStatus/CheckoutStatusSuccess";
 import CheckoutStatusError from "./Components/CheckoutStatus/CheckoutStatusError";
 import CheckoutStatusPending from "./Components/CheckoutStatus/CheckoutStatusPending";
+import Legal from "./Components/Legal/";
 
 
 export default class App extends React.Component {
@@ -58,6 +59,7 @@ export default class App extends React.Component {
                     <Route exact path="/checkout-status/success" component={CheckoutStatusSuccess}/>
                     <Route exact path="/checkout-status/error" component={CheckoutStatusError}/>
                     <Route exact path="/checkout-status/pending" component={CheckoutStatusPending}/>
+                    <Route exact path="/legal" component={Legal}/>
                 </Switch>)
         } else if (!isLoaded) {
             return <div>Loading...</div>;
@@ -79,6 +81,7 @@ export default class App extends React.Component {
                         <Route exact path="/checkout-status/success" component={CheckoutStatusSuccess}/>
                         <Route exact path="/checkout-status/error" component={CheckoutStatusError}/>
                         <Route exact path="/checkout-status/pending" component={CheckoutStatusPending}/>
+                        <Route exact path="/legal" component={Legal}/>
                     </Switch>
                 </Provider>
             );

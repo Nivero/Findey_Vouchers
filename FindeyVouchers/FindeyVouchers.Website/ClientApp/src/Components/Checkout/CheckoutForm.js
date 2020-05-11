@@ -1,5 +1,5 @@
 ﻿import React from 'react';
-import {Button, Card, CardBody, Col, Collapse, Row, Toast, ToastBody, ToastHeader} from 'reactstrap';
+import {Button, Card, CardBody, Col, Collapse, Row, Spinner, Toast, ToastBody, ToastHeader} from 'reactstrap';
 import {
     CardCvcElement,
     CardExpiryElement,
@@ -38,7 +38,8 @@ class CheckoutForm extends React.Component {
             paymentMethod: null,
             isOpenIDEAL: false,
             isOpenBANK: false,
-            secret: ''
+            secret: '',
+            paymentSent: false,
         };
         this.handleChange = this.handleChange.bind(this);
         this.setClientSecret();
@@ -104,7 +105,9 @@ class CheckoutForm extends React.Component {
         if (!stripe || !elements) {
             return;
         }
-
+        
+        this.setState({paymentSent: true})
+        
         this.createOrder({
             customer: {
                 firstname: firstname,
@@ -124,7 +127,7 @@ class CheckoutForm extends React.Component {
                         name: lastname,
                     },
                 },
-                return_url:window.location.origin + '/checkout-status/pending',
+                return_url: window.location.origin + '/checkout-status/pending',
             });
 
             if (error) {
@@ -169,6 +172,7 @@ class CheckoutForm extends React.Component {
 
     render() {
         const {stripe} = this.props
+        const {paymentSent} = this.state;
         return (
             <Col sm="12" md="7" className="justify-content-center">
                 <form onSubmit={this.handleSubmit} className="m-0 p-0">
@@ -287,9 +291,12 @@ class CheckoutForm extends React.Component {
                                         </CardBody>
                                     </Card>
                                     <button className="mci-checkout-button" type="submit"
-                                            disabled={!stripe}>
-                                        Confirm & Pay € {this.props.total}
+                                            disabled={!stripe || paymentSent}>
+                                        {!paymentSent ? <span>Confirm & Pay € {this.props.total}</span> :
+
+                                            <Spinner class="p-1" animation="border" variant="primary" />}
                                     </button>
+
                                 </Collapse>
                             </ToastBody>
                         </Toast>

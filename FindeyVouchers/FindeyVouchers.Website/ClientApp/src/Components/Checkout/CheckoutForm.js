@@ -67,7 +67,6 @@ class CheckoutForm extends React.Component {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
         };
-        console.log(data);
         fetch(`order/create`, requestOptions)
             .then((response) => {
                 return response;

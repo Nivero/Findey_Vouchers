@@ -275,9 +275,16 @@ namespace FindeyVouchers.Services
                 .Include(x => x.MerchantVoucher)
                 .Include(x => x.MerchantVoucher.Merchant)
                 .Where(x => x.Payment.Id == responsePaymentId).ToList();
+            try
+            {
+                await CreateAndSendVouchers(vouchers);
+                await _merchantService.CreateAndSendMerchantNotification(vouchers);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e}");
+            }
 
-            await CreateAndSendVouchers(vouchers);
-            await _merchantService.CreateAndSendMerchantNotification(vouchers);
         }
         public async Task CreateAndSendVouchers(List<CustomerVoucher> vouchers)
         {

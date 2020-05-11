@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using Stripe;
+using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 using FindeyVouchers.Domain;
 using FindeyVouchers.Domain.EfModels;
 using FindeyVouchers.Interfaces;
 using FindeyVouchers.Website.Models;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Stripe;
+using Microsoft.Extensions.Configuration;
+using Serilog;
 
 namespace FindeyVouchers.Website.Controllers
 {
@@ -20,14 +22,18 @@ namespace FindeyVouchers.Website.Controllers
         private readonly ICustomerService _customerService;
         private readonly IPaymentService _paymentService;
         private readonly IVoucherService _voucherService;
+        private readonly string _apiKey;
+        private readonly string _endpointSecret;
 
         public OrderController(IMerchantService merchantService, ICustomerService customerService,
-            IPaymentService paymentService, IVoucherService voucherService)
+            IPaymentService paymentService, IVoucherService voucherService, IConfiguration configuration)
         {
             _merchantService = merchantService;
             _customerService = customerService;
             _paymentService = paymentService;
             _voucherService = voucherService;
+            _apiKey = configuration.GetValue<string>("StripeApiKey");
+            _endpointSecret = configuration.GetValue<string>("StripeHookSecret");
         }
 
         [HttpPost]
@@ -36,7 +42,7 @@ namespace FindeyVouchers.Website.Controllers
         {
             // Set your secret key. Remember to switch to your live secret key in production!
             // See your keys here: https://dashboard.stripe.com/account/apikeys
-            StripeConfiguration.ApiKey = "sk_test_iZnEwjRXBzBdmTUdjLWDV8Xn00zsgY41iV";
+            StripeConfiguration.ApiKey = _apiKey;
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
@@ -66,6 +72,42 @@ namespace FindeyVouchers.Website.Controllers
             var service = new PaymentIntentService();
             var intent = service.Create(createOptions);
             return Ok(new {client_secret = intent.ClientSecret});
+        }
+
+        [HttpPost]
+        [Route("payment/ideal")]
+        public async Task<IActionResult> Index()
+        {
+            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+
+            try
+            {
+                // var stripeEvent = EventUtility.ConstructEvent(json,
+                //     Request.Headers["Stripe-Signature"], _endpointSecret);
+                var stripeEvent = EventUtility.ParseEvent(json);
+
+                // Handle the event
+                if (stripeEvent.Type == Events.PaymentIntentSucceeded
+                    || stripeEvent.Type == Events.PaymentIntentPaymentFailed)
+                {
+                    var paymentIntent = stripeEvent.Data.Object as PaymentIntent;
+                    _paymentService.UpdatePayment(new PaymentStatusResponse
+                    {
+                        PaymentId = paymentIntent.Id,
+                        Amount = paymentIntent.Amount.Value,
+                        Created = paymentIntent.Created.Millisecond,
+                        PaymentStatus = paymentIntent.Status,
+                        ErrorMessage = paymentIntent.LastPaymentError?.ToString()
+                    });
+                    await _voucherService.HandleFulfillment(paymentIntent.Id);
+                }
+
+                return Ok();
+            }
+            catch (StripeException)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost]

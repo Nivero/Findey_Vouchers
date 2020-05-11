@@ -125,7 +125,7 @@ class CheckoutForm extends React.Component {
                         name: lastname,
                     },
                 },
-                return_url: 'https://google.com',
+                return_url: 'https://b08fb523.ngrok.io/checkout-status',
             });
 
             if (error) {

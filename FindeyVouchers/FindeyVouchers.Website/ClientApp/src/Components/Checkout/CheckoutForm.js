@@ -125,7 +125,7 @@ class CheckoutForm extends React.Component {
                         name: lastname,
                     },
                 },
-                return_url: 'https://b08fb523.ngrok.io/checkout-status',
+                return_url:window.location.origin + '/checkout-status/pending',
             });
 
             if (error) {

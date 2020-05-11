@@ -2,14 +2,12 @@ import React from 'react';
 import {Route, Switch} from 'react-router-dom';
 import CompanyVouchers from './Components/CompanyVouchers';
 import Checkout from './Components/Checkout';
-//vervangen door call in App()
-//Tot hier
 import {Provider} from 'react-redux';
 import {createStore} from 'redux';
 import reducer from './redux/reducer';
 import CheckoutStatusSuccess from "./Components/CheckoutStatus/CheckoutStatusSuccess";
 import CheckoutStatusError from "./Components/CheckoutStatus/CheckoutStatusError";
-import CheckoutStatus from "./Components/CheckoutStatus";
+import CheckoutStatusPending from "./Components/CheckoutStatus/CheckoutStatusPending";
 
 
 export default class App extends React.Component {
@@ -59,7 +57,7 @@ export default class App extends React.Component {
                 <Switch>
                     <Route exact path="/checkout-status/success" component={CheckoutStatusSuccess}/>
                     <Route exact path="/checkout-status/error" component={CheckoutStatusError}/>
-                    <Route exact path="/checkout-status/" component={CheckoutStatus}/>
+                    <Route exact path="/checkout-status/pending" component={CheckoutStatusPending}/>
                 </Switch>)
         } else if (!isLoaded) {
             return <div>Loading...</div>;
@@ -80,7 +78,7 @@ export default class App extends React.Component {
                         <Route exact path="/checkout" component={Checkout}/>
                         <Route exact path="/checkout-status/success" component={CheckoutStatusSuccess}/>
                         <Route exact path="/checkout-status/error" component={CheckoutStatusError}/>
-                        <Route exact path="/checkout-status/" component={CheckoutStatus}/>
+                        <Route exact path="/checkout-status/pending" component={CheckoutStatusPending}/>
                     </Switch>
                 </Provider>
             );

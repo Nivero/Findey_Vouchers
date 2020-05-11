@@ -6,10 +6,10 @@
     <hr/>
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.VoucherMerchant.Name)
+            @Html.DisplayNameFor(model => model.MerchantVoucher.Name)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.VoucherMerchant.Name)
+            @Html.DisplayFor(model => model.MerchantVoucher.Name)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.PurchasedOn)
@@ -18,7 +18,7 @@
             @Html.DisplayFor(model => model.PurchasedOn)
         </dd>
         <dt class="col-sm-2">
-            @if (Model.VoucherMerchant.VoucherType == VoucherType.PrepaidCard)
+            @if (Model.MerchantVoucher.VoucherType == VoucherType.PrepaidCard)
             {
                 <span>Resterend bedrag</span>
             }
@@ -73,7 +73,7 @@
     </dl>
 </div>
 <div class="row">
-    @if (Model.VoucherMerchant.VoucherType == VoucherType.PrepaidCard && !Model.IsUsed)
+    @if (Model.MerchantVoucher.VoucherType == VoucherType.PrepaidCard && !Model.IsUsed)
     {
         <div class="col-sm-4">
             <form asp-controller="CustomerVoucher" asp-action="RetractAmount" method="post">

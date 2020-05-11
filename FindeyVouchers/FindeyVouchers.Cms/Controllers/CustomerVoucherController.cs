@@ -36,7 +36,7 @@ namespace FindeyVouchers.Cms.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var customerVouchers = _context.CustomerVouchers.Where(x => x.VoucherMerchant.Merchant == user);
+            var customerVouchers = _context.CustomerVouchers.Where(x => x.MerchantVoucher.Merchant == user);
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
@@ -59,11 +59,11 @@ namespace FindeyVouchers.Cms.Controllers
             }
 
             var customerVoucher = await _context.CustomerVouchers.Include(x => x.Customer)
-                .Include(x => x.VoucherMerchant)
+                .Include(x => x.MerchantVoucher)
                 .FirstOrDefaultAsync(m => m.Id == id);
             var user = await _userManager.GetUserAsync(User);
 
-            if (customerVoucher.VoucherMerchant.Merchant != user)
+            if (customerVoucher.MerchantVoucher.Merchant != user)
             {
                 return NotFound();
             }
@@ -71,7 +71,7 @@ namespace FindeyVouchers.Cms.Controllers
             return View(customerVoucher);
         }
 
-        public async Task<IActionResult> Invalidate(Guid? id)
+        public RedirectToActionResult Invalidate(Guid? id)
         {
             if (id != null)
             {
@@ -102,7 +102,7 @@ namespace FindeyVouchers.Cms.Controllers
             }
 
             var model = await _context.CustomerVouchers.Include(x => x.Customer)
-                .Include(x => x.VoucherMerchant)
+                .Include(x => x.MerchantVoucher)
                 .FirstOrDefaultAsync(m => m.Id == customerVoucher.Id);
             return View("Details", model);
         }

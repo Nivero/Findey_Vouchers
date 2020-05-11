@@ -1,8 +1,11 @@
 using FindeyVouchers.Domain;
+using FindeyVouchers.Domain.EfModels;
 using FindeyVouchers.Interfaces;
 using FindeyVouchers.Services;
+using FindeyVouchers.Website.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -29,11 +32,15 @@ namespace FindeyVouchers.Website
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/build"; });
             services.AddTransient<IMerchantService, MerchantService>();
             services.AddTransient<IVoucherService, VoucherService>();
             services.AddTransient<IAzureStorageService, AzureStorageService>();
+            services.AddTransient<IPaymentService, PaymentService>();
+            services.AddTransient<ICustomerService, CustomerService>();
+            services.AddTransient<IMailService, MailService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,0 +1,36 @@
+.mci-card:hover {
+    border: 1px solid grey !important;
+}
+
+.mci-card{
+    border: 1px solid white !important;
+    border-bottom: 1px solid grey !important;
+    border-radius: 2px;
+    transition: 0.2s;
+}
+
+.mci-card-image {
+    /*Important because bootstrap overwrite*/
+    /* Fix this because ugly as fuck!!!!*/
+    width: 300px !important;
+    height: 150px;   
+
+}
+
+.mci-price {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 30px;
+}
+
+.mci-voucher-discription {
+    max-height: 100px;
+    min-height: 80px;
+    overflow: auto;
+}
+
+.mci-readmore {
+    color: #2980b9;
+    text-decoration: underline;
+}

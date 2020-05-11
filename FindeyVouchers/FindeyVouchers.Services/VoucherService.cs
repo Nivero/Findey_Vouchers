@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using FindeyVouchers.Domain;
 using FindeyVouchers.Domain.EfModels;
 using FindeyVouchers.Interfaces;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using QRCoder;
@@ -23,12 +22,17 @@ namespace FindeyVouchers.Services
         private readonly IAzureStorageService _azureStorageService;
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IMailService _mailService;
+        private readonly IMerchantService _merchantService;
 
-        public VoucherService(ApplicationDbContext context, IAzureStorageService azureStorageService, IConfiguration configuration)
+        public VoucherService(ApplicationDbContext context, IAzureStorageService azureStorageService,
+            IConfiguration configuration, IMailService mailService, IMerchantService merchantService)
         {
             _context = context;
             _azureStorageService = azureStorageService;
             _configuration = configuration;
+            _mailService = mailService;
+            _merchantService = merchantService;
         }
 
         public string GenerateVoucherCode(int length)
@@ -65,7 +69,9 @@ namespace FindeyVouchers.Services
                     Name = merchant.CompanyName,
                     Email = merchant.Email,
                     PhoneNumber = merchant.PhoneNumber,
-                    Website = merchant.Website
+                    Website = merchant.Website,
+                    Address = $"{merchant.Address}, {merchant.City}",
+                    Description = merchant.Description
                 },
                 Vouchers = new List<Voucher>()
             };
@@ -113,7 +119,7 @@ namespace FindeyVouchers.Services
         {
             try
             {
-                var voucher = _context.CustomerVouchers.Include(x => x.VoucherMerchant)
+                var voucher = _context.CustomerVouchers.Include(x => x.MerchantVoucher)
                     .FirstOrDefault(x => x.Id == id);
                 if (voucher != null)
                 {
@@ -245,6 +251,81 @@ namespace FindeyVouchers.Services
             {
                 Log.Error($"Error updateing merchant voucher with id: {voucher.Id}, {e}");
             }
+        }
+
+        public void CreateCustomerVoucher(Customer customer, Voucher merchantVoucher, string responsePaymentId)
+        {
+            var customerVoucher = new CustomerVoucher
+            {
+                Customer = customer,
+                MerchantVoucher = _context.MerchantVouchers.FirstOrDefault(x => x.Id == merchantVoucher.Id),
+                PurchasedOn = DateTime.Now,
+                Price = merchantVoucher.Price,
+                Code = GenerateVoucherCode(12),
+                EmailSent = false,
+                Payment = _context.Payments.FirstOrDefault(x => x.Id == responsePaymentId)
+            };
+            _context.CustomerVouchers.Add(customerVoucher);
+            _context.SaveChanges();
+        }
+
+        public async Task HandleFulfillment(string responsePaymentId)
+        {
+            var vouchers = _context.CustomerVouchers.Include(x => x.Customer)
+                .Include(x => x.MerchantVoucher)
+                .Include(x => x.MerchantVoucher.Merchant)
+                .Where(x => x.Payment.Id == responsePaymentId).ToList();
+            try
+            {
+                await CreateAndSendVouchers(vouchers);
+                await _merchantService.CreateAndSendMerchantNotification(vouchers);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e}");
+            }
+
+        }
+        public async Task CreateAndSendVouchers(List<CustomerVoucher> vouchers)
+        {
+            try
+            {
+
+                StringBuilder sb = new StringBuilder();
+                foreach (var customerVoucher in vouchers)
+                {
+                    var emailVoucher =
+                        _mailService.GetVoucherSoldHtml(customerVoucher, GenerateQrCodeFromString(customerVoucher.Code));
+                    sb.Append(emailVoucher);
+                }
+
+                var subject = $"Je vouchers van {vouchers.First().MerchantVoucher.Merchant.CompanyName}";
+                var body = _mailService.GetVoucherSoldHtmlBody(vouchers.First().MerchantVoucher.Merchant.CompanyName,
+                    sb.ToString());
+                var response = await _mailService.SendMail(vouchers.First().Customer.Email, subject, body);
+                if (response.StatusCode == HttpStatusCode.Accepted)
+                {
+                    SetEmailSend(vouchers, true);
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e}");
+            }
+        }
+
+        private void SetEmailSend(List<CustomerVoucher> vouchers ,bool sent)
+        {
+            foreach (var voucher in vouchers)
+            {
+                var dbVoucher = _context.CustomerVouchers.FirstOrDefault(x => x.Id == voucher.Id);
+                if (dbVoucher != null)
+                {
+                    dbVoucher.EmailSent = true;
+                    _context.Update(dbVoucher);
+                }
+            }
+            _context.SaveChangesAsync();
         }
 
         public async Task DeactivateMerchantVoucher(Guid id)

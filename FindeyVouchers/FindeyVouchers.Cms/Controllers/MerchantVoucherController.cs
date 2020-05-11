@@ -43,7 +43,7 @@ namespace FindeyVouchers.Cms.Controllers
                 .ToListAsync();
             foreach (var item in vouchers)
             {
-                item.AmountSold = _context.CustomerVouchers.Count(x => x.VoucherMerchant == item);
+                item.AmountSold = _context.CustomerVouchers.Count(x => x.MerchantVoucher == item);
             }
 
             return View(vouchers);

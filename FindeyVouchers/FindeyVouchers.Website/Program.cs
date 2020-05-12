@@ -44,6 +44,10 @@ namespace FindeyVouchers.Website
                     config.AddJsonFile($"appsettings.{environmentName}.json", optional: true, reloadOnChange: true);
                     config.AddEnvironmentVariables();
                 })
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseUrls("http://localhost:5000");
+                });
     }
 }

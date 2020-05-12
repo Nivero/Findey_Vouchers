@@ -16,6 +16,7 @@ namespace FindeyVouchers.Website
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Warning()
+                .WriteTo.File("log.txt", rollingInterval: RollingInterval.Day)
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
                 .CreateLogger();

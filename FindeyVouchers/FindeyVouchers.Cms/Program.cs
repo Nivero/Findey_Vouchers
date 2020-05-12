@@ -17,6 +17,7 @@ namespace FindeyVouchers.Cms
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Warning()
                 .Enrich.FromLogContext()
+                .WriteTo.File("log.txt", rollingInterval: RollingInterval.Day)
                 .WriteTo.Console()
                 .CreateLogger();
 

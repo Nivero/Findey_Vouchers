@@ -24,8 +24,8 @@ export default class App extends React.Component {
 
 
     async fetchMerchant() {
-        let location = window.location.host.split(".");
-        let merchantName = location[location.indexOf("findey") - 1]
+        let completeUrl = window.location.host.split(".");
+        let merchantName = location[completeUrl.indexOf("findey") - 1]
         console.log(merchantName);
         const requestOptions = {
             method: 'GET',

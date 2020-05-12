@@ -45,6 +45,10 @@ namespace FindeyVouchers.Cms
                     config.AddEnvironmentVariables();
                 })
                 .UseSerilog()
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseUrls("http://localhost:5100", "https://localhost:5101");
+                });
     }
 }

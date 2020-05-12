@@ -25,36 +25,34 @@ export default class App extends React.Component {
 
     async fetchMerchant() {
         let completeUrl = window.location.host.split(".");
-        let merchantName = location[completeUrl.indexOf("findey") - 1]
-        console.log(merchantName);
+        let merchantName = completeUrl[completeUrl.indexOf("findey") - 1]
         const requestOptions = {
             method: 'GET',
         };
         // Merchant name should be here.
         // It will be the first part of the url IE. nivero.findey.nl
-        fetch(`merchant/` + merchantName, requestOptions)
-            .then((response) => response)
+        fetch(`merchant/${merchantName}`, requestOptions)
+            .then((response) => {
+                if (response.ok) {
+                    return response.json()
+                } else {
+                    return Promise.reject('merchant not found')
+                }
+            })
             .then(
                 (response) => {
-                    if (response.status === 200) {
-                        this.setState({
-                            isLoaded: true,
-                            response: response.json()
-                        });
-                    } else {
-                        this.setState({
-                            isLoaded: true,
-                            error: true
-                        });
-                    }
-
-                },
-                (error) => {
                     this.setState({
                         isLoaded: true,
-                        error
+                        response: response
                     });
+
+                })
+            .catch((error) => {
+                this.setState({
+                    isLoaded: true,
+                    error: true
                 });
+            });
     }
 
     render() {
@@ -64,7 +62,6 @@ export default class App extends React.Component {
         } else {
             if (error) {
                 return (
-
                     <Switch>
                         <Route exact path="/" component={MerchantNotFound}/>
                     </Switch>

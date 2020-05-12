@@ -5,6 +5,10 @@ import VoucherList from './VoucherList'
 import Footer from './Footer'
 
 export default class CompanyVouchers extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
 
     render() {
         return (

@@ -4,6 +4,9 @@ import {FaMapMarkerAlt, FaGlobe, FaTelegramPlane, FaPhoneSquareAlt} from "react-
 import './header.css';
 
 export default class Header extends React.Component {
+    constructor(props) {
+        super(props);
+    }
     render() {
         return (
             <header className="mci-header-container">

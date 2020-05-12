@@ -77,8 +77,10 @@ class CheckoutForm extends React.Component {
     }
 
     setClientSecret = () => {
+        let location = window.location.host.split(".");
+        let merchantName = location[location.indexOf("findey") - 1]
         const intentData = {
-            companyName: "Nivero",
+            companyName: merchantName,
             Amount: this.props.total * 100
         }
         const requestOptions = {

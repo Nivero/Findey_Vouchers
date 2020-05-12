@@ -1,4 +1,5 @@
-using System;using FindeyVouchers.Cms.Controllers;
+using System;
+using FindeyVouchers.Cms.Controllers;
 using FindeyVouchers.Domain;
 using FindeyVouchers.Domain.EfModels;
 using FindeyVouchers.Interfaces;
@@ -6,6 +7,7 @@ using FindeyVouchers.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +19,6 @@ namespace FindeyVouchers.Cms
 {
     public class Startup
     {
-        
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -28,18 +29,16 @@ namespace FindeyVouchers.Cms
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-                
             });
 
-             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
-            
+
             // Cookies
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -49,7 +48,7 @@ namespace FindeyVouchers.Cms
                 // requires using Microsoft.AspNetCore.Http;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-            
+
             // Configure identity
             services.Configure<IdentityOptions>(options =>
             {
@@ -60,7 +59,7 @@ namespace FindeyVouchers.Cms
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 6;
                 options.Password.RequiredUniqueChars = 1;
-                
+
                 // User settings.
                 options.User.RequireUniqueEmail = true;
             });
@@ -75,7 +74,7 @@ namespace FindeyVouchers.Cms
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 options.SlidingExpiration = true;
             });
-            
+
             services.AddTransient<IVoucherService, VoucherService>();
             services.AddTransient<IAzureStorageService, AzureStorageService>();
             services.AddTransient<IEmailSender, IdentityCoreEmailSender>();
@@ -100,15 +99,20 @@ namespace FindeyVouchers.Cms
                 app.UseHsts();
             }
 
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-            
+
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
-            
+
 
             app.UseEndpoints(endpoints =>
             {

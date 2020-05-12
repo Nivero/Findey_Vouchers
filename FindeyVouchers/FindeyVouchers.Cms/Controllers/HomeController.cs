@@ -1,21 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using FindeyVouchers.Cms.Models;
 using FindeyVouchers.Domain;
 using FindeyVouchers.Domain.EfModels;
 using FindeyVouchers.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 
 namespace FindeyVouchers.Cms.Controllers
@@ -162,7 +158,7 @@ namespace FindeyVouchers.Cms.Controllers
             if (expireTime.HasValue)
                 option.Expires = DateTime.Now.AddMinutes(expireTime.Value);
             else
-                option.Expires = DateTime.Now.AddMilliseconds(10);
+                option.Expires = DateTime.Now.AddDays(10);
 
             Response.Cookies.Append(key, value, option);
         }

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Threading.Tasks;
 using FindeyVouchers.Domain.EfModels;
 using SendGrid;

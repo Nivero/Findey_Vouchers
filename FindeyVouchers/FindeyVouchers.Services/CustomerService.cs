@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using FindeyVouchers.Domain;
+﻿using FindeyVouchers.Domain;
 using FindeyVouchers.Domain.EfModels;
 using FindeyVouchers.Interfaces;
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Threading.Tasks;
 using FindeyVouchers.Domain;
 using FindeyVouchers.Domain.EfModels;
@@ -11,7 +10,7 @@ namespace FindeyVouchers.Interfaces
     public interface IVoucherService
     {
         string GenerateVoucherCode(int length);
-        Bitmap GenerateQrCodeFromString(string text);
+        string GenerateQrCodeFromString(string text);
         MerchantVoucherResponse RetrieveMerchantVouchers(string companyName);
         void UpdatePrice(Guid id, decimal price);
         void InvalidateCustomerVoucher(Guid id);

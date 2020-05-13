@@ -1,5 +1,4 @@
 ﻿using FindeyVouchers.Interfaces;
-using FindeyVouchers.Website.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindeyVouchers.Website.Controllers
@@ -21,10 +20,7 @@ namespace FindeyVouchers.Website.Controllers
         public IActionResult Info([FromRoute] string name)
         {
             var response = _voucherService.RetrieveMerchantVouchers(name);
-            if (response != null)
-            {
-                return Ok(response);
-            }
+            if (response != null) return Ok(response);
 
             return NotFound();
         }

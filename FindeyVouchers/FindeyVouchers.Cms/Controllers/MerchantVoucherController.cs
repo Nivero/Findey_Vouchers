@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using FindeyVouchers.Cms.Models;
@@ -10,7 +9,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace FindeyVouchers.Cms.Controllers
@@ -34,34 +32,24 @@ namespace FindeyVouchers.Cms.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             if (string.IsNullOrWhiteSpace(user.CompanyName) || string.IsNullOrWhiteSpace(user.StripeAccountId))
-            {
                 return RedirectToAction("Index", "Home");
-            }
 
 
             var vouchers = await _context.MerchantVouchers.Include(x => x.Category).Where(x => x.Merchant == user)
                 .ToListAsync();
             foreach (var item in vouchers)
-            {
                 item.AmountSold = _context.CustomerVouchers.Count(x => x.MerchantVoucher == item);
-            }
 
             return View(vouchers);
         }
 
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var merchantVoucher = await _context.MerchantVouchers.Include(x => x.Category)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (merchantVoucher == null)
-            {
-                return NotFound();
-            }
+            if (merchantVoucher == null) return NotFound();
 
             return View(merchantVoucher);
         }
@@ -72,7 +60,7 @@ namespace FindeyVouchers.Cms.Controllers
             var model = new MerchantVoucherViewModel
             {
                 Voucher = new MerchantVoucher(),
-                Categories = _voucherService.GetCategories(user),
+                Categories = _voucherService.GetCategories(user)
             };
             return View(model);
         }
@@ -90,14 +78,10 @@ namespace FindeyVouchers.Cms.Controllers
             if (ModelState.IsValid)
             {
                 if (merchantVoucher.Voucher.DefaultImages == DefaultImages.Default)
-                {
                     await _voucherService.CreateMerchantVoucher(merchantVoucher.Voucher, file, user);
-                }
                 else
-                {
                     await _voucherService.CreateMerchantVoucher(merchantVoucher.Voucher,
                         merchantVoucher.Voucher.DefaultImages, user);
-                }
 
                 return RedirectToAction(nameof(Index));
             }
@@ -108,19 +92,13 @@ namespace FindeyVouchers.Cms.Controllers
 
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var user = await _userManager.GetUserAsync(User);
             var merchantVoucher =
                 _context.MerchantVouchers.Include(x => x.Category)
-                                         .FirstOrDefault(x => x.Id == id);
-            if (merchantVoucher == null)
-            {
-                return NotFound();
-            }
+                    .FirstOrDefault(x => x.Id == id);
+            if (merchantVoucher == null) return NotFound();
 
             var model = new MerchantVoucherViewModel
             {
@@ -136,10 +114,7 @@ namespace FindeyVouchers.Cms.Controllers
         public async Task<IActionResult> Edit(Guid id, MerchantVoucherViewModel merchantVoucher,
             [FromForm(Name = "ImageFile")] IFormFile file)
         {
-            if (id != merchantVoucher.Voucher.Id)
-            {
-                return NotFound();
-            }
+            if (id != merchantVoucher.Voucher.Id) return NotFound();
             var user = await _userManager.GetUserAsync(User);
             // TODO: clean this mess up. I couldnt get the category to bind to the voucher model.
             // So i added the id to the viewmodel and added it by hand here.
@@ -148,13 +123,10 @@ namespace FindeyVouchers.Cms.Controllers
             if (ModelState.IsValid)
             {
                 if (merchantVoucher.Voucher.DefaultImages == DefaultImages.Default)
-                {
                     await _voucherService.UpdateMerchantVoucher(merchantVoucher.Voucher, file);
-                }
                 else
-                {
-                    await _voucherService.UpdateMerchantVoucher(merchantVoucher.Voucher, merchantVoucher.Voucher.DefaultImages);
-                }
+                    await _voucherService.UpdateMerchantVoucher(merchantVoucher.Voucher,
+                        merchantVoucher.Voucher.DefaultImages);
 
 
                 return RedirectToAction(nameof(Index));

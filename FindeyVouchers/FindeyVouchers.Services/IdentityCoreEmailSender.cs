@@ -8,12 +8,12 @@ namespace FindeyVouchers.Services
 {
     public class IdentityCoreEmailSender : IEmailSender
     {
-        public IdentityCoreEmailSender(IOptions<FindeyVouchers.Domain.SendGrid> optionsAccessor)
+        public IdentityCoreEmailSender(IOptions<Domain.SendGrid> optionsAccessor)
         {
             Options = optionsAccessor.Value;
         }
 
-        public FindeyVouchers.Domain.SendGrid Options { get; } //set only via Secret Manager
+        public Domain.SendGrid Options { get; } //set only via Secret Manager
 
         public Task SendEmailAsync(string email, string subject, string message)
         {
@@ -23,7 +23,7 @@ namespace FindeyVouchers.Services
         public async Task<Response> Execute(string apiKey, string subject, string message, string email)
         {
             var client = new SendGridClient(apiKey);
-            var msg = new SendGridMessage()
+            var msg = new SendGridMessage
             {
                 From = new EmailAddress("noreply@findey.nl", Options.SendGridUser),
                 Subject = subject,

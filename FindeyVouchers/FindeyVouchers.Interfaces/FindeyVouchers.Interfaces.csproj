@@ -7,7 +7,6 @@
     <ItemGroup>
       <PackageReference Include="Azure.Core" Version="1.2.1" />
       <PackageReference Include="SendGrid" Version="9.14.1" />
-      <PackageReference Include="System.Drawing.Common" Version="5.0.0-preview.3.20214.6" />
     </ItemGroup>
 
     <ItemGroup>

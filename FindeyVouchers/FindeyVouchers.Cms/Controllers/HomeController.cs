@@ -19,9 +19,9 @@ namespace FindeyVouchers.Cms.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IVoucherService _voucherService;
 
         public HomeController(UserManager<ApplicationUser> userManager, ApplicationDbContext context,
@@ -40,33 +40,26 @@ namespace FindeyVouchers.Cms.Controllers
 
             // Store value so we can later verify it
             if (_context.StripeSecret.Any(x => x.Email.Equals(user.Email)))
-            {
                 _context.StripeSecret.Update(new StripeSecret
                 {
                     Secret = secret,
                     Email = user.Email
                 });
-            }
             else
-            {
                 _context.StripeSecret.Add(new StripeSecret
                 {
                     Secret = secret,
                     Email = user.Email
                 });
-            }
 
             await _context.SaveChangesAsync();
             var model = new HomeViewModel
             {
                 Email = user.Email.ToLower(),
                 AccountComplete = !string.IsNullOrWhiteSpace(user.CompanyName),
-                StripeComplete = !String.IsNullOrWhiteSpace(user.StripeAccountId)
+                StripeComplete = !string.IsNullOrWhiteSpace(user.StripeAccountId)
             };
-            if (!string.IsNullOrWhiteSpace(user.CompanyName))
-            {
-                model.StripeUrl = GenerateStripeUrl(user, secret);
-            }
+            if (!string.IsNullOrWhiteSpace(user.CompanyName)) model.StripeUrl = GenerateStripeUrl(user, secret);
 
 
             return View(model);
@@ -75,16 +68,10 @@ namespace FindeyVouchers.Cms.Controllers
         public async Task<IActionResult> OnBoarding()
         {
             var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return NotFound();
-            }
+            if (user == null) return NotFound();
 
             var applicationUser = await _context.Users.FindAsync(user.Id);
-            if (applicationUser == null)
-            {
-                return NotFound();
-            }
+            if (applicationUser == null) return NotFound();
 
             return View(applicationUser);
         }
@@ -94,16 +81,11 @@ namespace FindeyVouchers.Cms.Controllers
         public async Task<IActionResult> OnBoarding(string id,
             ApplicationUser applicationUser)
         {
-            if (id != applicationUser.Id)
-            {
-                return NotFound();
-            }
+            if (id != applicationUser.Id) return NotFound();
 
             if (_context.Users.Any(x => x.CompanyName.Equals(applicationUser.CompanyName)))
-            {
                 ModelState.AddModelError(string.Empty,
                     "Bedrijfsnaam is al in gebruik. Neem contact op met de beheerder.");
-            }
 
             if (ModelState.IsValid)
             {
@@ -130,13 +112,8 @@ namespace FindeyVouchers.Cms.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!_context.Users.Any(e => e.Id == id))
-                    {
                         return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
 
                 return RedirectToAction(nameof(Index));
@@ -153,7 +130,7 @@ namespace FindeyVouchers.Cms.Controllers
 
         private void SetCookie(string key, string value, int? expireTime)
         {
-            CookieOptions option = new CookieOptions();
+            var option = new CookieOptions();
 
             if (expireTime.HasValue)
                 option.Expires = DateTime.Now.AddMinutes(expireTime.Value);
@@ -165,21 +142,17 @@ namespace FindeyVouchers.Cms.Controllers
 
         private string GenerateStripeUrl(ApplicationUser user, string secret)
         {
-            string businessType = "";
+            var businessType = "";
             if (user.BusinessType == BusinessType.Corporation)
-            {
                 businessType = "company";
-            }
             else
-            {
                 businessType = "individual";
-            }
 
-            StringBuilder stripeUrl = new StringBuilder("https://connect.stripe.com/express/oauth/authorize");
+            var stripeUrl = new StringBuilder("https://connect.stripe.com/express/oauth/authorize");
             stripeUrl.Append($"?client_id={_configuration.GetValue<string>("StripeClientId")}");
             stripeUrl.Append($"&state={secret}");
-            stripeUrl.Append($"&suggested_capabilities[]=transfers");
-            stripeUrl.Append($"&suggested_capabilities[]=transfers");
+            stripeUrl.Append("&suggested_capabilities[]=transfers");
+            stripeUrl.Append("&suggested_capabilities[]=transfers");
             stripeUrl.Append($"&stripe_user[email]={user.Email}");
             stripeUrl.Append($"&stripe_user[url]={user.Website}");
             stripeUrl.Append($"&stripe_user[country]={user.Country}");
@@ -194,7 +167,7 @@ namespace FindeyVouchers.Cms.Controllers
             stripeUrl.Append($"&stripe_user[street_address]={user.Address}");
             stripeUrl.Append($"&stripe_user[city]={user.City}");
             stripeUrl.Append($"&stripe_user[zip]={user.ZipCode}");
-            stripeUrl.Append($"&stripe_user[currency]=EUR");
+            stripeUrl.Append("&stripe_user[currency]=EUR");
             return stripeUrl.ToString();
         }
     }

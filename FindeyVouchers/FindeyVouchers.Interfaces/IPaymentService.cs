@@ -1,5 +1,4 @@
-﻿using System;
-using FindeyVouchers.Domain;
+﻿using FindeyVouchers.Domain;
 using FindeyVouchers.Domain.EfModels;
 
 namespace FindeyVouchers.Interfaces

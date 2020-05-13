@@ -8,22 +8,19 @@ namespace FindeyVouchers.Domain.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AspNetRoles",
-                columns: table => new
+                "AspNetRoles",
+                table => new
                 {
                     Id = table.Column<string>(nullable: false),
                     Name = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_AspNetRoles", x => x.Id); });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
+                "AspNetUsers",
+                table => new
                 {
                     Id = table.Column<string>(nullable: false),
                     UserName = table.Column<string>(maxLength: 256, nullable: true),
@@ -54,14 +51,11 @@ namespace FindeyVouchers.Domain.Migrations
                     Website = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_AspNetUsers", x => x.Id); });
 
             migrationBuilder.CreateTable(
-                name: "Customers",
-                columns: table => new
+                "Customers",
+                table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
                     FirstName = table.Column<string>(nullable: true),
@@ -69,14 +63,11 @@ namespace FindeyVouchers.Domain.Migrations
                     Email = table.Column<string>(nullable: true),
                     PhoneNumber = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Customers", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Customers", x => x.Id); });
 
             migrationBuilder.CreateTable(
-                name: "Payments",
-                columns: table => new
+                "Payments",
+                table => new
                 {
                     Id = table.Column<string>(nullable: false),
                     Amount = table.Column<float>(nullable: false),
@@ -84,26 +75,20 @@ namespace FindeyVouchers.Domain.Migrations
                     Status = table.Column<string>(nullable: true),
                     Error = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Payments", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Payments", x => x.Id); });
 
             migrationBuilder.CreateTable(
-                name: "StripeSecret",
-                columns: table => new
+                "StripeSecret",
+                table => new
                 {
                     Email = table.Column<string>(nullable: false),
                     Secret = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StripeSecret", x => x.Email);
-                });
+                constraints: table => { table.PrimaryKey("PK_StripeSecret", x => x.Email); });
 
             migrationBuilder.CreateTable(
-                name: "AspNetRoleClaims",
-                columns: table => new
+                "AspNetRoleClaims",
+                table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
@@ -115,16 +100,16 @@ namespace FindeyVouchers.Domain.Migrations
                 {
                     table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
+                        "FK_AspNetRoleClaims_AspNetRoles_RoleId",
+                        x => x.RoleId,
+                        "AspNetRoles",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserClaims",
-                columns: table => new
+                "AspNetUserClaims",
+                table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
@@ -136,16 +121,16 @@ namespace FindeyVouchers.Domain.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        "FK_AspNetUserClaims_AspNetUsers_UserId",
+                        x => x.UserId,
+                        "AspNetUsers",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserLogins",
-                columns: table => new
+                "AspNetUserLogins",
+                table => new
                 {
                     LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
                     ProviderKey = table.Column<string>(maxLength: 128, nullable: false),
@@ -154,42 +139,42 @@ namespace FindeyVouchers.Domain.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                    table.PrimaryKey("PK_AspNetUserLogins", x => new {x.LoginProvider, x.ProviderKey});
                     table.ForeignKey(
-                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        "FK_AspNetUserLogins_AspNetUsers_UserId",
+                        x => x.UserId,
+                        "AspNetUsers",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserRoles",
-                columns: table => new
+                "AspNetUserRoles",
+                table => new
                 {
                     UserId = table.Column<string>(nullable: false),
                     RoleId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new {x.UserId, x.RoleId});
                     table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
+                        "FK_AspNetUserRoles_AspNetRoles_RoleId",
+                        x => x.RoleId,
+                        "AspNetRoles",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        "FK_AspNetUserRoles_AspNetUsers_UserId",
+                        x => x.UserId,
+                        "AspNetUsers",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserTokens",
-                columns: table => new
+                "AspNetUserTokens",
+                table => new
                 {
                     UserId = table.Column<string>(nullable: false),
                     LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
@@ -198,18 +183,18 @@ namespace FindeyVouchers.Domain.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.PrimaryKey("PK_AspNetUserTokens", x => new {x.UserId, x.LoginProvider, x.Name});
                     table.ForeignKey(
-                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        "FK_AspNetUserTokens_AspNetUsers_UserId",
+                        x => x.UserId,
+                        "AspNetUsers",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "VoucherCategories",
-                columns: table => new
+                "VoucherCategories",
+                table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(nullable: true),
@@ -220,16 +205,16 @@ namespace FindeyVouchers.Domain.Migrations
                 {
                     table.PrimaryKey("PK_VoucherCategories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_VoucherCategories_AspNetUsers_MerchantId",
-                        column: x => x.MerchantId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        "FK_VoucherCategories_AspNetUsers_MerchantId",
+                        x => x.MerchantId,
+                        "AspNetUsers",
+                        "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "MerchantVouchers",
-                columns: table => new
+                "MerchantVouchers",
+                table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
                     MerchantId = table.Column<string>(nullable: true),
@@ -246,22 +231,22 @@ namespace FindeyVouchers.Domain.Migrations
                 {
                     table.PrimaryKey("PK_MerchantVouchers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MerchantVouchers_VoucherCategories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "VoucherCategories",
-                        principalColumn: "Id",
+                        "FK_MerchantVouchers_VoucherCategories_CategoryId",
+                        x => x.CategoryId,
+                        "VoucherCategories",
+                        "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_MerchantVouchers_AspNetUsers_MerchantId",
-                        column: x => x.MerchantId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        "FK_MerchantVouchers_AspNetUsers_MerchantId",
+                        x => x.MerchantId,
+                        "AspNetUsers",
+                        "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "CustomerVouchers",
-                columns: table => new
+                "CustomerVouchers",
+                table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
                     CustomerId = table.Column<Guid>(nullable: true),
@@ -278,135 +263,135 @@ namespace FindeyVouchers.Domain.Migrations
                 {
                     table.PrimaryKey("PK_CustomerVouchers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CustomerVouchers_Customers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customers",
-                        principalColumn: "Id",
+                        "FK_CustomerVouchers_Customers_CustomerId",
+                        x => x.CustomerId,
+                        "Customers",
+                        "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_CustomerVouchers_MerchantVouchers_MerchantVoucherId",
-                        column: x => x.MerchantVoucherId,
-                        principalTable: "MerchantVouchers",
-                        principalColumn: "Id",
+                        "FK_CustomerVouchers_MerchantVouchers_MerchantVoucherId",
+                        x => x.MerchantVoucherId,
+                        "MerchantVouchers",
+                        "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_CustomerVouchers_Payments_PaymentId",
-                        column: x => x.PaymentId,
-                        principalTable: "Payments",
-                        principalColumn: "Id",
+                        "FK_CustomerVouchers_Payments_PaymentId",
+                        x => x.PaymentId,
+                        "Payments",
+                        "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetRoleClaims_RoleId",
-                table: "AspNetRoleClaims",
-                column: "RoleId");
+                "IX_AspNetRoleClaims_RoleId",
+                "AspNetRoleClaims",
+                "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "RoleNameIndex",
-                table: "AspNetRoles",
-                column: "NormalizedName",
+                "RoleNameIndex",
+                "AspNetRoles",
+                "NormalizedName",
                 unique: true,
                 filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserClaims_UserId",
-                table: "AspNetUserClaims",
-                column: "UserId");
+                "IX_AspNetUserClaims_UserId",
+                "AspNetUserClaims",
+                "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserLogins_UserId",
-                table: "AspNetUserLogins",
-                column: "UserId");
+                "IX_AspNetUserLogins_UserId",
+                "AspNetUserLogins",
+                "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserRoles_RoleId",
-                table: "AspNetUserRoles",
-                column: "RoleId");
+                "IX_AspNetUserRoles_RoleId",
+                "AspNetUserRoles",
+                "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "EmailIndex",
-                table: "AspNetUsers",
-                column: "NormalizedEmail");
+                "EmailIndex",
+                "AspNetUsers",
+                "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
-                name: "UserNameIndex",
-                table: "AspNetUsers",
-                column: "NormalizedUserName",
+                "UserNameIndex",
+                "AspNetUsers",
+                "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CustomerVouchers_CustomerId",
-                table: "CustomerVouchers",
-                column: "CustomerId");
+                "IX_CustomerVouchers_CustomerId",
+                "CustomerVouchers",
+                "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CustomerVouchers_MerchantVoucherId",
-                table: "CustomerVouchers",
-                column: "MerchantVoucherId");
+                "IX_CustomerVouchers_MerchantVoucherId",
+                "CustomerVouchers",
+                "MerchantVoucherId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CustomerVouchers_PaymentId",
-                table: "CustomerVouchers",
-                column: "PaymentId");
+                "IX_CustomerVouchers_PaymentId",
+                "CustomerVouchers",
+                "PaymentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MerchantVouchers_CategoryId",
-                table: "MerchantVouchers",
-                column: "CategoryId");
+                "IX_MerchantVouchers_CategoryId",
+                "MerchantVouchers",
+                "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MerchantVouchers_MerchantId",
-                table: "MerchantVouchers",
-                column: "MerchantId");
+                "IX_MerchantVouchers_MerchantId",
+                "MerchantVouchers",
+                "MerchantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_VoucherCategories_MerchantId",
-                table: "VoucherCategories",
-                column: "MerchantId");
+                "IX_VoucherCategories_MerchantId",
+                "VoucherCategories",
+                "MerchantId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AspNetRoleClaims");
+                "AspNetRoleClaims");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserClaims");
+                "AspNetUserClaims");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserLogins");
+                "AspNetUserLogins");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserRoles");
+                "AspNetUserRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserTokens");
+                "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "CustomerVouchers");
+                "CustomerVouchers");
 
             migrationBuilder.DropTable(
-                name: "StripeSecret");
+                "StripeSecret");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Customers");
+                "Customers");
 
             migrationBuilder.DropTable(
-                name: "MerchantVouchers");
+                "MerchantVouchers");
 
             migrationBuilder.DropTable(
-                name: "Payments");
+                "Payments");
 
             migrationBuilder.DropTable(
-                name: "VoucherCategories");
+                "VoucherCategories");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                "AspNetUsers");
         }
     }
 }

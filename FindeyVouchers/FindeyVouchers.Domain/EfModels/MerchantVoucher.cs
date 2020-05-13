@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
@@ -38,10 +37,10 @@ namespace FindeyVouchers.Domain.EfModels
         [DataType(DataType.Date)]
         public DateTime CreatedOn { get; set; }
 
-        [Display(Name = "Prijs")] [Required] public Decimal Price { get; set; }
+        [Display(Name = "Prijs")] [Required] public decimal Price { get; set; }
 
         [NotMapped]
-        [AllowedExtensions(new string[] {".jpg", ".png", ".gif", ".jpeg"})]
+        [AllowedExtensions(new[] {".jpg", ".png", ".gif", ".jpeg"})]
         public IFormFile ImageFile { get; set; }
 
         [NotMapped]
@@ -56,8 +55,7 @@ namespace FindeyVouchers.Domain.EfModels
         [Required]
         public VoucherType VoucherType { get; set; }
 
-        [Display(Name = "Categorie voucher")]
-        public VoucherCategory Category { get; set; }
+        [Display(Name = "Categorie voucher")] public VoucherCategory Category { get; set; }
     }
 
     public enum VoucherType
@@ -99,9 +97,7 @@ namespace FindeyVouchers.Domain.EfModels
             {
                 var extension = Path.GetExtension(file.FileName);
                 if (!((IList) _Extensions).Contains(extension.ToLower()))
-                {
-                    return new ValidationResult($"Alleen .png .jpg of .gif is toegestaan.");
-                }
+                    return new ValidationResult("Alleen .png .jpg of .gif is toegestaan.");
             }
 
             return ValidationResult.Success;

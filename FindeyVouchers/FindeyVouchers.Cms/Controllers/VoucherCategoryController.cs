@@ -25,9 +25,7 @@ namespace FindeyVouchers.Cms.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             if (string.IsNullOrWhiteSpace(user.CompanyName) || string.IsNullOrWhiteSpace(user.StripeAccountId))
-            {
                 return RedirectToAction("Index", "Home");
-            }
             var categories = _context.VoucherCategories.Where(x => x.Merchant == user);
             return View(categories);
         }
@@ -35,18 +33,12 @@ namespace FindeyVouchers.Cms.Controllers
         // GET: VoucherCategory/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
 
             var voucherCategory = await _context.VoucherCategories
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (voucherCategory == null)
-            {
-                return NotFound();
-            }
+            if (voucherCategory == null) return NotFound();
 
             return View(voucherCategory);
         }
@@ -65,12 +57,12 @@ namespace FindeyVouchers.Cms.Controllers
         public async Task<IActionResult> Create(VoucherCategory voucherCategory)
         {
             var exist = _context.VoucherCategories.Any(x => x.Ranking == voucherCategory.Ranking);
-            if(exist) ModelState.AddModelError(string.Empty, "Positie al in gebruik.");
+            if (exist) ModelState.AddModelError(string.Empty, "Positie al in gebruik.");
             if (ModelState.IsValid)
             {
                 voucherCategory.Id = Guid.NewGuid();
                 voucherCategory.Merchant = await _userManager.GetUserAsync(User);
-                
+
                 _context.Add(voucherCategory);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -82,16 +74,10 @@ namespace FindeyVouchers.Cms.Controllers
         // GET: VoucherCategory/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var voucherCategory = await _context.VoucherCategories.FindAsync(id);
-            if (voucherCategory == null)
-            {
-                return NotFound();
-            }
+            if (voucherCategory == null) return NotFound();
 
             return View(voucherCategory);
         }
@@ -101,14 +87,11 @@ namespace FindeyVouchers.Cms.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id,VoucherCategory voucherCategory)
+        public async Task<IActionResult> Edit(Guid id, VoucherCategory voucherCategory)
         {
-            if (id != voucherCategory.Id)
-            {
-                return NotFound();
-            }
+            if (id != voucherCategory.Id) return NotFound();
             var exist = _context.VoucherCategories.Any(x => x.Ranking == voucherCategory.Ranking);
-            if(exist) ModelState.AddModelError(string.Empty, "Positie al in gebruik.");
+            if (exist) ModelState.AddModelError(string.Empty, "Positie al in gebruik.");
             if (ModelState.IsValid)
             {
                 try
@@ -119,13 +102,8 @@ namespace FindeyVouchers.Cms.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!VoucherCategoryExists(voucherCategory.Id))
-                    {
                         return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
 
                 return RedirectToAction(nameof(Index));

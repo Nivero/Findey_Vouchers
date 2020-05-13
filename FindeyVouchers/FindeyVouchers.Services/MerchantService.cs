@@ -38,20 +38,21 @@ namespace FindeyVouchers.Services
             try
             {
                 var merchantVouchers = vouchers.Select(x => x.MerchantVoucher).Distinct();
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 foreach (var merchantVoucher in merchantVouchers)
                 {
-                    int count = vouchers.Count(x => x.MerchantVoucher == merchantVoucher);
+                    var count = vouchers.Count(x => x.MerchantVoucher == merchantVoucher);
                     var emailVoucher = _mailService.GetVoucherNoticiationHtml(merchantVoucher, count);
                     sb.Append(emailVoucher);
                 }
 
                 var totalAmount = vouchers.Sum(x => x.Price);
-                var subject = $"Nieuwe bestelling via Findey Vouchers";
+                var subject = "Nieuwe bestelling via Findey Vouchers";
                 var body = _mailService.GetVoucherNotificationHtmlBody(
                     vouchers.First().MerchantVoucher.Merchant.CompanyName, sb.ToString(), totalAmount,
                     vouchers.Count());
-                var response = await _mailService.SendMail(vouchers.First().MerchantVoucher.Merchant.Email, subject, body);
+                var response =
+                    await _mailService.SendMail(vouchers.First().MerchantVoucher.Merchant.Email, subject, body);
             }
             catch (Exception e)
             {

@@ -80,7 +80,7 @@ namespace FindeyVouchers.Website.Controllers
             {
                 // var stripeEvent = EventUtility.ConstructEvent(json,
                 //     Request.Headers["Stripe-Signature"], _endpointSecret);
-                var stripeEvent = EventUtility.ParseEvent(json);
+                var stripeEvent = EventUtility.ParseEvent(json, false);
 
                 // Handle the event
                 if (stripeEvent.Type == Events.PaymentIntentSucceeded

@@ -9,6 +9,7 @@ using FindeyVouchers.Interfaces;
 using FindeyVouchers.Website.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Serilog;
 using Stripe;
 
 namespace FindeyVouchers.Website.Controllers
@@ -100,8 +101,9 @@ namespace FindeyVouchers.Website.Controllers
 
                 return Ok();
             }
-            catch (StripeException)
+            catch (Exception e)
             {
+                Log.Error($"{e}");
                 return BadRequest();
             }
         }

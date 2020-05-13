@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -20,8 +19,8 @@ namespace FindeyVouchers.Services
     public class VoucherService : IVoucherService
     {
         private readonly IAzureStorageService _azureStorageService;
-        private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly ApplicationDbContext _context;
         private readonly IMailService _mailService;
         private readonly IMerchantService _merchantService;
 
@@ -37,29 +36,26 @@ namespace FindeyVouchers.Services
 
         public string GenerateVoucherCode(int length)
         {
-            Random random = new Random();
-            string characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-            StringBuilder result = new StringBuilder(length);
-            for (int i = 0; i < length; i++)
-            {
-                result.Append(characters[random.Next(characters.Length)]);
-            }
+            var random = new Random();
+            var characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            var result = new StringBuilder(length);
+            for (var i = 0; i < length; i++) result.Append(characters[random.Next(characters.Length)]);
 
             return result.ToString();
         }
 
-        public Bitmap GenerateQrCodeFromString(string text)
+        public string GenerateQrCodeFromString(string text)
         {
-            QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            QRCodeData qrCodeData = qrGenerator.CreateQrCode(text, QRCodeGenerator.ECCLevel.Q);
-            QRCode qrCode = new QRCode(qrCodeData);
-            Bitmap qrCodeImage = qrCode.GetGraphic(20);
-            return qrCodeImage;
+            var qrGenerator = new QRCodeGenerator();
+            var qrCodeData = qrGenerator.CreateQrCode(text, QRCodeGenerator.ECCLevel.Q);
+            var qrCode = new Base64QRCode(qrCodeData);
+            var qrCodeImageAsBase64 = qrCode.GetGraphic(20);
+            return qrCodeImageAsBase64;
         }
 
         public MerchantVoucherResponse RetrieveMerchantVouchers(string companyName)
         {
-            string url = _configuration.GetValue<string>("VoucherImageContainerUrl");
+            var url = _configuration.GetValue<string>("VoucherImageContainerUrl");
             var merchant = _context.Users.FirstOrDefault(x => x.NormalizedCompanyName.Equals(companyName));
             if (merchant == null) return null;
             var response = new MerchantVoucherResponse
@@ -139,10 +135,7 @@ namespace FindeyVouchers.Services
             voucher.Merchant = user;
 
             // Upload file
-            if (image != null)
-            {
-                voucher.Image = await UploadFile(image);
-            }
+            if (image != null) voucher.Image = await UploadFile(image);
 
             _context.Add(voucher);
 
@@ -162,61 +155,6 @@ namespace FindeyVouchers.Services
         public List<VoucherCategory> GetCategories(ApplicationUser user)
         {
             return _context.VoucherCategories.Where(x => x.Merchant == user).ToList();
-        }
-
-        private string GetImageNameFromEnum(DefaultImages image)
-        {
-            var value = "";
-            switch (image)
-            {
-                case DefaultImages.Black:
-                {
-                    value = "Black.png";
-                    break;
-                }
-                case DefaultImages.Blue:
-                {
-                    value = "Blue.png";
-                    break;
-                }
-                case DefaultImages.Bronze:
-                {
-                    value = "Bronze.png";
-                    break;
-                }
-                case DefaultImages.White:
-                {
-                    value = "White.png";
-                    break;
-                }
-                case DefaultImages.Yellow:
-                {
-                    value = "Yellow.png";
-                    break;
-                }
-                case DefaultImages.Gold:
-                {
-                    value = "Gold.png";
-                    break;
-                }
-                case DefaultImages.Green:
-                {
-                    value = "Green.png";
-                    break;
-                }
-                case DefaultImages.Pink:
-                {
-                    value = "Pink.png";
-                    break;
-                }
-                case DefaultImages.Silver:
-                {
-                    value = "Silver.png";
-                    break;
-                }
-            }
-
-            return value;
         }
 
         public async Task UpdateMerchantVoucher(MerchantVoucher voucher, IFormFile image)
@@ -284,18 +222,18 @@ namespace FindeyVouchers.Services
             {
                 Log.Error($"{e}");
             }
-
         }
+
         public async Task CreateAndSendVouchers(List<CustomerVoucher> vouchers)
         {
             try
             {
-
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 foreach (var customerVoucher in vouchers)
                 {
                     var emailVoucher =
-                        _mailService.GetVoucherSoldHtml(customerVoucher, GenerateQrCodeFromString(customerVoucher.Code));
+                        _mailService.GetVoucherSoldHtml(customerVoucher,
+                            GenerateQrCodeFromString(customerVoucher.Code));
                     sb.Append(emailVoucher);
                 }
 
@@ -303,10 +241,7 @@ namespace FindeyVouchers.Services
                 var body = _mailService.GetVoucherSoldHtmlBody(vouchers.First().MerchantVoucher.Merchant.CompanyName,
                     sb.ToString());
                 var response = await _mailService.SendMail(vouchers.First().Customer.Email, subject, body);
-                if (response.StatusCode == HttpStatusCode.Accepted)
-                {
-                    SetEmailSend(vouchers, true);
-                }
+                if (response.StatusCode == HttpStatusCode.Accepted) SetEmailSend(vouchers, true);
             }
             catch (Exception e)
             {
@@ -314,7 +249,69 @@ namespace FindeyVouchers.Services
             }
         }
 
-        private void SetEmailSend(List<CustomerVoucher> vouchers ,bool sent)
+        public async Task DeactivateMerchantVoucher(Guid id)
+        {
+            var merchantVoucher = await _context.MerchantVouchers.FindAsync(id);
+            merchantVoucher.IsActive = !merchantVoucher.IsActive;
+            await _context.SaveChangesAsync();
+        }
+
+        private string GetImageNameFromEnum(DefaultImages image)
+        {
+            var value = "";
+            switch (image)
+            {
+                case DefaultImages.Black:
+                {
+                    value = "Black.png";
+                    break;
+                }
+                case DefaultImages.Blue:
+                {
+                    value = "Blue.png";
+                    break;
+                }
+                case DefaultImages.Bronze:
+                {
+                    value = "Bronze.png";
+                    break;
+                }
+                case DefaultImages.White:
+                {
+                    value = "White.png";
+                    break;
+                }
+                case DefaultImages.Yellow:
+                {
+                    value = "Yellow.png";
+                    break;
+                }
+                case DefaultImages.Gold:
+                {
+                    value = "Gold.png";
+                    break;
+                }
+                case DefaultImages.Green:
+                {
+                    value = "Green.png";
+                    break;
+                }
+                case DefaultImages.Pink:
+                {
+                    value = "Pink.png";
+                    break;
+                }
+                case DefaultImages.Silver:
+                {
+                    value = "Silver.png";
+                    break;
+                }
+            }
+
+            return value;
+        }
+
+        private void SetEmailSend(List<CustomerVoucher> vouchers, bool sent)
         {
             foreach (var voucher in vouchers)
             {
@@ -325,14 +322,8 @@ namespace FindeyVouchers.Services
                     _context.Update(dbVoucher);
                 }
             }
-            _context.SaveChangesAsync();
-        }
 
-        public async Task DeactivateMerchantVoucher(Guid id)
-        {
-            var merchantVoucher = await _context.MerchantVouchers.FindAsync(id);
-            merchantVoucher.IsActive = !merchantVoucher.IsActive;
-            await _context.SaveChangesAsync();
+            _context.SaveChangesAsync();
         }
 
         private async Task<string> UploadFile(IFormFile file)

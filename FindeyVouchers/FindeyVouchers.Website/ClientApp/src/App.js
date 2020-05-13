@@ -8,6 +8,8 @@ import reducer from './redux/reducer';
 import CheckoutStatusSuccess from "./Components/CheckoutStatus/CheckoutStatusSuccess";
 import CheckoutStatusError from "./Components/CheckoutStatus/CheckoutStatusError";
 import CheckoutStatusPending from "./Components/CheckoutStatus/CheckoutStatusPending";
+import Legal from "./Components/Legal/";
+import MerchantNotFound from "./Components/NotFound";
 
 
 export default class App extends React.Component {
@@ -22,66 +24,71 @@ export default class App extends React.Component {
 
 
     async fetchMerchant() {
-        var location = window.location.host.split(".");
-        var merchantName = location[location.indexOf("findey") - 1]
-        console.log(merchantName);
+        let completeUrl = window.location.host.split(".");
+        let merchantName = completeUrl[completeUrl.indexOf("findey") - 1]
         const requestOptions = {
             method: 'GET',
         };
         // Merchant name should be here.
         // It will be the first part of the url IE. nivero.findey.nl
-        fetch(`merchant/nivero`, requestOptions)
-            .then((response) => response.json())
+        fetch(`merchant/${merchantName}`, requestOptions)
+            .then((response) => {
+                if (response.ok) {
+                    return response.json()
+                } else {
+                    return Promise.reject('merchant not found')
+                }
+            })
             .then(
-                (result) => {
+                (response) => {
                     this.setState({
                         isLoaded: true,
-                        response: result
+                        response: response
                     });
-                },
-                // Note: it's important to handle errors here
-                // instead of a catch() block so that we don't swallow
-                // exceptions from actual bugs in components.
-                (error) => {
-                    this.setState({
-                        isLoaded: true,
-                        error
-                    });
+
+                })
+            .catch((error) => {
+                this.setState({
+                    isLoaded: true,
+                    error: true
                 });
+            });
     }
 
     render() {
         const {isLoaded, response, error} = this.state;
-        if (error) {
-            return (
-                <Switch>
-                    <Route exact path="/checkout-status/success" component={CheckoutStatusSuccess}/>
-                    <Route exact path="/checkout-status/error" component={CheckoutStatusError}/>
-                    <Route exact path="/checkout-status/pending" component={CheckoutStatusPending}/>
-                </Switch>)
-        } else if (!isLoaded) {
+        if (!isLoaded) {
             return <div>Loading...</div>;
         } else {
-
-            const initialStore = {
-                cartItems: response.vouchers,
-                cartTotal: 0,
-                cartAmount: 0
-            };
-
-            const store = createStore(reducer, initialStore);
-            return (
-
-                <Provider store={store}>
+            if (error) {
+                return (
                     <Switch>
-                        <Route exact path="/" component={() => <CompanyVouchers data={response}/>}/>
-                        <Route exact path="/checkout" component={Checkout}/>
-                        <Route exact path="/checkout-status/success" component={CheckoutStatusSuccess}/>
-                        <Route exact path="/checkout-status/error" component={CheckoutStatusError}/>
-                        <Route exact path="/checkout-status/pending" component={CheckoutStatusPending}/>
+                        <Route exact path="/" component={MerchantNotFound}/>
                     </Switch>
-                </Provider>
-            );
+                );
+            } else {
+                const initialStore = {
+                    cartItems: response.vouchers,
+                    cartTotal: 0,
+                    cartAmount: 0
+                };
+
+                const store = createStore(reducer, initialStore);
+                return (
+
+                    <Provider store={store}>
+                        <Switch>
+                            <Route exact path="/" component={() => <CompanyVouchers data={response}/>}/>
+                            <Route exact path="/checkout" component={Checkout}/>
+                            <Route exact path="/checkout-status/success" component={CheckoutStatusSuccess}/>
+                            <Route exact path="/checkout-status/error" component={CheckoutStatusError}/>
+                            <Route exact path="/checkout-status/pending" component={CheckoutStatusPending}/>
+                            <Route exact path="/legal" component={Legal}/>
+                        </Switch>
+                    </Provider>
+                );
+            }
+
         }
     }
 }

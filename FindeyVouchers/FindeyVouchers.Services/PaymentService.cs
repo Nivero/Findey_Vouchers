@@ -29,7 +29,7 @@ namespace FindeyVouchers.Services
                 payment.Amount = response.Amount;
                 payment.Status = response.PaymentStatus;
                 payment.Error = response.ErrorMessage;
-                payment.Created = new DateTime().AddMilliseconds(response.Created);
+                payment.Created = new DateTime().AddSeconds(response.Created);
                 _context.Update(payment);
                 _context.SaveChanges();
             }

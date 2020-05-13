@@ -6,7 +6,6 @@ using FindeyVouchers.Domain.EfModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Stripe;
 
@@ -24,7 +23,7 @@ namespace FindeyVouchers.Cms.Controllers
             _userManager = userManager;
             // Set your secret key: remember to switch to your live secret key in production
             // See your keys here: https://dashboard.stripe.com/account/apikeys
-            this._client = new StripeClient("sk_test_iZnEwjRXBzBdmTUdjLWDV8Xn00zsgY41iV");
+            _client = new StripeClient("sk_test_iZnEwjRXBzBdmTUdjLWDV8Xn00zsgY41iV");
         }
 
         [HttpGet("/connect/oauth")]
@@ -37,18 +36,16 @@ namespace FindeyVouchers.Cms.Controllers
 
             // Assert the state matches the state you provided in the OAuth link (optional).
             if (!StateMatches(state).Result)
-            {
                 return StatusCode(
                     StatusCodes.Status403Forbidden,
-                    Json(new {Error = String.Format("Incorrect state parameter: {0}", state)})
+                    Json(new {Error = string.Format("Incorrect state parameter: {0}", state)})
                 );
-            }
 
             // Send the authorization code to Stripe's API.
             var options = new OAuthTokenCreateOptions
             {
                 GrantType = "authorization_code",
-                Code = code,
+                Code = code
             };
 
             OAuthToken response = null;
@@ -60,19 +57,14 @@ namespace FindeyVouchers.Cms.Controllers
             catch (StripeException e)
             {
                 if (e.StripeError != null && e.StripeError.Error == "invalid_grant")
-                {
                     return StatusCode(
                         StatusCodes.Status400BadRequest,
-                        Json(new {Error = String.Format("Invalid authorization code: {0}", code)})
+                        Json(new {Error = string.Format("Invalid authorization code: {0}", code)})
                     );
-                }
-                else
-                {
-                    return StatusCode(
-                        StatusCodes.Status500InternalServerError,
-                        Json(new {Error = "An unknown error occurred."})
-                    );
-                }
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    Json(new {Error = "An unknown error occurred."})
+                );
             }
 
             var connectedAccountId = response.StripeUserId;
@@ -88,7 +80,7 @@ namespace FindeyVouchers.Cms.Controllers
             var user = await _userManager.GetUserAsync(User);
 
             var savedState = _context.StripeSecret.FirstOrDefault(x => x.Email.Equals(user.Email));
-            
+
             return savedState != null && savedState.Secret == stateParameter;
         }
 

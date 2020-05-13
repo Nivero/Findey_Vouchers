@@ -8,9 +8,9 @@ using FindeyVouchers.Domain.EfModels;
 using FindeyVouchers.Interfaces;
 using FindeyVouchers.Website.Models;
 using Microsoft.AspNetCore.Mvc;
-using Stripe;
 using Microsoft.Extensions.Configuration;
 using Serilog;
+using Stripe;
 
 namespace FindeyVouchers.Website.Controllers
 {
@@ -18,12 +18,12 @@ namespace FindeyVouchers.Website.Controllers
     [Route("[controller]")]
     public class OrderController : ControllerBase
     {
-        private readonly IMerchantService _merchantService;
+        private readonly string _apiKey;
         private readonly ICustomerService _customerService;
+        private readonly string _endpointSecret;
+        private readonly IMerchantService _merchantService;
         private readonly IPaymentService _paymentService;
         private readonly IVoucherService _voucherService;
-        private readonly string _apiKey;
-        private readonly string _endpointSecret;
 
         public OrderController(IMerchantService merchantService, ICustomerService customerService,
             IPaymentService paymentService, IVoucherService voucherService, IConfiguration configuration)
@@ -45,14 +45,11 @@ namespace FindeyVouchers.Website.Controllers
             StripeConfiguration.ApiKey = _apiKey;
             var options = new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true,
+                PropertyNameCaseInsensitive = true
             };
             var response = JsonSerializer.Deserialize<PaymentIntentRequest>(body.ToString(), options);
             var user = _merchantService.GetMerchantInfo(response.CompanyName);
-            if (user == null)
-            {
-                return NotFound("Merchant not found");
-            }
+            if (user == null) return NotFound("Merchant not found");
 
             var createOptions = new PaymentIntentCreateOptions
             {
@@ -66,8 +63,8 @@ namespace FindeyVouchers.Website.Controllers
                 ApplicationFeeAmount = 1,
                 TransferData = new PaymentIntentTransferDataOptions
                 {
-                    Destination = user.StripeAccountId,
-                },
+                    Destination = user.StripeAccountId
+                }
             };
             var service = new PaymentIntentService();
             var intent = service.Create(createOptions);
@@ -84,7 +81,7 @@ namespace FindeyVouchers.Website.Controllers
             {
                 // var stripeEvent = EventUtility.ConstructEvent(json,
                 //     Request.Headers["Stripe-Signature"], _endpointSecret);
-                var stripeEvent = EventUtility.ParseEvent(json);
+                var stripeEvent = EventUtility.ParseEvent(json, false);
 
                 // Handle the event
                 if (stripeEvent.Type == Events.PaymentIntentSucceeded
@@ -104,8 +101,9 @@ namespace FindeyVouchers.Website.Controllers
 
                 return Ok();
             }
-            catch (StripeException)
+            catch (Exception e)
             {
+                Log.Error($"{e}");
                 return BadRequest();
             }
         }
@@ -116,7 +114,7 @@ namespace FindeyVouchers.Website.Controllers
         {
             var options = new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true,
+                PropertyNameCaseInsensitive = true
             };
             var response = JsonSerializer.Deserialize<PaymentStatusResponse>(body.ToString(), options);
             _paymentService.UpdatePayment(response);
@@ -135,7 +133,7 @@ namespace FindeyVouchers.Website.Controllers
 
             var options = new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true,
+                PropertyNameCaseInsensitive = true
             };
             var response = JsonSerializer.Deserialize<CreateOrderRequest>(body.ToString(), options);
             var customer = _customerService.CreateCustomer(response.Customer);
@@ -148,12 +146,8 @@ namespace FindeyVouchers.Website.Controllers
             });
 
             foreach (var merchantVoucher in response.Vouchers)
-            {
-                for (int i = 0; i < merchantVoucher.Amount; i++)
-                {
+                for (var i = 0; i < merchantVoucher.Amount; i++)
                     _voucherService.CreateCustomerVoucher(customer, merchantVoucher, response.PaymentId);
-                }
-            }
 
 
             return Ok();

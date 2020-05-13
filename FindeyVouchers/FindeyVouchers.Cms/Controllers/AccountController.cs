@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,8 +18,8 @@ namespace FindeyVouchers.Cms.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IEmailSender _emailSender;
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMailService _mailService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public AccountController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
             IEmailSender emailSender, IMailService mailService)
@@ -35,21 +33,13 @@ namespace FindeyVouchers.Cms.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return NotFound();
-            }
+            if (user == null) return NotFound();
 
             if (string.IsNullOrWhiteSpace(user.CompanyName) || string.IsNullOrWhiteSpace(user.StripeAccountId))
-            {
                 return RedirectToAction("Index", "Home");
-            }
 
             var applicationUser = await _context.Users.FindAsync(user.Id);
-            if (applicationUser == null)
-            {
-                return NotFound();
-            }
+            if (applicationUser == null) return NotFound();
 
             return View(applicationUser);
         }
@@ -59,10 +49,7 @@ namespace FindeyVouchers.Cms.Controllers
         public async Task<IActionResult> Index(string id,
             ApplicationUser applicationUser)
         {
-            if (id != applicationUser.Id)
-            {
-                return NotFound();
-            }
+            if (id != applicationUser.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -88,13 +75,8 @@ namespace FindeyVouchers.Cms.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!ApplicationUserExists(applicationUser.Id))
-                    {
                         return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
 
                 return RedirectToAction(nameof(Index));
@@ -115,10 +97,7 @@ namespace FindeyVouchers.Cms.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ApplicationUserExists(user.Id))
-                    {
-                        return NotFound();
-                    }
+                    if (!ApplicationUserExists(user.Id)) return NotFound();
                 }
 
                 return View(nameof(Index), user);
@@ -136,9 +115,9 @@ namespace FindeyVouchers.Cms.Controllers
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             var callbackUrl = Url.Page(
                 "/Account/ResetPassword",
-                pageHandler: null,
-                values: new {area = "Identity", code},
-                protocol: Request.Scheme);
+                null,
+                new {area = "Identity", code},
+                Request.Scheme);
 
             var msg = _mailService.GetPasswordForgetEmail(user.CompanyName, callbackUrl);
             await _emailSender.SendEmailAsync(

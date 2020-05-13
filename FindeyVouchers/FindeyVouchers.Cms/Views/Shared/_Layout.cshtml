@@ -57,19 +57,23 @@
     <!-- /#page-content-wrapper -->
 
 </div>
-
-<footer class="border-top footer text-muted">
-    <div class="container">
-        &copy; 2020 - Findey Vouchers
-    </div>
-    <div class="fixed-bottom">
-        <partial name="_CookieConsentPartial"/>
-    </div>
-</footer>
+@if (User.Identity.IsAuthenticated)
+{
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2020 - Findey Vouchers -
+            <a href='@Url.Content("~/files/ALGEMENE VOORWAARDEN - Merchant.pdf")'>Algemene voorwaarden </a> -
+            <a href='@Url.Content("~/files/PRIVACYVERKLARING - merchant.pdf")'>Privacy verklaring </a>
+        </div>
+        <div class="fixed-bottom">
+            <partial name="_CookieConsentPartial"/>
+        </div>
+    </footer>
+}
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
-@RenderSection("Scripts", required: false)
+@RenderSection("Scripts", false)
 </body>
 </html>

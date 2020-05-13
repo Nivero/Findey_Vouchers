@@ -92,7 +92,7 @@ namespace FindeyVouchers.Website.Controllers
                     {
                         PaymentId = paymentIntent.Id,
                         Amount = paymentIntent.Amount.Value,
-                        Created = paymentIntent.Created.Millisecond,
+                        Created = paymentIntent.Created.Second,
                         PaymentStatus = paymentIntent.Status,
                         ErrorMessage = paymentIntent.LastPaymentError?.ToString()
                     });

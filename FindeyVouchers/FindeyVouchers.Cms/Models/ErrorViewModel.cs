@@ -1,5 +1,3 @@
-using System;
-
 namespace FindeyVouchers.Cms.Models
 {
     public class ErrorViewModel

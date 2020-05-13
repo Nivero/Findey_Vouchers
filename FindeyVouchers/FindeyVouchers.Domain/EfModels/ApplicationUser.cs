@@ -9,6 +9,7 @@ namespace FindeyVouchers.Domain.EfModels
         public string StripeAccountId { get; set; }
 
         [Display(Name = "Voornaam")] public string FirstName { get; set; }
+
         [Display(Name = "Achternaam")] public string LastName { get; set; }
 
         [Display(Name = "Geboortedatum")]
@@ -19,7 +20,6 @@ namespace FindeyVouchers.Domain.EfModels
 
         [Display(Name = "Postcode")]
         [RegularExpression(@"^\d{4}?[aA-zZ]{2}$", ErrorMessage = "Ongeldige postcode")]
-
         public string ZipCode { get; set; }
 
         [Display(Name = "Stad")] public string City { get; set; }
@@ -32,12 +32,18 @@ namespace FindeyVouchers.Domain.EfModels
         public string CompanyName { get; set; }
 
         public string NormalizedCompanyName { get; set; }
+
         [Display(Name = "Rechtsvorm bedrijf")] public BusinessType BusinessType { get; set; }
 
         [DataType(DataType.PhoneNumber)]
         [RegularExpression(@"^06?\d{8}$", ErrorMessage = "Gebruik 06 en alleen getallen.")]
         [Display(Name = "Telefoonnummer")]
         public override string PhoneNumber { get; set; }
+
+        public string Website { get; set; }
+
+        [Display(Name = "Omschrijving bedrijf")]
+        public string Description { get; set; }
     }
 
     public enum BusinessType

@@ -1,0 +1,36 @@
+{
+    "vouchers": [
+        {
+            "id": "1f3922d9-8d6f-4db4-b30b-877b90094713",
+            "name": "Waardebon voucher",
+            "description": "voucher 2",
+            "image": "https://findeystorage.blob.core.windows.net/voucher-images/default-images/Blue.png",
+            "price": 32.00,
+            "category": {
+                "id": "30967df0-f4bc-45b4-b17a-d8470c389154",
+                "name": "Categorie 1"
+            },
+            "voucherType": 0
+        },
+        {
+            "id": "4cddf5de-3b8a-4aa1-93df-a3a8f30394ec",
+            "name": "Prepaid voucher",
+            "description": "Voucher 1",
+            "image": "https://findeystorage.blob.core.windows.net/voucher-images/default-images/Bronze.png",
+            "price": 12.00,
+            "category": {
+                "id": "30967df0-f4bc-45b4-b17a-d8470c389154",
+                "name": "Categorie 1"
+            },
+            "voucherType": 1
+        }
+    ],
+    "merchant": {
+        "name": "Nivero",
+        "website": "https://nivero.io",
+        "email": "rasjaad10@msn.com",
+        "phoneNumber": "0612121212",
+        "address": "Joan Muyskenweg, Amsterdam",
+        "description": null
+    }
+}

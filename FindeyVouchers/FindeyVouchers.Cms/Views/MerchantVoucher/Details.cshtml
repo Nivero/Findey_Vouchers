@@ -7,7 +7,7 @@
             @Html.DisplayNameFor(model => model.Image)
         </dt>
         <dd class="col-sm-10">
-            <img src="https://findeystorage.blob.core.windows.net/voucher-images/@Html.DisplayFor(model => model.Image)" width="150" height="150"/>
+            <img src="https://findeystorage.blob.core.windows.net/voucher-images/@Html.DisplayFor(model => model.Image)" width="300" height="150"/>
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
@@ -37,6 +37,12 @@
         </dt>
         <dd class="col-sm-10">
             €@Html.DisplayFor(model => model.Price)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Category)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Category)
         </dd>
     </dl>
 </div>

@@ -1,0 +1,6 @@
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Publish web" type="DotNetFolderPublish" factoryName="Publish to folder">
+    <riderPublish runtime="Portable" target_folder="$USER_HOME$/Desktop/FindeyVouchers.Website" target_framework="netcoreapp3.1" uuid_high="-4348004547459530295" uuid_low="-7061900206009546038" />
+    <method v="2" />
+  </configuration>
+</component>

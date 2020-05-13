@@ -8,12 +8,12 @@ namespace FindeyVouchers.Services
 {
     public class IdentityCoreEmailSender : IEmailSender
     {
-        public IdentityCoreEmailSender(IOptions<FindeyVouchers.Domain.SendGrid> optionsAccessor)
+        public IdentityCoreEmailSender(IOptions<Domain.SendGrid> optionsAccessor)
         {
             Options = optionsAccessor.Value;
         }
 
-        public FindeyVouchers.Domain.SendGrid Options { get; } //set only via Secret Manager
+        public Domain.SendGrid Options { get; } //set only via Secret Manager
 
         public Task SendEmailAsync(string email, string subject, string message)
         {
@@ -23,25 +23,21 @@ namespace FindeyVouchers.Services
         public async Task<Response> Execute(string apiKey, string subject, string message, string email)
         {
             var client = new SendGridClient(apiKey);
-            //TODO: put the email in appsettings
-            var from = new EmailAddress("noreply@findey.co", Options.SendGridUser);
-            var to = new EmailAddress(email);
+            var msg = new SendGridMessage
+            {
+                From = new EmailAddress("noreply@findey.nl", Options.SendGridUser),
+                Subject = subject,
+                PlainTextContent = message,
+                HtmlContent = message
+            };
+            msg.AddTo(new EmailAddress(email));
 
-            var msg = MailHelper.CreateSingleEmail(from, to, subject, message, message);
-            return await client.SendEmailAsync(msg);
+            // Disable click tracking.
+            // See https://sendgrid.com/docs/User_Guide/Settings/tracking.html
+            msg.SetClickTracking(false, false);
 
-            // var client = new SendGridClient(apiKey);
-            // var msg = new SendGridMessage()
-            // {
-            //     From = new EmailAddress("noreply@finde.co", Options.SendGridUser),
-            //     Subject = subject,
-            //     PlainTextContent = message,
-            //     HtmlContent = message
-            // };
-            // var tmp = MailHelper.CreateSingleEmail(msg.From, new EmailAddress(email), subject, msg.PlainTextContent, msg.HtmlContent);
-            // // msg.AddTo(new EmailAddress(email));
-            //
-            // return client.SendEmailAsync(tmp);
+            var response = await client.SendEmailAsync(msg);
+            return response;
         }
     }
 }

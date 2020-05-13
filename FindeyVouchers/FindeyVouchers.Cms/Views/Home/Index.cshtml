@@ -10,19 +10,17 @@
         <p>Selecteer een item van het menu om te beginnen!</p>
     </div>
 }
-else if(!Model.AccountComplete)
+else if (!Model.AccountComplete)
 {
     <div class="text-center">
         <h1 class="display-4">Welkom</h1>
-        <p>Het is je eerste op dit platform</p>
+        <p>Het is je eerste keer op dit platform</p>
         <p>Wij hebben daarom wat gegevens van jou nodig voordat jij producten kan gaan aanbieden!</p>
         <p>Klik op de button hieronder om jouw gegevens in te voeren.</p>
         <a asp-area="" asp-controller="Home" asp-action="OnBoarding">
             Start onboarding
         </a>
-
     </div>
-
 }
 else
 {
@@ -31,7 +29,8 @@ else
         <p>We zijn er bijna! Het laatste wat nog moet gebeuren is het opgeven van uw gegevens bij onze payment provider.</p>
         <p>Wij hebben geprobeerd om zoveel mogelijk gegevens voor u in te vullen!</p>
         <div class="sr-main">
-            <a href="@Model.StripeUrl">Rond af!
+            <a href="@Model.StripeUrl">
+                Rond af!
             </a>
         </div>
 

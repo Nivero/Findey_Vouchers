@@ -1,10 +1,44 @@
 @model CustomerVoucherViewModel
-<form asp-controller="CustomerVoucher" asp-action="Index" method="get">
-    <p>
-        Zoek op voucher code: <input type="text" asp-for="SearchQuery"/>
-        <input type="submit" value="Filter"/>
-    </p>
-</form>
+
+<script src="~/lib/jsQr/jsQR.js"></script>
+<div class="row">
+    <form asp-controller="CustomerVoucher" asp-action="Index" id="searchForm" method="get">
+        <p>
+            Zoek op voucher code: <input type="text" id="searchText" asp-for="SearchQuery"/>
+            <input type="submit" value="Zoek voucher"/>
+        </p>
+    </form>
+    <div>
+        <input type="button" data-toggle="modal" data-target="#exampleModal" value="Scan barcode" class="ml-2"/>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Scan barcode</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="width:400px">
+                <div id="loadingMessage">🎥 Unable to access video stream (please make sure you have a webcam enabled)</div>
+                <canvas id="canvas" hidden/>
+                <div id="output" hidden>
+                    <div id="outputMessage">Geen QR code gevonden</div>
+                    <div hidden>
+                        <b>Data:</b> <span id="outputData"/>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="closeModal" data-dismiss="modal">Sluiten</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <table class="table">
     <thead>
     <tr>
@@ -72,3 +106,70 @@
     }
     </tbody>
 </table>
+<script>
+    let video = document.createElement("video");
+    let canvasElement = document.getElementById("canvas");
+    let canvas = canvasElement.getContext("2d");
+    let loadingMessage = document.getElementById("loadingMessage");
+    let outputContainer = document.getElementById("output");
+    let outputMessage = document.getElementById("outputMessage");
+    let outputData = document.getElementById("outputData");
+    let searchText = document.getElementById("searchText");
+    let searchForm = document.getElementById("searchForm");
+    let closeModal = document.getElementById("closeModal");
+
+    function drawLine(begin, end, color) {
+      canvas.beginPath();
+      canvas.moveTo(begin.x, begin.y);
+      canvas.lineTo(end.x, end.y);
+      canvas.lineWidth = 4;
+      canvas.strokeStyle = color;
+      canvas.stroke();
+    }
+
+    // Use facingMode: environment to attemt to get the front camera on phones
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
+      video.srcObject = stream;
+      video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+      video.play();
+      requestAnimationFrame(tick);
+    });
+
+    function tick() {
+      loadingMessage.innerText = "⌛ Loading video..."
+      if (video.readyState === video.HAVE_ENOUGH_DATA) {
+        loadingMessage.hidden = true;
+        canvasElement.hidden = false;
+        outputContainer.hidden = false;
+
+        canvasElement.height = video.videoHeight;
+        canvasElement.width = video.videoWidth;
+        
+     
+        canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+        var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+        var code = jsQR(imageData.data, imageData.width, imageData.height, {
+          inversionAttempts: "dontInvert",
+        });
+        if (code) {
+          drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
+          drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
+          drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
+          drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
+
+          closeModal.click();
+          searchText.value = code.data;
+          searchForm.submit();
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+   function vidOff() {
+     //clearInterval(theDrawLoop);
+     //ExtensionData.vidStatus = 'off';
+     vid.pause();
+     vid.src = "";
+     localstream.getTracks()[0].stop();
+     console.log("Vid off");
+   }
+  </script>

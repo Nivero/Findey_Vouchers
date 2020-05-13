@@ -3,8 +3,9 @@
 
 <h4>Uw gegevens</h4>
 <p class="font-weight-bold text-danger">
-Bij het verzenden van het formulier bevestigd u dat deze gegevens naar waarheid zijn ingevuld.<br/>
-Deze gegevens zijn nodig voor het ontvangen van betalingen en het aanbieden van vouchers.</p>
+    Bij het verzenden van het formulier bevestigd u dat deze gegevens naar waarheid zijn ingevuld.<br/>
+    Deze gegevens zijn nodig voor het ontvangen van betalingen en het aanbieden van vouchers.
+</p>
 <hr/>
 <div class="row">
     <div class="col-md-4 align-items-center justify-content-center">
@@ -12,53 +13,64 @@ Deze gegevens zijn nodig voor het ontvangen van betalingen en het aanbieden van 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control"/>
+                <input asp-for="FirstName" class="form-control" required/>
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control"/>
+                <input asp-for="LastName" class="form-control" required/>
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DateOfBirth" class="control-label"></label>
-                <input asp-for="DateOfBirth" class="form-control"/>
+                <input asp-for="DateOfBirth" class="form-control" required/>
                 <span asp-validation-for="DateOfBirth" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Address" class="control-label"></label>
-                <input asp-for="Address" class="form-control"/>
+                <input asp-for="Address" class="form-control" required/>
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ZipCode" class="control-label"></label>
-                <input asp-for="ZipCode" class="form-control"/>
+                <input asp-for="ZipCode" class="form-control" required/>
                 <span asp-validation-for="ZipCode" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="City" class="control-label"></label>
-                <input asp-for="City" class="form-control"/>
+                <input asp-for="City" class="form-control" required/>
                 <span asp-validation-for="City" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CompanyName" class="control-label">Bedrijfsnaam (Deze is niet meer aanpasbaar na het verzenden)</label>
-                <input asp-for="CompanyName" class="form-control"/>
-                <span asp-validation-for="City" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BusinessType" class="control-label"></label>
-                <select asp-for="BusinessType" class="form-control" asp-items="Html.GetEnumSelectList<BusinessType>()"></select>
-                <span asp-validation-for="BusinessType" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="PhoneNumber" class="control-label"></label>
-                <input asp-for="PhoneNumber" class="form-control"/>
+                <input asp-for="PhoneNumber" class="form-control" required/>
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompanyName" class="control-label">Bedrijfsnaam (Deze is niet meer aanpasbaar na het verzenden)</label>
+                <input asp-for="CompanyName" class="form-control" required/>
+                <span asp-validation-for="CompanyName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label">Bedrijfs tekst </label>
+                <span class="small">(Dit is de tekst die de klant te zien krijgt op jouw voucher pagina.)</span>
+                <textarea  asp-for="Description" class="form-control">/</textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Website" class="control-label"></label>
+                <input asp-for="Website" class="form-control" required/>
+                <span asp-validation-for="Website" class="text-danger"/>
+            </div>
+            <div class="form-group">
+                <label asp-for="BusinessType" class="control-label"></label>
+                <select asp-for="BusinessType" class="form-control" asp-items="Html.GetEnumSelectList<BusinessType>()" required></select>
+                <span asp-validation-for="BusinessType" class="text-danger"></span>
             </div>
             <input type="hidden" asp-for="Id"/>
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control"/>
+                <input asp-for="Email" class="form-control" required/>
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">

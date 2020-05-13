@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using FindeyVouchers.Domain.EfModels;
-using Stripe;
 
 namespace FindeyVouchers.Cms.Models
 {

@@ -7,13 +7,13 @@ namespace FindeyVouchers.Domain.EfModels
     {
         public CustomerVoucher()
         {
-            this.ValidUntil = DateTime.Now.AddYears(1);
-            this.IsUsed = false;
+            ValidUntil = DateTime.Now.AddYears(1);
+            IsUsed = false;
         }
 
         public Guid Id { get; set; }
         public Customer Customer { get; set; }
-        public MerchantVoucher VoucherMerchant { get; set; }
+        public MerchantVoucher MerchantVoucher { get; set; }
 
         [Display(Name = "Gekocht op")]
         [DataType(DataType.Date)]
@@ -27,8 +27,9 @@ namespace FindeyVouchers.Domain.EfModels
         [Display(Name = "Geldig tot")]
         [DataType(DataType.Date)]
         public DateTime ValidUntil { get; set; }
-        
-        [Display(Name = "Voucher geldig?")]
-        public bool IsUsed { get; set; }
+
+        [Display(Name = "Voucher geldig?")] public bool IsUsed { get; set; }
+
+        public Payment Payment { get; set; }
     }
 }

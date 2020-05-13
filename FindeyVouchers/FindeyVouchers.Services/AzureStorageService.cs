@@ -1,10 +1,7 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
-using Azure.Storage.Blobs;
 using FindeyVouchers.Interfaces;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Serilog;
@@ -30,17 +27,15 @@ namespace FindeyVouchers.Services
                 var cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
                 var strContainerName = _configuration.GetValue<string>("VoucherImageContainerName");
                 var cloudBlobContainer = cloudBlobClient.GetContainerReference(strContainerName);
-                var fileName = this.GenerateFileName(strFileName);
+                var fileName = GenerateFileName(strFileName);
 
                 if (await cloudBlobContainer.CreateIfNotExistsAsync())
-                {
                     await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
                         {PublicAccess = BlobContainerPublicAccessType.Blob});
-                }
 
                 if (fileName != null && fileData != null)
                 {
-                    CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(fileName);
+                    var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(fileName);
                     cloudBlockBlob.Properties.ContentType = fileMimeType;
                     await cloudBlockBlob.UploadFromByteArrayAsync(fileData, 0, fileData.Length);
                     return fileName;
@@ -78,7 +73,7 @@ namespace FindeyVouchers.Services
 
         private string GenerateFileName(string fileName)
         {
-            string[] strName = fileName.Split('.');
+            var strName = fileName.Split('.');
             var strFileName = DateTime.Now.ToUniversalTime().ToString("yyyyMMdd\\THHmmssfff") + "." +
                               strName[strName.Length - 1];
             return strFileName;

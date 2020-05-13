@@ -32,16 +32,12 @@ namespace FindeyVouchers.Cms.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             if (string.IsNullOrWhiteSpace(user.CompanyName) || string.IsNullOrWhiteSpace(user.StripeAccountId))
-            {
                 return RedirectToAction("Index", "Home");
-            }
 
-            var customerVouchers = _context.CustomerVouchers.Where(x => x.VoucherMerchant.Merchant == user);
+            var customerVouchers = _context.CustomerVouchers.Where(x => x.MerchantVoucher.Merchant == user);
 
             if (!string.IsNullOrEmpty(searchQuery))
-            {
                 customerVouchers = customerVouchers.Where(s => s.Code.Contains(searchQuery));
-            }
 
             var model = new CustomerVoucherViewModel
             {
@@ -53,28 +49,21 @@ namespace FindeyVouchers.Cms.Controllers
 
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var customerVoucher = await _context.CustomerVouchers.Include(x => x.Customer)
-                .Include(x => x.VoucherMerchant)
+                .Include(x => x.MerchantVoucher)
                 .FirstOrDefaultAsync(m => m.Id == id);
             var user = await _userManager.GetUserAsync(User);
 
-            if (customerVoucher.VoucherMerchant.Merchant != user)
-            {
-                return NotFound();
-            }
+            if (customerVoucher.MerchantVoucher.Merchant != user) return NotFound();
 
             return View(customerVoucher);
         }
 
-        public async Task<IActionResult> Invalidate(Guid? id)
+        public RedirectToActionResult Invalidate(Guid? id)
         {
             if (id != null)
-            {
                 try
                 {
                     _voucherService.InvalidateCustomerVoucher(id.Value);
@@ -83,9 +72,8 @@ namespace FindeyVouchers.Cms.Controllers
                 {
                     Log.Error("Error invalidating voucher with id {0} error: {1}", id, e);
                 }
-            }
 
-            return RedirectToAction("Details", "CustomerVoucher", new {id = id});
+            return RedirectToAction("Details", "CustomerVoucher", new {id});
         }
 
         [HttpPost]
@@ -93,16 +81,14 @@ namespace FindeyVouchers.Cms.Controllers
         public async Task<IActionResult> RetractAmount(CustomerVoucher customerVoucher)
         {
             if (ModelState.IsValid)
-            {
                 if (customerVoucher != null)
                 {
                     _voucherService.UpdatePrice(customerVoucher.Id, customerVoucher.Price);
                     return RedirectToAction("Details", "CustomerVoucher", new {id = customerVoucher.Id});
                 }
-            }
 
             var model = await _context.CustomerVouchers.Include(x => x.Customer)
-                .Include(x => x.VoucherMerchant)
+                .Include(x => x.MerchantVoucher)
                 .FirstOrDefaultAsync(m => m.Id == customerVoucher.Id);
             return View("Details", model);
         }

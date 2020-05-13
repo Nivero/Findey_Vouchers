@@ -1,0 +1,220 @@
+.content {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+.background {
+  height: 100vh;
+  width: 100vw;
+  background-image: url("../images/background-image.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.form-box {
+  padding: 8em 5em 0 5em;
+  width: 100%;
+  height: auto;
+}
+#formbox {
+  padding: 16em 5em 0 5em;
+  width: 100%;
+  height: auto;
+}
+
+.headline {
+  width: 100%;
+  margin: 0 0 3em 0;
+}
+.headline h2 {
+  text-align: center;
+  font-weight: bold;
+  color: #1c6ec2;
+}
+.headline p {
+  text-align: center;
+  color: #b7b7b7;
+}
+
+.input-fields form {
+  width: 60%;
+  margin: 0 auto;
+  height: auto;
+}
+.input-fields form input {
+  display: block;
+  margin: 2em auto;
+  width: 100%;
+  outline: 0;
+  border-width: 0 0 2px;
+  border-color: #b7b7b7;
+}
+.input-fields form input:focus {
+  -webkit-transition: ease-in-out 0.2s all;
+  -o-transition: ease-in-out 0.2s all;
+  transition: ease-in-out 0.2s all;
+  border-color: #1c6ec2;
+}
+.input-fields form .extra-form-elements {
+  display: inline;
+}
+.input-fields form .extra-form-elements .left-element {
+  float: left;
+}
+.input-fields form .extra-form-elements .right-element {
+  float: right;
+}
+.input-fields form .extra-form-elements .center-element {
+  width: 100%;
+  text-align: center;
+}
+
+/*Button styling*/
+.input-fields form .extra-form-elements .right-element button,
+.left-element button,
+.center-element button {
+  margin: 2.5em 0 3em 0;
+  padding: 0.6em 3em;
+  border: none;
+  border-radius: 5px;
+}
+.input-fields form .extra-form-elements .left-element button {
+  background: #1c6ec2;
+  color: white;
+  -webkit-transition: ease-in-out all 0.3s;
+  -o-transition: ease-in-out all 0.3s;
+  transition: ease-in-out all 0.3s;
+}
+.input-fields form .extra-form-elements .right-element button {
+  background: none;
+  border: #1c6ec2 1px solid;
+  color: #1c6ec2;
+  -webkit-transition: ease-in-out all 0.3s;
+  -o-transition: ease-in-out all 0.3s;
+  transition: ease-in-out all 0.3s;
+}
+.input-fields form .extra-form-elements .center-element button {
+  background: #1c6ec2;
+  color: white;
+  -webkit-transition: ease-in-out all 0.3s;
+  -o-transition: ease-in-out all 0.3s;
+  transition: ease-in-out all 0.3s;
+}
+.input-fields form .extra-form-elements .left-element button:hover {
+  background: rgb(31, 103, 175);
+  -webkit-transition: ease-in-out all 0.3s;
+  -o-transition: ease-in-out all 0.3s;
+  transition: ease-in-out all 0.3s;
+}
+.input-fields form .extra-form-elements .right-element button:hover {
+  background: rgb(231, 231, 231);
+  -webkit-transition: ease-in-out all 0.3s;
+  -o-transition: ease-in-out all 0.3s;
+  transition: ease-in-out all 0.3s;
+}
+.input-fields form .extra-form-elements .center-element button:hover {
+  background: rgb(31, 103, 175);
+  -webkit-transition: ease-in-out all 0.3s;
+  -o-transition: ease-in-out all 0.3s;
+  transition: ease-in-out all 0.3s;
+}
+
+/*Anchor styling (extra-form-elements)*/
+.input-fields form .extra-form-elements .center-element a {
+  text-decoration: underline;
+  color: rgb(33, 37, 41);
+}
+.input-fields form .extra-form-elements .right-element a {
+  color: rgb(33, 37, 41);
+}
+
+.copyright {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  margin: 10px;
+  color: #b7b7b7;
+}
+
+.clear {
+  clear: both;
+}
+
+/*Responsive styling*/
+
+@media screen and (max-width: 1800px) {
+  .input-fields #specialform {
+    width: 80%;
+    padding: 0 20px;
+  }
+}
+
+@media screen and (max-width: 1350px) {
+  .input-fields #specialform {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 1150px) {
+  .form-box {
+    padding: 16em 2em 0 2em;
+  }
+  #formbox {
+    padding: 16em 2em 0 2em;
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .form-box {
+    padding: 2em 2em 0 2em;
+  }
+  #formbox {
+    padding: 2em 2em 0 2em;
+  }
+  .content {
+    height: auto;
+  }
+  .copyright {
+    bottom: -3em;
+  }
+  .input-fields form .extra-form-elements .left-element button {
+    margin-left: 0;
+  }
+  .input-fields form .extra-form-elements .right-element button {
+    margin-right: 0;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .form-box {
+    padding: 4em 0 0 0;
+  }
+  #formbox {
+    padding: 4em 0 0 0;
+  }
+  .input-fields form .extra-form-elements .right-element button,
+  .left-element button {
+    padding: 0.4em 2em;
+  }
+  .content {
+    height: 100vh;
+  }
+  .copyright {
+    bottom: 0;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .headline h2 {
+    font-size: 1.5em;
+  }
+  .content {
+    height: auto;
+  }
+  .copyright {
+    bottom: -3em;
+  }
+}

@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
 using FindeyVouchers.Domain.EfModels;
 using FindeyVouchers.Interfaces;
@@ -52,15 +51,11 @@ namespace FindeyVouchers.Services
         public string GetVoucherSoldHtml(CustomerVoucher voucher, string b64Image)
         {
             var htmlVoucher = new StringBuilder();
-
-            using (var ms = new MemoryStream())
-            {
-                var voucherImageUrl = _imageUrl + voucher.MerchantVoucher.Image;
+            var voucherImageUrl = _imageUrl + voucher.MerchantVoucher.Image;
                 htmlVoucher.Append(
-                    $"<div style=\"align-content: center; justify-content: center; text-align: center; border-bottom: 1px solid grey;margin-bottom:1em\"><div> <img src=\"{voucherImageUrl}\" width=\"300\" style=\"display: block; margin: auto;\"> </div><div style=\"margin: 1em;\"> {voucher.MerchantVoucher.Name} t.w.v. € {voucher.MerchantVoucher.Price} </div><div> <img src=\"data:image/jpeg;base64,{b64Image}\" width=\"150\" style=\"display: block; margin: auto;\"> </div> </div>");
+                    $"<div style=\"align-content: center; justify-content: center; text-align: center; border-bottom: 1px solid grey;margin-bottom:1em\"><div> <img src=\"{voucherImageUrl}\" width=\"300\" style=\"display: block; margin: auto;\"> </div><div style=\"margin: 1em;\"> {voucher.MerchantVoucher.Name} t.w.v. € {voucher.MerchantVoucher.Price} </div><div> <img src=\"data:image/png;base64,{b64Image}\" width=\"150\" style=\"display: block; margin: auto;\"> </div> </div>");
 
                 return htmlVoucher.ToString();
-            }
         }
 
         public string GetVoucherSoldHtmlBody(string companyName, string htmlVouchers)

@@ -77,7 +77,6 @@ namespace FindeyVouchers.Website.Controllers
                 Log.Error($"{e}");
                 return BadRequest();
             }
-
         }
 
         [HttpPost]
@@ -93,19 +92,20 @@ namespace FindeyVouchers.Website.Controllers
                 var stripeEvent = EventUtility.ParseEvent(json, false);
 
                 // Handle the event
-                if (stripeEvent.Type == Events.PaymentIntentSucceeded
-                    || stripeEvent.Type == Events.PaymentIntentPaymentFailed
-                    || stripeEvent.Type == Events.PayoutCanceled)
+
+                var paymentIntent = stripeEvent.Data.Object as PaymentIntent;
+                // Always log all!
+                _paymentService.UpdatePayment(new PaymentStatusResponse
                 {
-                    var paymentIntent = stripeEvent.Data.Object as PaymentIntent;
-                    _paymentService.UpdatePayment(new PaymentStatusResponse
-                    {
-                        PaymentId = paymentIntent.Id,
-                        Amount = paymentIntent.Amount.Value,
-                        Created = paymentIntent.Created,
-                        PaymentStatus = paymentIntent.Status,
-                        ErrorMessage = paymentIntent.LastPaymentError?.ToString()
-                    });
+                    PaymentId = paymentIntent.Id,
+                    Amount = paymentIntent.Amount.Value,
+                    Created = paymentIntent.Created,
+                    PaymentStatus = paymentIntent.Status,
+                    ErrorMessage = paymentIntent.LastPaymentError?.ToString()
+                });
+                // Only fullfilment when succes
+                if (stripeEvent.Type == Events.PaymentIntentSucceeded)
+                {
                     await _voucherService.HandleFulfillment(paymentIntent.Id);
                 }
 

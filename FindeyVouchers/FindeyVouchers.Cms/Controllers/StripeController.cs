@@ -6,6 +6,7 @@ using FindeyVouchers.Domain.EfModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Serilog;
 using Stripe;
 
@@ -17,13 +18,13 @@ namespace FindeyVouchers.Cms.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public StripeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public StripeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
             _context = context;
             _userManager = userManager;
             // Set your secret key: remember to switch to your live secret key in production
             // See your keys here: https://dashboard.stripe.com/account/apikeys
-            _client = new StripeClient("sk_test_iZnEwjRXBzBdmTUdjLWDV8Xn00zsgY41iV");
+            _client = new StripeClient(configuration.GetValue<string>("StripeApiKey"));
         }
 
         [HttpGet("/connect/oauth")]
@@ -56,6 +57,7 @@ namespace FindeyVouchers.Cms.Controllers
             }
             catch (StripeException e)
             {
+                Log.Error("stripe error: {0}",e);
                 if (e.StripeError != null && e.StripeError.Error == "invalid_grant")
                     return StatusCode(
                         StatusCodes.Status400BadRequest,

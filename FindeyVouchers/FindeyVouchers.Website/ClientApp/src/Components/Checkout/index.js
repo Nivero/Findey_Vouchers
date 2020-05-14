@@ -7,7 +7,7 @@ import OrderOverView from "./OrderOverView";
 import {InjectedCheckoutForm} from "./CheckoutForm";
 import {Elements} from "@stripe/react-stripe-js";
 
-const stripePromise = loadStripe('pk_test_t9hsTVk7AWp7pZI7UmZKKQ7r00PyLH5QmB');
+const stripePromise = loadStripe('pk_live_EnmsulJpsuqfx7wpKTqWDlON00nbiPNe1s');
 const
     Checkout = (props) => {
         return (

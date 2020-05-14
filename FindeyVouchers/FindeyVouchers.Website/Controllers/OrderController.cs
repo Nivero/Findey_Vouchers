@@ -42,33 +42,42 @@ namespace FindeyVouchers.Website.Controllers
         {
             // Set your secret key. Remember to switch to your live secret key in production!
             // See your keys here: https://dashboard.stripe.com/account/apikeys
-            StripeConfiguration.ApiKey = _apiKey;
-            var options = new JsonSerializerOptions
+            try
             {
-                PropertyNameCaseInsensitive = true
-            };
-            var response = JsonSerializer.Deserialize<PaymentIntentRequest>(body.ToString(), options);
-            var user = _merchantService.GetMerchantInfo(response.CompanyName);
-            if (user == null) return NotFound("Merchant not found");
+                StripeConfiguration.ApiKey = _apiKey;
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+                var response = JsonSerializer.Deserialize<PaymentIntentRequest>(body.ToString(), options);
+                var user = _merchantService.GetMerchantInfo(response.CompanyName);
+                if (user == null) return NotFound("Merchant not found");
 
-            var createOptions = new PaymentIntentCreateOptions
+                var createOptions = new PaymentIntentCreateOptions
+                {
+                    PaymentMethodTypes = new List<string>
+                    {
+                        "ideal",
+                        "card"
+                    },
+                    Amount = response.Amount,
+                    Currency = "eur",
+                    ApplicationFeeAmount = 1,
+                    TransferData = new PaymentIntentTransferDataOptions
+                    {
+                        Destination = user.StripeAccountId
+                    }
+                };
+                var service = new PaymentIntentService();
+                var intent = service.Create(createOptions);
+                return Ok(new {client_secret = intent.ClientSecret});
+            }
+            catch (Exception e)
             {
-                PaymentMethodTypes = new List<string>
-                {
-                    "ideal",
-                    "card"
-                },
-                Amount = response.Amount,
-                Currency = "eur",
-                ApplicationFeeAmount = 1,
-                TransferData = new PaymentIntentTransferDataOptions
-                {
-                    Destination = user.StripeAccountId
-                }
-            };
-            var service = new PaymentIntentService();
-            var intent = service.Create(createOptions);
-            return Ok(new {client_secret = intent.ClientSecret});
+                Log.Error($"{e}");
+                return BadRequest();
+            }
+
         }
 
         [HttpPost]
@@ -85,14 +94,15 @@ namespace FindeyVouchers.Website.Controllers
 
                 // Handle the event
                 if (stripeEvent.Type == Events.PaymentIntentSucceeded
-                    || stripeEvent.Type == Events.PaymentIntentPaymentFailed)
+                    || stripeEvent.Type == Events.PaymentIntentPaymentFailed
+                    || stripeEvent.Type == Events.PayoutCanceled)
                 {
                     var paymentIntent = stripeEvent.Data.Object as PaymentIntent;
                     _paymentService.UpdatePayment(new PaymentStatusResponse
                     {
                         PaymentId = paymentIntent.Id,
                         Amount = paymentIntent.Amount.Value,
-                        Created = paymentIntent.Created.Second,
+                        Created = paymentIntent.Created,
                         PaymentStatus = paymentIntent.Status,
                         ErrorMessage = paymentIntent.LastPaymentError?.ToString()
                     });

@@ -56,7 +56,8 @@ namespace FindeyVouchers.Cms.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(VoucherCategory voucherCategory)
         {
-            var exist = _context.VoucherCategories.Any(x => x.Ranking == voucherCategory.Ranking);
+            var user = await _userManager.GetUserAsync(User);
+            var exist = _context.VoucherCategories.Any(x => x.Merchant == user && x.Ranking == voucherCategory.Ranking);
             if (exist) ModelState.AddModelError(string.Empty, "Positie al in gebruik.");
             if (ModelState.IsValid)
             {

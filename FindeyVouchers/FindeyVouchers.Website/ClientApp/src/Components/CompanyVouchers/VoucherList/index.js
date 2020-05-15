@@ -7,7 +7,7 @@ import styles from './voucher-list.module.css'
 
 const VoucherList = ({ vouchers }) => {
   const categories = mapCategories(vouchers);
-  
+
   return (
     <section  style={{ marginBottom: 125 }}>
       <div className="d-flex mb-3 mt-3">
@@ -20,7 +20,7 @@ const VoucherList = ({ vouchers }) => {
         }
       </div>
 
-      <div className="pt-5">
+      <div className="pt-3">
         {categories.map((category) => {
           return (<div key={category.id}>
             <h3 className="border-bottom pb-3">{category.name}</h3>

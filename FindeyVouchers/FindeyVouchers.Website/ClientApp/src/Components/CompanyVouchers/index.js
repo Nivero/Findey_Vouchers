@@ -14,9 +14,9 @@ export default class CompanyVouchers extends React.Component {
         return (
           <div>
             <TopHeader title={'OVERZICHT VOUCHERS'} />
-            <Container className="mt-5">
+            <Container className="mt-4">
               <CompanyInfo merchant={this.props.data.merchant}/>
-              <div className="mt-5">
+              <div className="mt-4">
                 <VoucherList vouchers={this.props.data.vouchers}/>
               </div>
 

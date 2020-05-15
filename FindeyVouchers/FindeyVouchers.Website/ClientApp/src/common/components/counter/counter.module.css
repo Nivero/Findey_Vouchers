@@ -1,0 +1,9 @@
+.add {
+    border-top-left-radius: 20px !important;
+    border-bottom-left-radius: 20px !important;
+}
+
+.remove {
+    border-top-right-radius: 20px !important;
+    border-bottom-right-radius: 20px !important;
+}

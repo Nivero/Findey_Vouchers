@@ -1,0 +1,13 @@
+
+.contact {
+    border-left: #cccccc 1px solid;
+    margin: 1em 0 1em 0;
+}
+
+@media screen and (max-width: 575px) {
+    .contact {
+        padding-top: 1em;
+        border-top: #cccccc 1px solid;
+    }
+}
+

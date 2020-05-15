@@ -1,28 +1,28 @@
-*,
-*:before,
-*:after {
-    box-sizing: border-box;
-}
+/**,*/
+/**:before,*/
+/**:after {*/
+/*    box-sizing: border-box;*/
+/*}*/
 
-body,
-html {
-    background-color: #f6f9fc;
-    font-size: 18px;
-    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-}
+/*body,*/
+/*html {*/
+/*    background-color: #f6f9fc;*/
+/*    !*font-size: 18px;*!*/
+/*    !*font-family: Helvetica Neue, Helvetica, Arial, sans-serif;*!*/
+/*}*/
 
-form {
-    max-width: 800px;
-    margin: 20px auto;
-}
+/*form {*/
+/*    max-width: 800px;*/
+/*    margin: 20px auto;*/
+/*}*/
 
-label {
-    color: #6b7c93;
-    font-weight: 300;
-    letter-spacing: 0.025em;
-    margin-top: 16px;
-    display: block;
-}
+/*label {*/
+/*    color: #6b7c93;*/
+/*    font-weight: 300;*/
+/*    letter-spacing: 0.025em;*/
+/*    margin-top: 16px;*/
+/*    display: block;*/
+/*}*/
 
 .mci-checkout-button {
     white-space: nowrap;
@@ -95,7 +95,7 @@ input::placeholder {
     color: #666ee8;
 }
 
-/* 
+/*
 The StripeElement class is applied to the Element container by default.
 More info: https://stripe.com/docs/stripe-js/reference#element-options
 */

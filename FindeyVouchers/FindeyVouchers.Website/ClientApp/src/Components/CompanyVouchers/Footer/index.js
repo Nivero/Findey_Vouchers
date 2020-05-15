@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { CART_RESET } from '../../../redux/actions';
 import { Button, Col, Row } from 'reactstrap';
-import './footer.css';
+import styles from './footer.module.css';
 import { Link } from 'react-router-dom';
 
 const Footer = ( { cartTotal, cartAmount, dispatch } ) => {
@@ -12,19 +12,18 @@ const Footer = ( { cartTotal, cartAmount, dispatch } ) => {
     }
 
     return (
-        <footer className={`fixed-bottom border-bottom-0 border-left-0 border-right-0 rounded-top mci-footer p-4 ${cartAmount > 0 ? 'visible' : 'invisible'}`}>
-            <Row>
-                <Col md={{ size: 1, offset: 2 }} className="font-weight-bolder p-2"> 
-                    <span> { cartAmount } Vouchers </span>
-                </Col>
-                <Col md={{ size: 2, offset: 0 }} className="font-weight-bolder mci-left-border p-2"> 
-                    <span style={{paddingLeft: '10px'}}> Total: € { cartTotal } </span>
-                </Col>
-                <Col md={{ size: 2, offset: 3 }} className="j">
-                    <Link to="/checkout"><Button color="secondary" size="md" className="text-uppercase">Naar Checkout</Button></Link>{' '}
-                    <Button color="secondary" onClick={handleCancel}>X</Button>
-                </Col>
-            </Row>
+        <footer className={`fixed-bottom ${cartAmount > 0 ? 'visible' : 'invisible'}`}>
+            <div className={`d-flex flex-sm-column flex-md-row justify-content-center align-items-center ${styles.footer}`}>
+
+                <div className="font-weight-bold ">
+                    <span> { cartAmount } Vouchers </span>|<span> Total: € { cartTotal } </span>
+                </div>
+
+                <div className="ml-md-5 mt-sm-2 mt-md-0">
+                    <Link to="/checkout"><Button color="secondary" className={`text-uppercase rounded-btn ${styles.btn}`}>Naar Checkout</Button></Link>{' '}
+                    <Button color="secondary" className="rounded-btn ml-4" onClick={handleCancel}>X</Button>
+                </div>
+            </div>
         </footer>
     );
 }
@@ -34,4 +33,3 @@ const mapStateToProps = state => {
 }
 
 export default connect(mapStateToProps)(Footer);
-  

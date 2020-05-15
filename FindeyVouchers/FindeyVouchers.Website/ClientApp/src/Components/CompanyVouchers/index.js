@@ -1,22 +1,29 @@
 import React from 'react';
 import {Container} from 'reactstrap';
-import Header from './Header';
+import CompanyInfo from './company-info';
 import VoucherList from './VoucherList'
 import Footer from './Footer'
+import TopHeader from '../../common/components/top-header/TopHeader';
 
 export default class CompanyVouchers extends React.Component {
     constructor(props) {
         super(props);
     }
 
-
     render() {
         return (
-            <Container fluid={true} className="p-0">
-                <Header merchant={this.props.data.merchant}/>
+          <div>
+            <TopHeader title={'OVERZICHT VOUCHERS'} />
+            <Container className="mt-5">
+              <CompanyInfo merchant={this.props.data.merchant}/>
+              <div className="mt-5">
                 <VoucherList vouchers={this.props.data.vouchers}/>
-                <Footer/>
+              </div>
+
             </Container>
+            <Footer/>
+          </div>
+
         );
     }
 }

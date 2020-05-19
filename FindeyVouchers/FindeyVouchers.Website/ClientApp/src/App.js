@@ -15,7 +15,7 @@ import MerchantNotFound from "./Components/NotFound";
 export default class App extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {response: {}, isLoaded: false, error: null};
+        this.state = { response: {}, isLoaded: false, error: null };
     }
 
     componentDidMount() {
@@ -56,39 +56,15 @@ export default class App extends React.Component {
     }
 
     render() {
-        const {isLoaded, response, error} = this.state;
-        if (!isLoaded) {
-            return <div>Loading...</div>;
-        } else {
-            if (error) {
-                return (
-                    <Switch>
-                        <Route exact path="/" component={MerchantNotFound}/>
-                    </Switch>
-                );
-            } else {
-                const initialStore = {
-                    cartItems: response.vouchers,
-                    cartTotal: 0,
-                    cartAmount: 0
-                };
-
-                const store = createStore(reducer, initialStore);
-                return (
-
-                    <Provider store={store}>
-                        <Switch>
-                            <Route exact path="/" component={() => <CompanyVouchers data={response}/>}/>
-                            <Route exact path="/checkout" component={Checkout}/>
-                            <Route exact path="/checkout-status/success" component={CheckoutStatusSuccess}/>
-                            <Route exact path="/checkout-status/error" component={CheckoutStatusError}/>
-                            <Route exact path="/checkout-status/pending" component={CheckoutStatusPending}/>
-                            <Route exact path="/legal" component={Legal}/>
-                        </Switch>
-                    </Provider>
-                );
-            }
-
-        }
+        return (
+            <div className="App">
+                <div className="header">
+                    <span>
+                        <h4></h4>
+                        <h2>CHECKOUT</h2>
+                    </span>
+                </div>
+            </div>
+        );
     }
 }

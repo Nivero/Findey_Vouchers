@@ -1,43 +1,186 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>Findey Vouchers</title>
-  </head>
-  <body>
+    <title>Checkout page</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous" />
+    <link rel="stylesheet"
+          href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+          integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
+          crossorigin="anonymous" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+    <div class="titel"><span>JOUW ORDER</span></div>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- <div class="offset-md-1 offset-xl-1"></div> -->
+            <div class="col-md-6 col-xl-6 col-sm-12 block">
+                <h4 class="margin">1. Jouw vouchers</h4>
+                <section class="products">
+                    <div class="imgProduct"></div>
+                    <div class="infoProduct">
+                        <h4>Titel</h4>
+                        <div class="prices">
+                            <span>2</span>
+                            <b class="x">x</b>
+                            <span>€ 100</span>
+                            <b class="price">€ 200</b>
+                        </div>
+                    </div>
+                    <hr class="min-width" />
+                    <div class="clear"></div>
+                    <div class="imgProduct"></div>
+                    <div class="infoProduct">
+                        <h4>Titel</h4>
+                        <div class="prices">
+                            <span>2</span>
+                            <b class="x">x</b>
+                            <span>€ 100</span>
+                            <b class="price">€ 200</b>
+                        </div>
+                    </div>
+                    <hr class="min-width" />
+                    <div class="clear"></div>
+                    <div class="total">
+                        <h5>Totaal</h5>
+                        <h5 class="price" id="FinalPrice">€ 400</h5>
+                    </div>
+                </section>
+            </div>
+            <!-- <div class="offset-md-1"></div> -->
+            <div class="col-md-6 col-xl-6 col-sm-12 block">
+                <h4>2. Jouw informatie</h4>
+                <div class="info">
+                    <form class="infoForm" action="" method="POST">
+                        <input type="text"
+                               class="form-control"
+                               id="exampleInputEmail1"
+                               aria-describedby="emailHelp"
+                               placeholder="First name" />
+                        <input type="text"
+                               class="form-control"
+                               id="exampleInputEmail1"
+                               aria-describedby="emailHelp"
+                               placeholder="Last name" />
+                        <div style="clear: both;"></div>
+                        <input type="email"
+                               class="form-control"
+                               id="exampleInputEmail1"
+                               aria-describedby="emailHelp"
+                               style="margin-top: 1em;"
+                               placeholder="Email" />
+                        <input type="phone"
+                               class="form-control"
+                               id="exampleInputEmail1"
+                               aria-describedby="emailHelp"
+                               style="margin-top: 1em;"
+                               placeholder="Phone number" />
+                        <div style="clear: both;"></div>
+                    </form>
+                </div>
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+                <h4 style="margin-top: 22px;">3. Kies een betalingsmethode</h4>
+                <div class="info paymentMethod">
+                    <div class="method">
+                        <div class="custom-control custom-radio">
+                            <div class="center">
+                                <input class="custom-control-input"
+                                       type="radio"
+                                       name="ideal"
+                                       id="ideal"
+                                       value="option1"
+                                       onclick="ideal()"
+                                       checked />
+                                <label class="custom-control-label" for="ideal">
+                                    iDEAL
+                                </label>
+                            </div>
+                            <div class="underlineI"></div>
+                        </div>
+                        <div class="custom-control custom-radio ccLine">
+                            <div class="center">
+                                <input class="custom-control-input btn-danger"
+                                       type="radio"
+                                       name="creditcard"
+                                       id="creditcard"
+                                       value="option1"
+                                       onclick="creditcard()" />
+                                <label class="custom-control-label" for="creditcard">
+                                    Credit Card
+                                </label>
+                            </div>
+                            <div class="underlineC"></div>
+                        </div>
+                    </div>
+                    <!-- IDeal -->
+                    <form action="" method="POST" id="idl">
+                        <div class="group" style="margin-left: 0px;">
+                        </div>
+                        <div class="group" style="margin-right: 0px; float: right;">
+                        </div>
+                        <div class="clear"></div>
+                        <div>
+                            <div id="ideal-bank-element">
+                            </div>
+                        </div><br>
+                        <div id="error-message" role="alert" style="text-align: left;"></div>
+                    </form>
+                    <!-- CREDIT CARD -->
+                    <form action="" method="post" id="cc">
+                        <div class="group" style="margin-left: 0px;">
+                        </div>
+                        <div class="group" style="margin-right: 0px; float: right;">
+                        </div>
+                        <div class="clear"></div>
+                        <div class="group" style="width: 100%; margin: auto;">
+                            <div style="margin-top: 16px;" id="card-element"></div>
+                        </div>
+                        <div class="outcome">
+                            <div class="error" role="alert"></div>
+                            <div class="success">
+                                Gelukt! Je stripe token is <span class="token"></span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container footer">
+        <div class="row">
+            <div class="col-md-12 col-xl-12">
+                <hr class="min-width">
+                <div class="form-check">
+                </div>
+                <div class="clear"></div>
+                <script src="https://checkout.stripe.com/checkout.js"
+                        data-key="pk_test_kzGmXbmaIR7wbBaKwuzdpPrW00r5NvSJJd"
+                        data-amount="40000"
+                        data-email="test@test.com"
+                        data-currency="EUR"
+                        data-name="Upwork Project"
+                        data-description="Purchase Vouchers"
+                        data-label="Bevestig & Betaal € 400"
+                        data-locale="auto"
+                        class="stripe-button"></script>
+                <span id="stripeAmount" style="display:none"></span>
+                <hr class="min-width">
+                <p>Indien u de bestelling plaatst, gaat u akkoord met onze Privacy Voorwaarden</p>
+            </div>
+        </div>
+    </div>
+    <script src="jquery/dist/jquery.min.js"></script>
+    <script src="bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="main.js"></script>
+    <script src="stripe.js"></script>
+</body>
 </html>

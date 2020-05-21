@@ -31,7 +31,7 @@ export default class App extends React.Component {
         };
         // Merchant name should be here.
         // It will be the first part of the url IE. nivero.findey.nl
-        fetch(`merchant/${merchantName}`, requestOptions)
+        fetch(`merchant/nivero`, requestOptions)
             .then((response) => {
                 if (response.ok) {
                     return response.json()

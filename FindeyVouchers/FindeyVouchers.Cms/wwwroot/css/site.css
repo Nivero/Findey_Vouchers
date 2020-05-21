@@ -97,3 +97,6 @@ body {
 .color-link{
     color:#0366d6;
 }
+.fab-code-textarea{
+    resize: none;
+}

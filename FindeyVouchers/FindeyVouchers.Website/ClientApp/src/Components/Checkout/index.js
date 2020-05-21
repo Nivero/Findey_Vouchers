@@ -5,17 +5,9 @@ import './checkout.css';
 import {loadStripe} from '@stripe/stripe-js';
 import OrderOverView from "./OrderOverView";
 import {InjectedCheckoutForm} from "./CheckoutForm";
-import { Elements } from "@stripe/react-stripe-js";
-import ReactDOM from 'react-dom';
-import App from './App';
+import {Elements} from "@stripe/react-stripe-js";
 
 const stripePromise = loadStripe('pk_live_EnmsulJpsuqfx7wpKTqWDlON00nbiPNe1s');
-ReactDOM.render(
-    <BrowserRouter>
-        <App />
-    </BrowserRouter>,
-    document.getElementById('root')
-);
 const
     Checkout = (props) => {
         return (
@@ -43,6 +35,8 @@ const
     }
 
 export default connect(mapStateToProps)
+
 (
     Checkout
-);
+)
+;

@@ -1,10 +1,12 @@
 ﻿import React from 'react';
-import { Button, Card, CardBody, Col, Row, Spinner, Nav, NavItem, NavLink } from 'reactstrap';
+import { Button, Card, CardBody, Col, Row, Spinner, Nav, NavItem, NavLink, FormGroup } from 'reactstrap';
+import { AvForm, AvField } from 'availity-reactstrap-validation';
 import {
   ElementsConsumer,
   IdealBankElement,
   CardElement,
 } from '@stripe/react-stripe-js';
+import { PHONE_REGEX } from '../../common/regex.constants';
 import { ErrorResult, Result } from './util';
 import './checkout.css';
 
@@ -148,7 +150,7 @@ class CheckoutForm extends React.Component {
 
       if (error) {
         // Show error to your customer.
-        console.log(error.message);
+        console.log('error', error.message);
       }
     } else {
       const result = await stripe.confirmCardPayment(secret, {
@@ -185,7 +187,6 @@ class CheckoutForm extends React.Component {
     }
   }
 
-
   render() {
     const { stripe, children } = this.props
     const { paymentSent } = this.state;
@@ -195,12 +196,15 @@ class CheckoutForm extends React.Component {
         <Row>
           <Col sm="12" md="6" className="mb-sm-3">{children}</Col>
           <Col sm="12" md="6">
-            <form onSubmit={(e) => e.preventDefault()} className="">
+            <AvForm
+              id="checkoutForm"
+              onValidSubmit={this.handleSubmit} className="">
               <h4>2. Jouw informatie</h4>
               <Card body className="bg-light p-4">
                 <Row className="mb-4">
                   <Col sm="12" md="6">
-                    <input
+                    <FormGroup>
+                    <AvField
                       name="firstname"
                       type="text"
                       required
@@ -208,9 +212,11 @@ class CheckoutForm extends React.Component {
                       value={this.state.firstname}
                       onChange={this.handleChange}
                     />
+                    </FormGroup>
                   </Col>
                   <Col sm="12" md="6">
-                    <input
+                    <FormGroup>
+                    <AvField
                       name="lastname"
                       type="text"
                       required
@@ -218,11 +224,13 @@ class CheckoutForm extends React.Component {
                       value={this.state.lastname}
                       onChange={this.handleChange}
                     />
+                    </FormGroup>
                   </Col>
                 </Row>
                 <Row>
                   <Col sm="12" md="6">
-                    <input
+                    <FormGroup>
+                    <AvField
                       name="email"
                       type="email"
                       required
@@ -230,16 +238,20 @@ class CheckoutForm extends React.Component {
                       value={this.state.email}
                       onChange={this.handleChange}
                     />
+                    </FormGroup>
                   </Col>
                   <Col sm="12" md="6">
-                    <input
+                    <FormGroup>
+                    <AvField
                       name="phoneNumber"
-                      type="tel"
+                      type="text"
                       required
+                      validate={{ pattern: { value: PHONE_REGEX } }}
                       placeholder="012 123 1234"
                       value={this.state.phoneNumber}
                       onChange={this.handleChange}
                     />
+                    </FormGroup>
                   </Col>
 
                 </Row>
@@ -291,11 +303,9 @@ class CheckoutForm extends React.Component {
                         </div>
                       </NavLink>
                     </NavItem>
-
                   </Nav>
 
                   <CardBody>
-
                     {this.state.isOpenIDEAL && (
                       <div>
                         <IdealBankElement
@@ -307,13 +317,11 @@ class CheckoutForm extends React.Component {
 
                     {this.state.isOpenBank && (
                       <div>
-
                         <CardElement options={CARD_ELEMENT_OPTIONS}/>
                         {this.state.errorMessage &&
                         <ErrorResult>{this.state.errorMessage}</ErrorResult>}
                         {this.state.paymentMethod && (
-                          <Result>Got
-                            PaymentMethod: {this.state.paymentMethod.id}</Result>
+                          <Result>Got PaymentMethod: {this.state.paymentMethod.id}</Result>
                         )}
                       </div>
                     )}
@@ -321,7 +329,7 @@ class CheckoutForm extends React.Component {
 
                 </Card>
               </div>
-            </form>
+            </AvForm>
           </Col>
         </Row>
 
@@ -329,9 +337,10 @@ class CheckoutForm extends React.Component {
 
         <div className="m-5 text-center">
           <Button className=" mci-checkout-button"
-                  onClick={this.handleSubmit}
+                  form="checkoutForm"
+                  type="submit"
                   size="lg"
-                  disabled={!stripe || paymentSent}>
+                  disabled={!stripe || paymentSent || this.props.total === 0}>
             {!paymentSent ? <span>Bevestig & Betaal € {this.props.total}</span> :
 
               <Spinner class="p-1" animation="border" variant="primary"/>}

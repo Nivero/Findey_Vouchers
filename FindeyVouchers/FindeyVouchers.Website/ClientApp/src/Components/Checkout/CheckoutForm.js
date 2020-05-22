@@ -1,11 +1,12 @@
 ﻿import React from 'react';
-import { Button, Card, CardBody, Col, Row, Spinner, Nav, NavItem, NavLink, Input, FormGroup } from 'reactstrap';
+import { Button, Card, CardBody, Col, Row, Spinner, Nav, NavItem, NavLink, FormGroup } from 'reactstrap';
 import { AvForm, AvField } from 'availity-reactstrap-validation';
 import {
   ElementsConsumer,
   IdealBankElement,
   CardElement,
 } from '@stripe/react-stripe-js';
+import { PHONE_REGEX } from '../../common/regex.constants';
 import { ErrorResult, Result } from './util';
 import './checkout.css';
 
@@ -245,7 +246,7 @@ class CheckoutForm extends React.Component {
                       name="phoneNumber"
                       type="text"
                       required
-                      validate={{ pattern: { value: /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/ } }}
+                      validate={{ pattern: { value: PHONE_REGEX } }}
                       placeholder="012 123 1234"
                       value={this.state.phoneNumber}
                       onChange={this.handleChange}

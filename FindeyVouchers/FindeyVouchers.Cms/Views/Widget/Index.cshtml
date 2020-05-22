@@ -57,23 +57,27 @@
                     </div>
 
                     <ol>
-                        <li class="mb-2">Onderaan, tussen de lijnen vind u de html-code die op uw website geplaatst moet worden.</li>
+                        <li class="mb-2">Onderaan vindt u twee gedeeltes met code, de html-code & de css-code. Deze moeten
+                            worden geplaatst op uw website.</li>
+                        <li class="mb-2">Als eerst, kopieer alle css-code.</li>
+                        <li class="mb-2">Ga vervolgens naar het gedeelte van uw website-bouwer waar u css-code kunt toevoegen.
+                                         Plak hier alle gekopieerde css-code en druk vervolgens op publiceer.</li>
                         <li class="mb-2">
-                            Vervang de https://companyname.findey.nl met
-                            “ https://vul-hier-jouw-opgegeven-bedrijfsnaam-in.findey.nl "en kopieer alle code tussen
-                            de lijnen.
+                           Als tweede, vervang de “ https://companyname.findey “ met “ https://{vul-hier-jouw-
+                           opgegevens-bedrijfsnaam-in}.findey.nl “ en kopieer alle html-code.
                         </li>
-                        <li class="mb-2">Vervolgens, ga naar uw websitebouwer toe en open de Editor.</li>
+                        <li class="mb-2">Ga vervolgens weer terug naar uw website-bouwer en open de Editor.</li>
                         <li class="mb-2">Voeg een mogelijkheid toe om custom html-code toe te voegen aan de website.</li>
-                        <li class="mb-2">Voeg de html-code hieraan toe en publiceer de website met de aangebrachte html-code.</li>
+                        <li class="mb-2">Voeg de gekopieerde html-code hieraan toe en publiceer de website met de nieuwe html-
+                                          code.</li>
                         <li class="mb-2">
-                            Als u de website in een ander tablat opent ziet u dat er een website-widget toegevoegd is aan
+                            Als u de website in een ander tabblad opent ziet u dat er een website-widget toegevoegd is aan
                             uw website.
                         </li>
                         <li class="mb-2">U kunt zelf bepalen waar en op welke pagina’s de widget weergeven mag worden.</li>
                         <li class="mb-2">Verder kunt u de widget aanpassen naar wens.</li>
                         <li class="mb-2">
-                            Indien u de website-widget niet zag verschijnen na stap 5, probeer dan op een andere manier
+                            Indien u de website-widget niet zag verschijnen na stap 7, probeer dan op een andere manier
                             customer html-code toe te voegen aan uw website. Kijk bijvoorbeeld of uw website-bouwer
                             de mogelijkheid heeft om per pagina customer html-code toe te voegen.
                         </li>
@@ -104,21 +108,45 @@
                     </textarea>
                     <label for="exampleFormControlTextarea1">Css code:</label>
                     <textarea class="form-control fab-code-textarea" rows="16" readonly>
-                        <a class="voucher-container" href="https://companyname.findey.nl"> 
-                            <div class="voucher-text-container">     
-                                Waardebonnen bekijken
-                            </div>
-                            <div class="voucher-icon-container">
-                                <svg viewBox="0 0 24 24">
-                                    <path fill="currentColor" d="M9.06,1.93C7.17,1.92 5.33,3.74 6.17,6H3A2,2 0 0,0 1,8V10A1,1 0
-                                    0,0 2,11H11V8H13V11H22A1,1 0 0,0 23,10V8A2,2 0 0,0 21,6H17.83C19,2.73 14.6,0.42
-                                    12.57,3.24L12,4L11.43,3.22C10.8,2.33 9.93,1.94 9.06,1.93M9,4C9.89,4 10.34,5.08
-                                    9.71,5.71C9.08,6.34 8,5.89 8,5A1,1 0 0,1 9,4M15,4C15.89,4 16.34,5.08 15.71,5.71C15.08,6.34
-                                    14,5.89 14,5A1,1 0 0,1 15,4M2,12V20A2,2 0 0,0 4,22H20A2,2 0 0,0
-                                    22,20V12H13V20H11V12H2Z"></path>
-                                </svg>
-                            </div>
-                        </a>
+                          .voucher-container{
+                            text-decoration: none;
+                            background: #ffffff;
+                            border-radius: 4px;
+                            width:300px;
+                            height:40px;
+                            display:flex;
+                            justify-content: center;
+                            -webkit-box-shadow: 2px 2px 10px -3px rgba(0,0,0,0.75);
+                            -moz-box-shadow: 2px 2px 10px -3px rgba(0,0,0,0.75);
+                            box-shadow: 2px 2px 10px -3px rgba(0,0,0,0.75);
+                          }
+                      
+                          .voucher-text-container{
+                            text-align: center;
+                            vertical-align: middle;
+                            font-size: 15px;
+                            line-height: 40px;
+                            font-family: 'Open Sans';
+                            width: 260px;
+                            color: #333;
+                            text-decoration: none;
+                            text-transform: uppercase;
+                          }
+                          .voucher-icon-container {
+                           border-left: 1px solid rgba(0,0,0,0.1);
+                           width: 40px;
+                           height: 40px;
+                           float:right;
+                      
+                         }
+                         .voucher-icon-container svg{
+                          width: 20px;
+                          height: 20px;
+                          color:  rgb(165, 157, 153); 
+                          position: relative;
+                          top: 25%;
+                          left: 25%;
+                        }
                     </textarea>
                     </div>
                 </div>

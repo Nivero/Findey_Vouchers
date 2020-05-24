@@ -71,7 +71,7 @@ namespace FindeyVouchers.Services
                 },
                 Vouchers = new List<Voucher>()
             };
-            var vouchers = _context.MerchantVouchers.Include(x => x.Category).Where(x => x.Merchant == merchant);
+            var vouchers = _context.MerchantVouchers.Include(x => x.Category).Where(x => x.Merchant == merchant && x.IsActive);
             foreach (var item in vouchers)
             {
                 var tmp = new Voucher

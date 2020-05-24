@@ -41,8 +41,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="Voucher.VoucherType" class="control-label"></label>
-                <span class="small d-md-block">Bij een waardebon moet het hele bedrag gebruikt worden. Bij een prepaid voucher kan een deel van het bedrag besteed worden terwijl de voucher nog steeds geldig blijft.</span>
-                <span class="small d-md-block text-danger">Het type kan niet meer aangepast worden na het creëren van een voucher.</span>
+                <span class="small d-md-block">Bij het type waardebon moet de barcode in één keer verzilverd worden, bijvoorbeeld voor een
+                                               combi-deal van 2 flessen wijn.
+                                               Bij het type prepaid blijft de voucher geldig zolang er een positief saldo op de voucher staat,
+                                               bijvoorbeeld voor een voucher t.w.v. € 100.</span>
+                <span class="small d-md-block text-danger">Het type voucher kan niet meer worden aangepast na het creëren, wel kan de voucher
+                                                           gedeactiveerd worden.</span>
                 <select asp-for="Voucher.VoucherType" class="form-control" asp-items="Html.GetEnumSelectList<VoucherType>()" required></select>
                 <span asp-validation-for="Voucher.VoucherType" class="text-danger"></span>
             </div>

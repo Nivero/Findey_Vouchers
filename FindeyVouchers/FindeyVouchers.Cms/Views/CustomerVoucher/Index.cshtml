@@ -60,7 +60,9 @@
         <th>
             @Html.DisplayNameFor(model => model.Vouchers.First().IsUsed)
         </th>
-        <th></th>
+        <th>
+            Betaling succes
+        </th>
     </tr>
     </thead>
     <tbody>
@@ -90,7 +92,17 @@
                 }
             </td>
             <td>
-                @if (!item.IsUsed)
+                @if (!item.IsUsed && item.Payment.Error == null)
+                {
+                    <span class="voucher-status-dot-on d-flex justify-content-center"></span>
+                }
+                else
+                {
+                    <span class="voucher-status-dot-off d-flex justify-content-center"></span>
+                }
+            </td>
+            <td>
+                @if (item.Payment.Error == null)
                 {
                     <span class="voucher-status-dot-on d-flex justify-content-center"></span>
                 }

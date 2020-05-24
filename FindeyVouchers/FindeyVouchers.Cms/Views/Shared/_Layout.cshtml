@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using FindeyVouchers.Domain.EfModels
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -27,11 +31,26 @@
                     <a asp-area="" asp-controller="CustomerVoucher" asp-action="Index">Verkochte vouchers</a>
                 </li>
                 <li>
-                    <a asp-area="" asp-controller="VoucherCategory" asp-action="Index">categorieën</a>
+                    <a asp-area="" asp-controller="VoucherCategory" asp-action="Index">Categorieën</a>
                 </li>
                 <li>
                     <a asp-area="" asp-controller="Account" asp-action="Index">Account</a>
                 </li>
+                <li>
+                    <a asp-area="" asp-controller="Widget" asp-action="Index">Widget installeren</a>
+                </li>
+                @{
+                    if (SignInManager.IsSignedIn(User))
+                    {
+                        var company = UserManager.GetUserAsync(User).GetAwaiter().GetResult().CompanyName;
+                        <li>
+                            <a href="https://@(company).findey.nl" target="_blank">Bekijk voucher-pagina</a>
+                        </li>
+                    }
+
+
+                }
+
                 <li class="mt-5">
                     <a>
                         <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout"

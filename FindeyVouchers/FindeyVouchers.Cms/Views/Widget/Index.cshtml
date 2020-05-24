@@ -1,0 +1,173 @@
+﻿@{
+    ViewData["Title"] = "Welkom";
+}
+@model HomeViewModel
+<div class="col-md-6">
+    <div id="accordion">
+        <div class="card">
+            <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Wordpress
+                    </button>
+                </h5>
+            </div>
+
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                <div class="card-body">
+                    <div class="font-weight-bold mb-4">
+                        Indien u gebruik maakt van Wordpress kunt u een plugin installeren en activeren voor de website-
+                        widget. Volg de stappen hieronder om via Wordpress de widget te installeren.
+                    </div>
+                    <ol>
+                        <li class="mb-2">Log in op uw Wordpress-account</li>
+                        <li class="mb-2">Installeer de plugin ‘ Floating Chat Widget ‘ en activeer die vervolgens.</li>
+                        <li class="mb-2">Als u niet direct genavigeerd wordt naar het Chaty dashboard, klik dan op Chaty in de
+                                         Wordpress menu-balk.</li>
+                        <li class="mb-2">Verwijder als eerst alle bestaande widgets door op de bijbehorende kruisjes te klikken.</li>
+                        <li class="mb-2">Kies bij Stap 1 voor de Customer Link.</li>
+                        <li class="mb-2">
+                           Vervolgens, vul bij de URL deze regel in: “ https://{vul-hier-je-opgegeven-FindeyVouchers-
+                           bedrijfsnaam-in}.findey.nl “. (Of klik op “ Bekijk voucher-pagina ” in het Findey Voucher CMS
+                           en kopieer de URL van de nieuwe geopende pagina.)
+                        </li>
+                        <li class="mb-2">Zorg dat zowel Desktop als Mobile zijn aangevinkt.</li>
+                        <li class="mb-2">De kleur van de Widget kunt u aanpassen door op het tandwieltje te klikken.</li>
+                        <li class="mb-2">Verder kunt u de Widget aanpassen naar wens.</li>
+                        <li class="mb-2">
+                          Als u klaar bent, zorg dan voor Active: On en klik op SAVE CHANGES.
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingTwo">
+                <h5 class="mb-0">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Handmatig
+                    </button>
+                </h5>
+            </div>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                <div class="card-body">
+                    <div class="font-weight-bold mb-4">
+                        Indien u handmatig een website-widget wilt toevoegen, zult u deze zelf op uw website moeten
+                        instellen en positioneren. Volg de stappen hieronder om handmatig de widget te installeren.
+                    </div>
+
+                    <ol>
+                        <li class="mb-2">Onderaan vindt u twee gedeeltes met code, de html-code & de css-code. Deze moeten
+                            worden geplaatst op uw website.</li>
+                        <li class="mb-2">Als eerst, kopieer alle css-code.</li>
+                        <li class="mb-2">Ga vervolgens naar het gedeelte van uw website-bouwer waar u css-code kunt toevoegen.
+                                         Plak hier alle gekopieerde css-code en druk vervolgens op publiceer.</li>
+                        <li class="mb-2">
+                           Als tweede, vervang de “ https://companyname.findey “ met “ https://{vul-hier-jouw-
+                           opgegevens-bedrijfsnaam-in}.findey.nl “ en kopieer alle html-code.
+                        </li>
+                        <li class="mb-2">Ga vervolgens weer terug naar uw website-bouwer en open de Editor.</li>
+                        <li class="mb-2">Voeg een mogelijkheid toe om custom html-code toe te voegen aan de website.</li>
+                        <li class="mb-2">Voeg de gekopieerde html-code hieraan toe en publiceer de website met de nieuwe html-
+                                          code.</li>
+                        <li class="mb-2">
+                            Als u de website in een ander tabblad opent ziet u dat er een website-widget toegevoegd is aan
+                            uw website.
+                        </li>
+                        <li class="mb-2">U kunt zelf bepalen waar en op welke pagina’s de widget weergeven mag worden.</li>
+                        <li class="mb-2">Verder kunt u de widget aanpassen naar wens.</li>
+                        <li class="mb-2">
+                            Indien u de website-widget niet zag verschijnen na stap 7, probeer dan op een andere manier
+                            customer html-code toe te voegen aan uw website. Kijk bijvoorbeeld of uw website-bouwer
+                            de mogelijkheid heeft om per pagina customer html-code toe te voegen.
+                        </li>
+                        <li class="mb-2">
+                            Indien u de website-widget wel ziet maar niet naar de voucher-pagina opent, controleer dan of
+                            u wel de juiste URL heeft getypt voordat u deze kopieerde.
+                        </li>
+                    </ol>
+
+                    <div class="form-group">
+                        <label for="exampleFormControlTextarea1">Html code:</label>
+                        <textarea class="form-control fab-code-textarea" rows="16" readonly>
+                            <a class="voucher-container" href="https://companyname.findey.nl"> 
+                                <div class="voucher-text-container">     
+                                    Waardebonnen bekijken
+                                </div>
+                                <div class="voucher-icon-container">
+                                    <svg viewBox="0 0 24 24">
+                                        <path fill="currentColor" d="M9.06,1.93C7.17,1.92 5.33,3.74 6.17,6H3A2,2 0 0,0 1,8V10A1,1 0
+                                        0,0 2,11H11V8H13V11H22A1,1 0 0,0 23,10V8A2,2 0 0,0 21,6H17.83C19,2.73 14.6,0.42
+                                        12.57,3.24L12,4L11.43,3.22C10.8,2.33 9.93,1.94 9.06,1.93M9,4C9.89,4 10.34,5.08
+                                        9.71,5.71C9.08,6.34 8,5.89 8,5A1,1 0 0,1 9,4M15,4C15.89,4 16.34,5.08 15.71,5.71C15.08,6.34
+                                        14,5.89 14,5A1,1 0 0,1 15,4M2,12V20A2,2 0 0,0 4,22H20A2,2 0 0,0
+                                        22,20V12H13V20H11V12H2Z"></path>
+                                    </svg>
+                                </div>
+                            </a>
+                    </textarea>
+                    <label for="exampleFormControlTextarea1">Css code:</label>
+                    <textarea class="form-control fab-code-textarea" rows="16" readonly>
+                          .voucher-container{
+                            text-decoration: none;
+                            background: #ffffff;
+                            border-radius: 4px;
+                            width:300px;
+                            height:40px;
+                            display:flex;
+                            justify-content: center;
+                            -webkit-box-shadow: 2px 2px 10px -3px rgba(0,0,0,0.75);
+                            -moz-box-shadow: 2px 2px 10px -3px rgba(0,0,0,0.75);
+                            box-shadow: 2px 2px 10px -3px rgba(0,0,0,0.75);
+                          }
+                      
+                          .voucher-text-container{
+                            text-align: center;
+                            vertical-align: middle;
+                            font-size: 15px;
+                            line-height: 40px;
+                            font-family: 'Open Sans';
+                            width: 260px;
+                            color: #333;
+                            text-decoration: none;
+                            text-transform: uppercase;
+                          }
+                          .voucher-icon-container {
+                           border-left: 1px solid rgba(0,0,0,0.1);
+                           width: 40px;
+                           height: 40px;
+                           float:right;
+                      
+                         }
+                         .voucher-icon-container svg{
+                          width: 20px;
+                          height: 20px;
+                          color:  rgb(165, 157, 153); 
+                          position: relative;
+                          top: 25%;
+                          left: 25%;
+                        }
+                    </textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingThree">
+                <h5 class="mb-0">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Development agency / freelancer
+                    </button>
+                </h5>
+            </div>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                <div class="card-body">
+                    Indien u met een development agency of freelancer werkt, vraag dan of zij een Floating Action
+
+                    Button op uw website willen plaatsen die herleidt naar de wildcard “ https://{opgegeven-
+                    bedrijfsnaam-op-Findey-Vouchers}.findey.nl “ op een extern tablat.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

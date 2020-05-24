@@ -1,5 +1,5 @@
 import React from 'react';
-import Voucher from './Voucher'
+import Voucher from '../../../common/components/Voucher/'
 import { Button } from 'reactstrap';
 
 import { mapCategories } from './helpers';

@@ -128,7 +128,8 @@ namespace FindeyVouchers.Website.Controllers
             };
             var response = JsonSerializer.Deserialize<PaymentStatusResponse>(body.ToString(), options);
             _paymentService.UpdatePayment(response);
-            await _voucherService.HandleFulfillment(response.PaymentId);
+            if (response.PaymentStatus.Equals("succeeded"))
+                await _voucherService.HandleFulfillment(response.PaymentId);
 
             return Ok();
         }

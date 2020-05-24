@@ -16,7 +16,7 @@ namespace FindeyVouchers.Domain.EfModels
         [DataType(DataType.Date)]
         public DateTime DateOfBirth { get; set; }
 
-        [Display(Name = "Adres")] public string Address { get; set; }
+        [Display(Name = "Vestigingsadres van uw bedrijf")] public string Address { get; set; }
 
         [Display(Name = "Postcode")]
         [RegularExpression(@"^\d{4}?[aA-zZ]{2}$", ErrorMessage = "Ongeldige postcode")]
@@ -40,6 +40,7 @@ namespace FindeyVouchers.Domain.EfModels
         [Display(Name = "Telefoonnummer")]
         public override string PhoneNumber { get; set; }
 
+        [Display(Name = "Bedrijfswebsite")] 
         public string Website { get; set; }
 
         [Display(Name = "Omschrijving bedrijf")]

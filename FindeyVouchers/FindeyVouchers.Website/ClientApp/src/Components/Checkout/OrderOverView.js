@@ -1,44 +1,41 @@
 ﻿import React from 'react';
 import {
-    Col, Row,
-    Toast,
-    ToastHeader,
+  Card,
+  CardBody,
+  CardFooter
 } from 'reactstrap';
 import './checkout.css'
-import ToastBody from "reactstrap/es/ToastBody";
-import ListGroup from "reactstrap/es/ListGroup";
-import ListGroupItem from "reactstrap/es/ListGroupItem";
+import Voucher from '../../common/components/Voucher';
 
-export default class OrderOverview extends React.Component {
-    constructor(props) {
-        super(props);
+const OrderOverview = ({ cartItems, cartTotal }) => {
+  const items = cartItems.filter((item) => item.amount > 0);
 
-    }
+  return (<div>
+    <h4 className="font-weight-bold">1. Jouw vouchers</h4>
+    <Card>
+      <CardBody className="mb-3" style={{ maxHeight:450, overflowY: 'auto' }}>
+        {items.length === 0 && (<div>No vouchers selected</div>)}
 
-    render() {
-        return (
-            <Col sm="12" md="5" className="d-flex justify-content-center">
-                <Toast className="mci-toast">
-                    <ToastHeader>
-                        1. Jouw bestelling
-                    </ToastHeader>
-                    <ToastBody>
-                        <ListGroup>
-                            {
-                                this.props.cartItems.map(item => {
-                                    if (item.amount > 0) {
-                                        let totalItemPrice = item.price * item.amount;
-                                        return <ListGroupItem key={item.id}>{item.amount} x {item.name}<span
-                                            className="float-right font-weight-bold">€ {totalItemPrice}</span></ListGroupItem>
-                                    }
-                                })
-                            }
-                            <ListGroupItem className="fixed-bottom">Totaal: <span
-                                className="float-right font-weight-bold">€ {this.props.cartTotal}</span></ListGroupItem>
-                        </ListGroup>
-                    </ToastBody>
-                </Toast>
-            </Col>
-        );
-    }
+        {items.map((voucher) => {
+          return (
+            <div key={voucher.id} className="border-bottom">
+              <Voucher viewMode key={voucher.id} data={voucher}/>
+            </div>
+          )
+        })}
+
+      </CardBody>
+      <CardFooter className="p-3" style={{ backgroundColor: 'transparent' }} >
+        <div className="d-flex justify-content-between " >
+          <h5 className="m-0 font-weight-bold" >Totaal</h5>
+          <h5 className="m-0 font-weight-bold">€ {cartTotal}</h5>
+        </div>
+
+      </CardFooter>
+    </Card>
+  </div>)
+
 }
+
+export default OrderOverview;
+

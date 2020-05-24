@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { CART_ADD, CART_REMOVE } from '../../../../redux/actions';
+import { CART_ADD, CART_REMOVE } from '../../../redux/actions';
 import {
   Row,
   Col,
@@ -13,7 +13,7 @@ import {
 
 } from 'reactstrap';
 
-import Counter from '../../../../common/components/counter/Counter';
+import Counter from '../counter/Counter';
 
 class Voucher extends React.Component {
   constructor(props) {
@@ -47,6 +47,8 @@ class Voucher extends React.Component {
   }
 
   render() {
+    const { viewMode, data } = this.props;
+
     return (
 
       <Row className="pt-4 pb-4">
@@ -77,15 +79,26 @@ class Voucher extends React.Component {
                         </span>
             </p>
           </div>
-          <div className="d-flex justify-content-between">
-            <Counter
-               value={this.state.amountOfVoucher}
-               onAdd={this.handleVoucherRemove}
-               onRemove={this.handleVoucherAdd}
-            />
 
-            <div> € {this.props.data.price} </div>
-          </div>
+          {viewMode ?
+            (<div className="d-flex justify-content-between">
+              <div className="text-secondary small">{data.amount} x € {data.price}</div>
+
+              <div> € {data.price * data.amount} </div>
+            </div>)
+
+            : (<div className="d-flex justify-content-between">
+              <Counter
+                value={this.state.amountOfVoucher}
+                onAdd={this.handleVoucherRemove}
+                onRemove={this.handleVoucherAdd}
+              />
+
+              <div> € {this.props.data.price} </div>
+            </div>)
+          }
+
+
         </Col>
       </Row>
     );

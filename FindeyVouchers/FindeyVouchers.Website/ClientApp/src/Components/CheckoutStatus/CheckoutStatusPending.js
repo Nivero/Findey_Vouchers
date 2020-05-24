@@ -9,9 +9,9 @@ export default class CheckoutStatusSuccess extends React.Component {
         return (
             <Container>
                 <Jumbotron>
-                    <h1 className="display-5 text-uppercase text-warning"><FaHourglass size={64} /> Uw betaling wordt verwerkt!</h1>
+                    <h1 className="display-5 text-uppercase text-warning"><FaHourglass size={64} />Uw betaling wordt verwerkt!</h1>
                     <hr className="my-2" />
-                    <p>Houd uw inbox in de gaten voor uw vouchers.</p>
+                    <p>Houd uw inbox in de gaten voor uw vouchers als uw betaling geslaagd is.</p>
                     <p className="lead">
                         <Link to="/"><Button color="success">Terug naar de homepage</Button></Link>
                     </p>

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using Serilog;
 
 namespace FindeyVouchers.Cms.Controllers
@@ -34,10 +35,11 @@ namespace FindeyVouchers.Cms.Controllers
             if (string.IsNullOrWhiteSpace(user.CompanyName) || string.IsNullOrWhiteSpace(user.StripeAccountId))
                 return RedirectToAction("Index", "Home");
 
-            var customerVouchers = _context.CustomerVouchers.Include(x=> x.Payment).Where(x => x.MerchantVoucher.Merchant == user);
+            var customerVouchers = _context.CustomerVouchers.Include(x => x.Payment)
+                .Where(x => x.MerchantVoucher.Merchant == user);
 
             if (!string.IsNullOrEmpty(searchQuery))
-                customerVouchers = customerVouchers.Include(x=> x.Payment).Where(s => s.Code.Contains(searchQuery));
+                customerVouchers = customerVouchers.Include(x => x.Payment).Where(s => s.Code.Contains(searchQuery));
 
             var model = new CustomerVoucherViewModel
             {
@@ -79,17 +81,25 @@ namespace FindeyVouchers.Cms.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RetractAmount(CustomerVoucher customerVoucher)
-        {
+        {            var model = await _context.CustomerVouchers.Include(x => x.Customer)
+                .Include(x => x.MerchantVoucher)
+                .FirstOrDefaultAsync(m => m.Id == customerVoucher.Id);
             if (ModelState.IsValid)
-                if (customerVoucher != null)
+            {
+                var currentVoucher = _context.CustomerVouchers.FirstOrDefault(x => customerVoucher.Id == x.Id);
+                if (customerVoucher != null && currentVoucher != null)
                 {
+                    if (currentVoucher.Price < customerVoucher.Price)
+                    {
+                        ModelState.AddModelError(String.Empty, "Bedrag kan niet hoger zijn dan huidige waarde.");
+                        return View("Details", model);
+                    }
+
                     _voucherService.UpdatePrice(customerVoucher.Id, customerVoucher.Price);
                     return RedirectToAction("Details", "CustomerVoucher", new {id = customerVoucher.Id});
                 }
-
-            var model = await _context.CustomerVouchers.Include(x => x.Customer)
-                .Include(x => x.MerchantVoucher)
-                .FirstOrDefaultAsync(m => m.Id == customerVoucher.Id);
+            }
+            
             return View("Details", model);
         }
 

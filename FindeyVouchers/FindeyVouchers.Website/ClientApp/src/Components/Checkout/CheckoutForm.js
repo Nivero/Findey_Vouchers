@@ -40,7 +40,8 @@ const CARD_ELEMENT_OPTIONS = {
         color: '#303238'
       }
     }
-  }
+  },
+  hidePostalCode: true
 };
 
 class CheckoutForm extends React.Component {

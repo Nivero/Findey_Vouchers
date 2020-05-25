@@ -34,10 +34,10 @@ namespace FindeyVouchers.Cms.Controllers
             if (string.IsNullOrWhiteSpace(user.CompanyName) || string.IsNullOrWhiteSpace(user.StripeAccountId))
                 return RedirectToAction("Index", "Home");
 
-            var customerVouchers = _context.CustomerVouchers.Where(x => x.MerchantVoucher.Merchant == user);
+            var customerVouchers = _context.CustomerVouchers.Include(x=> x.Payment).Where(x => x.MerchantVoucher.Merchant == user);
 
             if (!string.IsNullOrEmpty(searchQuery))
-                customerVouchers = customerVouchers.Where(s => s.Code.Contains(searchQuery));
+                customerVouchers = customerVouchers.Include(x=> x.Payment).Where(s => s.Code.Contains(searchQuery));
 
             var model = new CustomerVoucherViewModel
             {

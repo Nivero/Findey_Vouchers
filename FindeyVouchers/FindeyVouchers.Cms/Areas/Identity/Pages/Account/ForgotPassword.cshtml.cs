@@ -43,11 +43,11 @@ namespace FindeyVouchers.Cms.Areas.Identity.Pages.Account
                 if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
-                    return RedirectToPage("./ForgotPasswordConfirmation");
+                    return RedirectToPage("./Login");
                 }
 
                 await ResetPassword(user);
-                return RedirectToPage("./ForgotPasswordConfirmation");
+                return RedirectToPage("./Login");
             }
 
             return Page();

@@ -89,13 +89,14 @@ namespace FindeyVouchers.Cms.Controllers
                 var currentVoucher = _context.CustomerVouchers.FirstOrDefault(x => customerVoucher.Id == x.Id);
                 if (customerVoucher != null && currentVoucher != null)
                 {
-                    if (currentVoucher.Price < customerVoucher.Price)
+                    if (currentVoucher.Price > customerVoucher.Price)
                     {
                         ModelState.AddModelError(String.Empty, "Bedrag kan niet hoger zijn dan huidige waarde.");
                         return View("Details", model);
                     }
 
-                    _voucherService.UpdatePrice(customerVoucher.Id, customerVoucher.Price);
+                    var newPrice = currentVoucher.Price - customerVoucher.Price;
+                    _voucherService.UpdatePrice(customerVoucher.Id, newPrice);
                     return RedirectToAction("Details", "CustomerVoucher", new {id = customerVoucher.Id});
                 }
             }

@@ -89,7 +89,7 @@ namespace FindeyVouchers.Cms.Controllers
                 var currentVoucher = _context.CustomerVouchers.FirstOrDefault(x => customerVoucher.Id == x.Id);
                 if (customerVoucher != null && currentVoucher != null)
                 {
-                    if (currentVoucher.Price > customerVoucher.Price)
+                    if (currentVoucher.Price > customerVoucher.Price && customerVoucher.Price > 0)
                     {
                         ModelState.AddModelError(String.Empty, "Bedrag kan niet hoger zijn dan huidige waarde.");
                         return View("Details", model);

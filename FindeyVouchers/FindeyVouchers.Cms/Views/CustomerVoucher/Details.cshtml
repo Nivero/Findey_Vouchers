@@ -20,7 +20,7 @@
         <dt class="col-sm-2">
             @if (Model.MerchantVoucher.VoucherType == VoucherType.PrepaidCard)
             {
-                <span>Te verzilveren bedrag</span>
+                <span>Resterend bedrag</span>
             }
             else
             {
@@ -80,7 +80,7 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                 <div class="form-group">
-                    <label> Voer nieuwe geld waarde in:</label>
+                    <label>Voer het bedrag in wat verzilverd moet worden</label>
                     <input asp-for="Price" class="form-control col-sm-2"/>
                     <span asp-validation-for="Price" class="text-danger mt-2"></span>
                 </div>

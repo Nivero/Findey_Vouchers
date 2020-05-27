@@ -5,94 +5,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1.0 minimum-scale=1.0" />
+
     <title>@ViewData["Title"] - Findey Vouchers</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/css/site.css"/>
-    <link rel="stylesheet" href="~/css/sidebar.css"/>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/sidebar.css" />
 </head>
 <body>
-<div id="wrapper" class="toggled">
+
+    <style>
+    </style>
+
+    <div id="wrapper" class="toggled">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <!-- Sidebar -->
+            <div id="sidebar-wrapper">
+                <div class="collapse navbar-collapse show" id="navbarSupportedContent">
+                    <ul class="sidebar-nav navbar-nav">
+
+                        <li class="sidebar-brand">
+                            <a asp-area="" asp-controller="Home" asp-action="Index" class="item logo" style="width: 80%; float: left;">
+                                Findey vouchers
+                            </a>
+
+                            <a class="closeSide" onclick="closeSide()" href="javascript:void(0)">x</a>
+                            <a class="openSide" onclick="openSide()" href="javascript:void(0)" style="display: none">
+                                &#9776;
+                            </a>
+
+                        </li>
+                        <li>
+                            <a class="item border-line" asp-area="" asp-controller="MerchantVoucher" asp-action="Index">Mijn vouchers</a>
+                        </li>
+                        <li>
+                            <a class="item border-line" asp-area="" asp-controller="CustomerVoucher" asp-action="Index">Verkochte vouchers</a>
+                        </li>
+                        <li>
+                            <a class="item border-line" asp-area="" asp-controller="VoucherCategory" asp-action="Index">Categorieën</a>
+                        </li>
+                        <li>
+                            <a class="item border-line" asp-area="" asp-controller="Account" asp-action="Index">Account</a>
+                        </li>
+                        <li>
+                            <a class="item border-line" asp-area="" asp-controller="Widget" asp-action="Index">Widget installeren</a>
+                        </li>
+                        @{
+                            if (SignInManager.IsSignedIn(User))
+                            {
+                                var company = UserManager.GetUserAsync(User).GetAwaiter().GetResult().CompanyName;
+                                <li>
+                                    <a class="item border-line" href="https://@(company).findey.nl" target="_blank">Bekijk voucher-pagina</a>
+                                </li>
+                            }
+                        }
+
+                        <li>
+                            <a class="item" style="margin-top: 26px;">
+                                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout"
+                                      asp-route-returnUrl="@Url.Page("/", new {area = ""})"
+                                      method="post">
+
+                                    <button style="margin-left: 20px;" type="submit" class="nav-link btn text-white logout">Log uit</button>
+
+                                </form>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /#sidebar-wrapper -->
+        }
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+
+            <div class="container-fluid body">
+                @RenderBody()
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
     @if (User.Identity.IsAuthenticated)
     {
-        <!-- Sidebar -->
-        <div id="sidebar-wrapper">
-            <ul class="sidebar-nav">
-                <li class="sidebar-brand">
-                    <a asp-area="" asp-controller="Home" asp-action="Index">
-                        Findey vouchers
-                    </a>
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="MerchantVoucher" asp-action="Index">Mijn vouchers</a>
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="CustomerVoucher" asp-action="Index">Verkochte vouchers</a>
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="VoucherCategory" asp-action="Index">Categorieën</a>
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="Account" asp-action="Index">Account</a>
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="Widget" asp-action="Index">Widget installeren</a>
-                </li>
-                @{
-                    if (SignInManager.IsSignedIn(User))
-                    {
-                        var company = UserManager.GetUserAsync(User).GetAwaiter().GetResult().CompanyName;
-                        <li>
-                            <a href="https://@(company).findey.nl" target="_blank">Bekijk voucher-pagina</a>
-                        </li>
-                    }
-
-
-                }
-
-                <li class="mt-5">
-                    <a>
-                        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout"
-                              asp-route-returnUrl="@Url.Page("/", new {area = ""})"
-                              method="post">
-
-                            <button type="submit" class="nav-link btn text-white">Log uit</button>
-
-                        </form>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <!-- /#sidebar-wrapper -->
+        <footer class="footer">
+            <div class="container">
+                <span class="text-muted">
+                    &copy; 2020 - Findey Vouchers -
+                    <a href='@Url.Content("~/files/ALGEMENE VOORWAARDEN - Merchant.pdf")'>Algemene voorwaarden </a> -
+                    <a href='@Url.Content("~/files/PRIVACYVERKLARING - merchant.pdf")'>Privacy verklaring </a>
+                </span>
+            </div>
+        </footer>
     }
-    <!-- Page Content -->
-    <div id="page-content-wrapper">
 
-        <div class="container-fluid">
-            @RenderBody()
-        </div>
-    </div>
-    <!-- /#page-content-wrapper -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        let screen = window.matchMedia("(max-width: 600px)")
+        let open = true;
 
-</div>
-@if (User.Identity.IsAuthenticated)
-{
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2020 - Findey Vouchers -
-            <a href='@Url.Content("~/files/ALGEMENE VOORWAARDEN - Merchant.pdf")'>Algemene voorwaarden </a> -
-            <a href='@Url.Content("~/files/PRIVACYVERKLARING - merchant.pdf")'>Privacy verklaring </a>
-        </div>
-        <div class="fixed-bottom">
-            <partial name="_CookieConsentPartial"/>
-        </div>
-    </footer>
-}
+        function openSide() {
+            if ($(window).width() < 600) {
+                $("#sidebar-wrapper").width("75%");
+            } else {
+                $("#sidebar-wrapper").width("250");
+            }
+            $(".closeSide").css("display", "block");
+            $(".openSide").css("display", "none");
+            $(".item").css("display", "block");
+            open = true;
+            opacity(screen);
+        }
 
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
-@RenderSection("Scripts", false)
+        function closeSide() {
+            $("#sidebar-wrapper").width("50");
+            $("#wrapper.toggled").css("padding-left", "10px");
+            $("#wrapper.toggled").css("margin-left", "10px");
+            $(".item").css("display", "none");
+            $(".closeSide").css("display", "none");
+            $(".openSide").css("display", "block");
+            open = false;
+            opacity(screen);
+        }
+
+        function opacity() {
+            console.log("open", open);
+            console.log("$(window).width() < 600", $(window).width() < 600)
+            if ($(window).width() < 600 && open) { // If media query matches
+                console.log("mathed");
+                $("#wrapper.toggled #page-content-wrapper").css("opacity", ".1");
+            } else {
+                console.log("not mathed");
+                $("#wrapper.toggled #page-content-wrapper").css("opacity", "1");
+            }
+        }
+
+        opacity(screen)
+    </script>
+    @RenderSection("Scripts", false)
 </body>
 </html>

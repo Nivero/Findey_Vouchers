@@ -118,3 +118,7 @@ body {
 .fab-code-textarea{
     resize: none;
 }
+
+canvas#canvas {
+    width: 80% !important;
+}

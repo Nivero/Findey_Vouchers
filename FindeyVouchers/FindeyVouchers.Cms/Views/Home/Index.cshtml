@@ -3,31 +3,50 @@
 }
 @model HomeViewModel
 
+
+
 @if (Model.StripeComplete && Model.AccountComplete)
 {
     <div class="col-md-12 justify-content-center">
         <h1 class="display-4">Voordat u begint!</h1>
         <ol>
-          <li class="mb-2">Om klanten de mogelijkheid te geven om snel en gemakkelijk de vouchers te kopen, moet er
-              een website-widget zichtbaar worden. Onder “ Widget installeren ” in de menu-balk staat
-              beschreven hoe u dit kunt installeren.</li>
-          <li class="mb-2">Nadat de widget is geïnstalleerd, moet u eerst een categorie aanmaken. (Zonder categorie kunt
-              u geen vouchers toevoegen.) Onder 'Categorieën' in de menu-balk kunt u categorieën toevoegen.</li>
-          <li class="mb-2">Vervolgens voegt u onder 'Mijn vouchers' in de menu-balk de gewenste vouchers toe. ( Een
-              prepaid-voucher mag in meerdere malen besteed worden door de klant indien een positief saldo.
-              En een waardebon-voucher moet in een keer besteed worden. )</li>
-          <li class="mb-2">Bekijk uw toegevoegde vouchers onder “ Mijn Vouchers ” in de menu-balk, of bekijk uw
-              vouchers visueel door op “ Voucher-pagina bekijken “ in de menu-balk te klikken.</li>
-          <li class="mb-2">De bedrijfstekst & bedrijfsgegevens ( niet bedrijfsnaam ) die weergeven worden op de voucher-
-              pagina zijn aanpasbaar onder “ Account “ in de menu-balk.</li>
-          <li class="mb-2">Wanneer een voucher wordt gekocht, zal er een e-mail worden toegestuurd naar de klant. De e-
-              mail bevat per gekochte voucher een unieke barcode. Deze barcode is bedrijfsgebonden en zal
-              alleen verzilverd kunnen worden door u. Verzilver de voucher door de unieke voucher-code in te
-              voeren, of de unieke barcode te scannen, onder “ Verkochte vouchers ” in de menu-balk.</li>
-          <li class="mb-2">Voor hulp stuur een e-mail naar info@findey.co of Whatsapp naar +31 6 52632019</li>
-          <li class="mb-2">Indien u nog geen verificatie bij Stripe heeft gedaan, zal u een bericht krijgen om dit
-              vooralsnog te doen. Dit is noodzakelijk om de betalingen van klanten te mogen ontvangen.</li>
+            <li class="mb-2">
+                Je hebt een speciale button op je website nodig om je klanten snel en gemakkelijk een voucher te laten kopen.<br />
+                > Hoe je de button kunt installeren, lees je in de menubalk onder ‘Button installeren’.
+            </li>
+            <li class="mb-2">
+                Heb je de button geïnstalleerd? Maak dan nu eerst een categorie aan. Dit heb je nodig om vouchers toe te kunnen voegen.<br />
+                > Hoe je een categorie toevoegt, lees je onder ‘Categorieën’.
+            </li>
+            <li class="mb-2">
+                Ga nu naar ‘Mijn vouchers’ om de gewenste vouchers toe te voegen: prepaid-vouchers of waardebon-vouchers.<br />
+                > Het bedrag van een waardebon-voucher moet de klant in één keer besteden. Het bedrag van een prepaid-voucher hoeft niet in één keer te worden besteed.<br />
+                > Je kunt de vouchers die je hebt toegevoegd bekijken onder ‘Mijn vouchers’ of ‘Bekijk Voucher pagina’ in de menubalk.
+            </li>
+            <li class="mb-2">
+                Heb je al een verificatie bij Stripe gedaan? Dan kun je nu met de vouchers aan de slag. Als je de verificatie nog moet doen, krijg je hier een bericht over. De verificatie bij Stripe is noodzakelijk om de betalingen van klanten te kunnen ontvangen.
+            </li>
         </ol>
+
+        <h1 class="display-4">Voucher verzilveren</h1>
+        <div class="mb-4">
+            <p>
+                Wanneer een klant één of meer vouchers koopt ontvangt hij een e-mail met een unieke barcode voor elke voucher. De barcode is bedrijfsgebonden en kan alleen door jouw bedrijf worden gebruikt.
+                Je verzilvert een voucher door de barcode te scannen of de combinatiecode in te voeren en vervolgens naar ‘details’ te gaan van een specifieke voucher. Ga hiervoor naar ‘Verkochte vouchers’ in de menubalk.
+            </p>
+        </div>
+        <h1 class="display-4">Bedrijfstekst of bedrijfsgegevens aanpassen</h1>
+        <div class="mb-4">
+            <p>
+                Wil je de bedrijfstekst of bedrijfsgegevens aanpassen van de voucher-pagina die te zien is voor de klanten? Ga dan naar ‘Account’ in de menubalk. De bedrijfsnaam kan niet worden aangepast.
+            </p>
+        </div>
+        <div class="mb-4">
+            <h1 class="display-4">Hulp nodig?</h1>
+            <p>
+                Heb je hulp nodig bij het installeren van de button? Of om de vouchers toe te voegen? Stuur dan een e-mail naar <a href="mailto:info@findey.co">info@findey.co</a> of een WhatsApp naar +31 6 52 63 20 19
+            </p>
+        </div>
     </div>
 }
 else if (!Model.AccountComplete)

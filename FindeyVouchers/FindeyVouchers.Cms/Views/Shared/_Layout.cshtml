@@ -106,7 +106,8 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
         let screen = window.matchMedia("(max-width: 600px)")
-        let open = true;
+        let open = false;
+        let primair = true;
 
         function openSide() {
             if ($(window).width() < 600) {
@@ -135,12 +136,27 @@
         function opacity() {
             console.log("open", open);
             console.log("$(window).width() < 600", $(window).width() < 600)
+
+            if ($(window).width() < 600 && primair) {
+                $("#sidebar-wrapper").width("50");
+                $("#wrapper.toggled").css("padding-left", "10px");
+                $("#wrapper.toggled").css("margin-left", "15px");
+                $(".item").css("display", "none");
+                $(".closeSide").css("display", "none");
+                $(".openSide").css("display", "block");
+                open = false;
+                primair = false;
+                return;
+            }
+
             if ($(window).width() < 600 && open) { // If media query matches
                 console.log("mathed");
                 $("#wrapper.toggled #page-content-wrapper").css("opacity", ".1");
+                return;
             } else {
                 console.log("not mathed");
                 $("#wrapper.toggled #page-content-wrapper").css("opacity", "1");
+                return;
             }
         }
 

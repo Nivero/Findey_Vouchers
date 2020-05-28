@@ -50,6 +50,6 @@ namespace FindeyVouchers.Domain.EfModels
     public enum BusinessType
     {
         [Display(Name = "Eenmanszaak")] SoleProp,
-        [Display(Name = "Bedrijf")] Corporation
+        [Display(Name = "Overig")] Corporation
     }
 }

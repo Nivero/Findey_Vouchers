@@ -24,7 +24,7 @@ namespace FindeyVouchers.Cms.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
-            if (string.IsNullOrWhiteSpace(user.CompanyName) || string.IsNullOrWhiteSpace(user.StripeAccountId))
+            if (string.IsNullOrWhiteSpace(user?.CompanyName) || string.IsNullOrWhiteSpace(user?.StripeAccountId))
                 return RedirectToAction("Index", "Home");
             var categories = _context.VoucherCategories.Where(x => x.Merchant == user);
             return View(categories);

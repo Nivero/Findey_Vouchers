@@ -27,43 +27,44 @@
                     <ul class="sidebar-nav navbar-nav">
 
                         <li class="sidebar-brand">
+                            <a class="closeSide" onclick="closeSide()" href="javascript:void(0)">x</a>
+
                             <a asp-area="" asp-controller="Home" asp-action="Index" class="item logo" style="width: 80%; float: left;">
                                 Findey vouchers
                             </a>
-
-                            <a class="closeSide" onclick="closeSide()" href="javascript:void(0)">x</a>
+                            
                             <a class="openSide" onclick="openSide()" href="javascript:void(0)" style="display: none">
                                 &#9776;
                             </a>
 
                         </li>
-                        <li>
+                        <li class="side-bar-nav-list-item">
                             <a class="item border-line" asp-area="" asp-controller="MerchantVoucher" asp-action="Index">Mijn vouchers</a>
                         </li>
-                        <li>
+                        <li class="side-bar-nav-list-item">
                             <a class="item border-line" asp-area="" asp-controller="CustomerVoucher" asp-action="Index">Verkochte vouchers</a>
                         </li>
-                        <li>
+                        <li class="side-bar-nav-list-item">
                             <a class="item border-line" asp-area="" asp-controller="VoucherCategory" asp-action="Index">Categorieën</a>
                         </li>
-                        <li>
+                        <li class="side-bar-nav-list-item">
                             <a class="item border-line" asp-area="" asp-controller="Account" asp-action="Index">Account</a>
                         </li>
-                        <li>
+                        <li class="side-bar-nav-list-item">
                             <a class="item border-line" asp-area="" asp-controller="Widget" asp-action="Index">Button installeren</a>
                         </li>
                         @{
                             if (SignInManager.IsSignedIn(User))
                             {
                                 var company = UserManager.GetUserAsync(User).GetAwaiter().GetResult().CompanyName;
-                                <li>
+                                <li class="side-bar-nav-list-item">
                                     <a class="item border-line" href="https://@(company).findey.nl" target="_blank">Bekijk voucher-pagina</a>
                                 </li>
                             }
                         }
 
                         <li>
-                            <a class="item" style="margin-top: 26px;">
+                            <a class="item" id="logout-link">
                                 <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout"
                                       asp-route-returnUrl="@Url.Page("/", new {area = ""})"
                                       method="post">

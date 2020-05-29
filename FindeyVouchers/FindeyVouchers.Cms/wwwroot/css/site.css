@@ -122,3 +122,7 @@ body {
 canvas#canvas {
     width: 80% !important;
 }
+
+#logout-link {
+    margin-top:20px;
+}

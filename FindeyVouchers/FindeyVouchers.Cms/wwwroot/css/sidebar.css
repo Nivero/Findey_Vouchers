@@ -121,7 +121,7 @@ form .nav-link {
 }
 
 #sidebar-wrapper .logout {
-    margin-top: 75%;
+    margin-top: 30px;
 }
 
 .body, .body .row {
@@ -184,7 +184,17 @@ form .nav-link {
     }
 
     #sidebar-wrapper .logout {
-        margin-top: 10%;
+        margin-top: 10px;
         font-size: 1.3rem
+    }
+
+    #sidebar-wrapper .side-bar-nav-list-item {
+        line-height: 25px !important;
+    }
+
+    .sidebar-nav > .sidebar-brand {
+        height: 50px;
+        font-size: 25px;
+        line-height: 40px;
     }
 }

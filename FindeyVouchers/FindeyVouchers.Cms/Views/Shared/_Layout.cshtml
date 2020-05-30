@@ -29,10 +29,10 @@
                         <li class="sidebar-brand">
                             <a class="closeSide" onclick="closeSide()" href="javascript:void(0)">x</a>
 
-                            <a asp-area="" asp-controller="Home" asp-action="Index" class="item logo" style="width: 80%; float: left;">
+                            <a asp-area="" asp-controller="Home" asp-action="Index" class="item logo">
                                 Findey vouchers
                             </a>
-                            
+
                             <a class="openSide" onclick="openSide()" href="javascript:void(0)" style="display: none">
                                 &#9776;
                             </a>
@@ -107,7 +107,8 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
         let screen = window.matchMedia("(max-width: 600px)")
-        let open = true;
+        let opn = false;
+        let primair = true;
 
         function openSide() {
             if ($(window).width() < 600) {
@@ -118,7 +119,7 @@
             $(".closeSide").css("display", "block");
             $(".openSide").css("display", "none");
             $(".item").css("display", "block");
-            open = true;
+            opn = true;
             opacity(screen);
         }
 
@@ -129,19 +130,34 @@
             $(".item").css("display", "none");
             $(".closeSide").css("display", "none");
             $(".openSide").css("display", "block");
-            open = false;
+            opn = false;
             opacity(screen);
         }
 
         function opacity() {
-            console.log("open", open);
+            console.log("open", opn);
             console.log("$(window).width() < 600", $(window).width() < 600)
-            if ($(window).width() < 600 && open) { // If media query matches
+
+            if ($(window).width() < 600 && primair) {
+                $("#sidebar-wrapper").width("50");
+                $("#wrapper.toggled").css("padding-left", "10px");
+                $("#wrapper.toggled").css("margin-left", "15px");
+                $(".item").css("display", "none");
+                $(".closeSide").css("display", "none");
+                $(".openSide").css("display", "block");
+                open = false;
+                primair = false;
+                return;
+            }
+
+            if ($(window).width() < 600 && opn) { // If media query matches
                 console.log("mathed");
                 $("#wrapper.toggled #page-content-wrapper").css("opacity", ".1");
+                return;
             } else {
                 console.log("not mathed");
                 $("#wrapper.toggled #page-content-wrapper").css("opacity", "1");
+                return;
             }
         }
 

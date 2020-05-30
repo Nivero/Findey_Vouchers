@@ -123,3 +123,11 @@ body {
 .fab-code-textarea{
     resize: none;
 }
+
+canvas#canvas {
+    width: 80% !important;
+}
+
+#logout-link {
+    margin-top:20px;
+}

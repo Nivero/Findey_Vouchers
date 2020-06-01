@@ -52,10 +52,10 @@ namespace FindeyVouchers.Services
         {
             var htmlVoucher = new StringBuilder();
             var voucherImageUrl = _imageUrl + voucher.MerchantVoucher.Image;
-                htmlVoucher.Append(
-                    $"<div style=\"align-content: center; justify-content: center; text-align: center; border-bottom: 1px solid grey;margin-bottom:1em\"><div> <img src=\"{voucherImageUrl}\" width=\"300\" style=\"display: block; margin: auto;\"> </div><div style=\"margin: 1em;\"> {voucher.MerchantVoucher.Name} t.w.v. € {voucher.MerchantVoucher.Price} </div><div> <img src=\"data:image/png;base64,{b64Image}\" width=\"150\" style=\"display: block; margin: auto;\"> </div> </div>");
+            htmlVoucher.Append(
+                $"<div style=\"align-content: center; justify-content: center; text-align: center; border-bottom: 1px solid grey;margin-bottom:1em\"><div> <img src=\"{voucherImageUrl}\" width=\"300\" style=\"display: block; margin: auto;\"> </div><div style=\"margin: 1em;\"> {voucher.MerchantVoucher.Name} t.w.v. € {voucher.MerchantVoucher.Price} </div><div> <img src=\"data:image/png;base64,{b64Image}\" width=\"150\" style=\"display: block; margin: auto;\"> </div> {voucher.Code}  </div>");
 
-                return htmlVoucher.ToString();
+            return htmlVoucher.ToString();
         }
 
         public string GetVoucherSoldHtmlBody(string companyName, string htmlVouchers)

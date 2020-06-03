@@ -228,19 +228,26 @@ namespace FindeyVouchers.Services
         {
             try
             {
+                var files = new List<SendgridMailAttachment>();
                 var sb = new StringBuilder();
                 foreach (var customerVoucher in vouchers)
                 {
+                    string fileName = customerVoucher.Code + ".png";
+                    files.Add(new SendgridMailAttachment
+                    {
+                        Name = fileName,
+                        Image = GenerateQrCodeFromString(customerVoucher.Code)
+                    });
                     var emailVoucher =
-                        _mailService.GetVoucherSoldHtml(customerVoucher,
-                            GenerateQrCodeFromString(customerVoucher.Code));
+                        _mailService.GetVoucherSoldHtml(customerVoucher, fileName);
+                    
                     sb.Append(emailVoucher);
                 }
 
                 var subject = $"Je vouchers van {vouchers.First().MerchantVoucher.Merchant.CompanyName}";
                 var body = _mailService.GetVoucherSoldHtmlBody(vouchers.First().MerchantVoucher.Merchant.CompanyName,
                     sb.ToString());
-                var response = await _mailService.SendMail(vouchers.First().Customer.Email, subject, body);
+                var response = await _mailService.SendMail(vouchers.First().Customer.Email, subject, body, files);
                 if (response.StatusCode == HttpStatusCode.Accepted) SetEmailSend(vouchers, true);
             }
             catch (Exception e)
